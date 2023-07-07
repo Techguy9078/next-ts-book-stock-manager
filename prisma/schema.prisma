@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model StoredBooks {
+  barcode   String        @id @unique
+  isbn      String
+  title     String
+  author    String
+  year      String
+  publisher String
+  createdAt DateTime      @default(now())
+  books     ScannedBook[]
+
+  @@unique([barcode, isbn, title, author, year, publisher])
+}
+
+model ScannedBook {
+  bookID    Int         @id @default(autoincrement())
+  barcode   String
+  isbn      String
+  title     String
+  author    String
+  year      String
+  publisher String
+  book      StoredBooks @relation(fields: [barcode, isbn, title, author, year, publisher], references: [barcode, isbn, title, author, year, publisher])
+  createdAt DateTime    @default(now())
+}
+
+model Sales {
+  saleID    Int      @id @default(autoincrement())
+  isbn      String
+  title     String
+  author    String
+  createdAt DateTime @default(now())
+}
+
+model SalesStats {
+  date         String @id
+  addedBooks   Int
+  removedBooks Int
+}
