@@ -39,4 +39,4 @@ Also if not working with database this is another fix.
 npx prisma migrate dev --name <editname, just like commits.>
 ```
 
-
+Credit: DLParkin [bookStore-stock-manager](https://github.com/DLParkin/bookStore-stock-manager)
