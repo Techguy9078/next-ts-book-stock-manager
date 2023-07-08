@@ -1,5 +1,8 @@
 Created with Next.js, Prisma and PostgreSQL.
 
+Credit: DLParkin [bookStore-stock-manager](https://github.com/DLParkin/bookStore-stock-manager)
+
+
 ## Getting Started
 
 First, install [PostgreSQL](https://www.postgresql.org/) and initialise PostgreSQL.
@@ -38,5 +41,3 @@ Also if not working with database this is another fix.
 ```bash
 npx prisma migrate dev --name <editname, just like commits.>
 ```
-
-Credit: DLParkin [bookStore-stock-manager](https://github.com/DLParkin/bookStore-stock-manager)
