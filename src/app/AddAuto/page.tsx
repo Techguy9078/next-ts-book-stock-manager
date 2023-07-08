@@ -78,31 +78,30 @@ export default function AddAuto() {
 				ResetValues(undefined);
 				return setIsError(true);
 			}
-		} catch {
+		} catch {}
+		try {
+			const bookResults = await axios.get(
+				`/api/BookAPI/APIBookSearch?barcode=${barcode}`
+			);
+
+			if (!bookResults) {
+				ResetValues(undefined);
+				return setIsError(true);
+			}
+
 			try {
-				const bookResults = await axios.get(
-					`/api/BookAPI/APIBookSearch?barcode=${barcode}`
-				);
-
-				if (!bookResults) {
-					ResetValues(undefined);
-					return setIsError(true);
-				}
-
-				try {
-					await axios.post("/api/BookAPI/Book", bookResults.data);
-					await axios.put("/api/SalesAPI/SalesStats", {
-						updateField: "addBook",
-					});
-					return ResetValues(bookResults.data);
-				} catch {
-					ResetValues(undefined);
-					return setIsError(true);
-				}
+				await axios.post("/api/BookAPI/Book", bookResults.data);
+				await axios.put("/api/SalesAPI/SalesStats", {
+					updateField: "addBook",
+				});
+				return ResetValues(bookResults.data);
 			} catch {
 				ResetValues(undefined);
 				return setIsError(true);
 			}
+		} catch {
+			ResetValues(undefined);
+			return setIsError(true);
 		}
 	}
 
