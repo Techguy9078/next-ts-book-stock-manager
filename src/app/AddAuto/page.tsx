@@ -58,27 +58,8 @@ export default function AddAuto() {
 		if (!barcode) return;
 		setIsError(false);
 		setLoading(true);
-		try {
-			const customBookResults = await axios.get(
-				`/api/BookAPI/CustomAPIBookSearch?barcode=${barcode}`
-			);
 
-			if (!customBookResults) {
-				ResetValues(undefined);
-				return setIsError(true);
-			}
-
-			try {
-				await axios.post("/api/BookAPI/Book", customBookResults.data);
-				await axios.put("/api/SalesAPI/SalesStats", {
-					updateField: "addBook",
-				});
-				return ResetValues(customBookResults.data);
-			} catch {
-				ResetValues(undefined);
-				return setIsError(true);
-			}
-		} catch {}
+		// Checks API For Book
 		try {
 			const bookResults = await axios.get(
 				`/api/BookAPI/APIBookSearch?barcode=${barcode}`
@@ -95,6 +76,29 @@ export default function AddAuto() {
 					updateField: "addBook",
 				});
 				return ResetValues(bookResults.data);
+			} catch {
+				ResetValues(undefined);
+				return setIsError(true);
+			}
+		} catch {}
+
+		// Checks Private API For Books
+		try {
+			const customBookResults = await axios.get(
+				`/api/BookAPI/CustomAPIBookSearch?barcode=${barcode}`
+			);
+
+			if (!customBookResults) {
+				ResetValues(undefined);
+				return setIsError(true);
+			}
+
+			try {
+				await axios.post("/api/BookAPI/Book", customBookResults.data);
+				await axios.put("/api/SalesAPI/SalesStats", {
+					updateField: "addBook",
+				});
+				return ResetValues(customBookResults.data);
 			} catch {
 				ResetValues(undefined);
 				return setIsError(true);
@@ -134,6 +138,7 @@ export default function AddAuto() {
 
 					<AddButton loading={loading} />
 				</form>
+
 				{bookDetails && <ResultCard {...bookDetails} />}
 			</VStack>
 
