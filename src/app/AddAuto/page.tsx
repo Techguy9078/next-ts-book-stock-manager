@@ -64,6 +64,7 @@ export default function AddAuto() {
 			const bookResults = await axios.get(
 				`/api/BookAPI/APIBookSearch?barcode=${barcode}`
 			);
+			console.log(bookResults.data);
 
 			if (!bookResults) {
 				ResetValues(undefined);
@@ -87,6 +88,7 @@ export default function AddAuto() {
 			const customBookResults = await axios.get(
 				`/api/BookAPI/CustomAPIBookSearch?barcode=${barcode}`
 			);
+			console.log(customBookResults.data);
 
 			if (!customBookResults) {
 				ResetValues(undefined);

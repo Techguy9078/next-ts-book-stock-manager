@@ -29,9 +29,9 @@ export async function BookDataParseOL(
 			? (bookObject.year = bookData.publish_date)
 			: (bookObject.year = "");
 	} else {
-		bookObject.year = Number(bookData.publish_date.split(" ")[0])
-			? bookData.publish_date.split(" ")[0]
-			: bookData.publish_date.split(" ")[1];
+		bookObject.year = Number(bookData.publish_date.split(",")[0])
+			? bookData.publish_date.split(",")[0]
+			: bookData.publish_date.split(",")[1];
 	}
 
 	if (bookData.publishers) {

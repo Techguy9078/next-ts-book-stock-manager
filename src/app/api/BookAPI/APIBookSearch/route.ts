@@ -11,6 +11,8 @@ const sessionId = process.env.Secure1PSID!;
 // Another Trial ISBN 9780007276721
 
 // http://openlibrary.org/api/volumes/brief/isbn/${barcode}.json
+// http://openlibrary.org/api/volumes/brief/isbn/9780062278227.json
+
 //
 // https://openlibrary.org/api/books?bibkeys=ISBN:${barcode}&jscmd=data&format=json
 
