@@ -16,7 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
-import ResultCard from "@/components/AddAuto/ResultCard";
+import ResultCard from "@/components/ResultCard/ResultCard";
 import axios from "axios";
 import CustomDivider from "@/components/Divider/customDivider";
 import AddButton from "@/components/Buttons/AddButton";

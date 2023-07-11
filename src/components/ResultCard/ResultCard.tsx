@@ -51,11 +51,11 @@ export default function ResultCard({
 				</Heading>
 				<Divider borderColor={useColorModeValue("black", "white")} />
 				<Stack>
-					<ResultItem cardBodyName={"Barcode"} item={barcode} />
-					<ResultItem cardBodyName={"ISBN"} item={isbn} />
 					<ResultItem cardBodyName={"Author"} item={author} />
 					<ResultItem cardBodyName={"Published"} item={year} />
 					<ResultItem cardBodyName={"Publisher"} item={publisher} />
+					<ResultItem cardBodyName={"ISBN"} item={isbn} />
+					<ResultItem cardBodyName={"Barcode"} item={barcode} />
 				</Stack>
 			</Stack>
 		</Box>

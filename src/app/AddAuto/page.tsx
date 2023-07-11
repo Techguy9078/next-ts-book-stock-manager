@@ -10,7 +10,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 import CustomDivider from "@/components/Divider/customDivider";
-import ResultCard from "@/components/AddAuto/ResultCard";
+import ResultCard from "@/components/ResultCard/ResultCard";
 import axios from "axios";
 import AddButton from "@/components/Buttons/AddButton";
 import BookCount from "@/components/BookCount/BookCount";

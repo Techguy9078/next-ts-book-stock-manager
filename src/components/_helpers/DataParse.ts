@@ -24,14 +24,26 @@ export async function BookDataParseOL(
 		.map((author: any) => author.name)
 		.join(", ");
 
-	if (Number(bookData.publish_date)) {
-		Number(bookData.publish_date) < 3000
-			? (bookObject.year = bookData.publish_date)
-			: (bookObject.year = "");
+	if (typeof bookData.publish_date == "object") {
+		if (Number(bookData.publish_date[0])) {
+			Number(bookData.publish_date[0]) < 3000
+				? (bookObject.year = bookData.publish_date[0].replaceAll(" ", ""))
+				: (bookObject.year = "");
+		} else {
+			bookObject.year = Number(bookData.publish_date[0].split(",")[0])
+				? bookData.publish_date.split(",")[0].replaceAll(" ", "")
+				: bookData.publish_date.split(",")[1].replaceAll(" ", "");
+		}
 	} else {
-		bookObject.year = Number(bookData.publish_date.split(",")[0])
-			? bookData.publish_date.split(",")[0]
-			: bookData.publish_date.split(",")[1];
+		if (Number(bookData.publish_date)) {
+			Number(bookData.publish_date) < 3000
+				? (bookObject.year = bookData.publish_date.replaceAll(" ", ""))
+				: (bookObject.year = "");
+		} else {
+			bookObject.year = Number(bookData.publish_date.split(",")[0])
+				? bookData.publish_date.split(",")[0].replaceAll(" ", "")
+				: bookData.publish_date.split(",")[1].replaceAll(" ", "");
+		}
 	}
 
 	if (bookData.publishers) {
