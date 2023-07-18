@@ -4,7 +4,8 @@ import NavBar from "@/components/Navigation/NavBar";
 
 export const metadata = {
 	title: "Book Store App",
-	description: "Created by Techguy9078",
+	description:
+		"A Bookstore Stock Management Application, Created by Techguy9078",
 };
 
 export default function RootLayout({

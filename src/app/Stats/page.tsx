@@ -21,7 +21,7 @@ export default function Stats() {
 	useEffect(() => {
 		getBookCount(currentBookCount);
 		getSalesData();
-	}, []);
+	}, [getBookCount, currentBookCount]);
 
 	return (
 		<Box

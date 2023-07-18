@@ -38,7 +38,7 @@ export default function BookCountProvider({
 
 	useEffect(() => {
 		getBookCount();
-	}, []);
+	}, [getBookCount]);
 
 	return (
 		<BookCountContext.Provider value={contextValue}>

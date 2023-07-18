@@ -11,6 +11,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Book Models
 model StoredBooks {
   barcode   String        @id @unique
   isbn      String
@@ -36,6 +37,7 @@ model ScannedBook {
   createdAt DateTime    @default(now())
 }
 
+// Sales Data Models
 model Sales {
   saleID    Int      @id @default(autoincrement())
   isbn      String
@@ -48,4 +50,14 @@ model SalesStats {
   date         String @id
   addedBooks   Int
   removedBooks Int
+}
+
+// Customer Request Models
+model CustomerBookRequest {
+  customerID          Int      @id @default(autoincrement())
+  customerPhoneNumber String
+  customerName        String
+  bookTitle           String
+  bookAuthor          String
+  createdAt           DateTime @default(now())
 }
