@@ -2,8 +2,6 @@
 import {
 	Box,
 	FormControl,
-	FormErrorMessage,
-	FormHelperText,
 	FormLabel,
 	Input,
 	InputGroup,
@@ -13,7 +11,7 @@ import {
 	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import ResultCard from "@/components/ResultCard/ResultCard";
@@ -22,27 +20,16 @@ import CustomDivider from "@/components/Divider/customDivider";
 import AddButton from "@/components/Buttons/AddButton";
 import BookCount from "@/components/BookCount/BookCount";
 import { ManualBookDataParse } from "@/components/_helpers/DataParse";
+import { BookCountContext } from "../BookCountContext";
 
 export default function ManualAdd() {
+	const { currentBookCount, getBookCount } = useContext(BookCountContext);
 	const toast = useToast();
-
-	const [bookCount, setBookCount] = useState("");
 
 	const [loading, setLoading] = useState(false);
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
 	const [isError, setIsError] = useState(false);
 	const [toastDisplay, setToastDisplay] = useState(false);
-
-	useEffect(() => {
-		if (!bookCount) {
-			getBookCount();
-		}
-	}, [bookCount]);
-
-	async function getBookCount() {
-		const responseBookCount = await axios.get("/api/BookAPI/BookCount");
-		setBookCount(responseBookCount.data);
-	}
 
 	const { register, handleSubmit } = useForm<IScannedBookLayout>();
 
@@ -65,7 +52,7 @@ export default function ManualAdd() {
 	function ResetValues(bookDetails: IScannedBookLayout | undefined) {
 		setLoading(false);
 		setBookDetails(bookDetails ? bookDetails : undefined);
-		setBookCount("");
+		getBookCount(currentBookCount);
 		setToastDisplay(true);
 
 		setTimeout(() => {
@@ -82,7 +69,7 @@ export default function ManualAdd() {
 			<VStack spacing={4} align={"left"}>
 				<Text fontSize="2xl">Manual Add Books</Text>
 				<CustomDivider />
-				<BookCount bookCount={bookCount} />
+				<BookCount />
 				<CustomDivider />
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<FormLabel>

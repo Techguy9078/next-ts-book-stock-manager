@@ -7,32 +7,21 @@ import {
 	VStack,
 	useColorModeValue,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import CustomDivider from "@/components/Divider/customDivider";
 import axios from "axios";
 import BookCount from "@/components/BookCount/BookCount";
 import BookTable from "@/components/Tables/SearchBookTable";
+import { BookCountContext } from "../BookCountContext";
 
 export default function Search() {
+	const { currentBookCount, getBookCount } = useContext(BookCountContext);
 	const barcodeInputRef = useRef<HTMLInputElement>(null);
 
 	const [reload, setReload] = useState(false);
-
-	const [bookCount, setBookCount] = useState("");
 	const [search, setSearch] = useState<string>("");
 	const [books, setBooks] = useState<Array<IScannedBookLayout>>();
-
-	useEffect(() => {
-		if (!bookCount) {
-			getBookCount();
-		}
-	}, [bookCount]);
-
-	async function getBookCount() {
-		const responseBookCount = await axios.get("/api/BookAPI/BookCount");
-		setBookCount(responseBookCount.data);
-	}
 
 	useEffect(() => {
 		const controller = new AbortController();
@@ -61,7 +50,7 @@ export default function Search() {
 
 	function handleRerender() {
 		setReload(true);
-		getBookCount();
+		getBookCount(currentBookCount);
 		setTimeout(() => {
 			setReload(false);
 		}, 2000);
@@ -76,7 +65,7 @@ export default function Search() {
 			<VStack spacing={4} align={"left"} pb={4}>
 				<Text fontSize="2xl">Search for Books</Text>
 				<CustomDivider />
-				<BookCount bookCount={bookCount} />
+				<BookCount />
 				<CustomDivider />
 				<form>
 					<FormLabel>

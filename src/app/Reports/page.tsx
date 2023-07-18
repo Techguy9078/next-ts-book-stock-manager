@@ -55,8 +55,8 @@ export default function Reports() {
 				<CustomDivider />
 				{!reportData && (
 					<Text>
-						Seems Like you haven't selected any dates yet :)... Select some to
-						begin
+						Seems Like you haven&apos;t selected any dates yet :)... Select some
+						to begin
 					</Text>
 				)}
 				{reportData && !reportData?.length && selectedDates && (

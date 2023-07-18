@@ -7,7 +7,7 @@ import {
 	VStack,
 	useColorModeValue,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 
 import CustomDivider from "@/components/Divider/customDivider";
 import ResultCard from "@/components/ResultCard/ResultCard";
@@ -15,11 +15,11 @@ import axios from "axios";
 import AddButton from "@/components/Buttons/AddButton";
 import BookCount from "@/components/BookCount/BookCount";
 import { SuccessToast, WarningToast } from "@/components/Toasts/Toasts";
+import { BookCountContext } from "../BookCountContext";
 
 export default function AddAuto() {
+	const { currentBookCount, getBookCount } = useContext(BookCountContext);
 	const barcodeInputRef = useRef<HTMLInputElement>(null);
-
-	const [bookCount, setBookCount] = useState("");
 
 	const [barcode, setBarcode] = useState<string>("");
 	const [loading, setLoading] = useState(false);
@@ -27,22 +27,11 @@ export default function AddAuto() {
 	const [isError, setIsError] = useState(false);
 	const [toastDisplay, setToastDisplay] = useState(false);
 
-	useEffect(() => {
-		if (!bookCount) {
-			getBookCount();
-		}
-	}, [bookCount]);
-
-	async function getBookCount() {
-		const responseBookCount = await axios.get("/api/BookAPI/BookCount");
-		setBookCount(responseBookCount.data);
-	}
-
 	function ResetValues(bookDetails: IScannedBookLayout | undefined) {
 		setLoading(false);
 		setBarcode("");
 		setBookDetails(bookDetails ? bookDetails : undefined);
-		setBookCount("");
+		getBookCount(currentBookCount);
 		setToastDisplay(true);
 
 		setTimeout(() => {
@@ -120,7 +109,7 @@ export default function AddAuto() {
 			<VStack spacing={4} align={"left"}>
 				<Text fontSize="2xl">Auto Find Books</Text>
 				<CustomDivider />
-				<BookCount bookCount={bookCount} />
+				<BookCount />
 				<CustomDivider />
 				<form onSubmit={(e) => formSubmit(e)}>
 					<FormLabel>

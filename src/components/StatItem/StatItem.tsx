@@ -16,12 +16,16 @@ export default function StatItem({
 	bookCount,
 }: {
 	data: SalesStats;
-	bookCount: number | undefined;
+	bookCount: string;
 }) {
+	
 	function bookPercentage(inputBook: number) {
-		const bookCounttoNum = Number(bookCount);
-		return (Number(inputBook / (bookCounttoNum + inputBook)) * 100).toFixed(2);
+		const currentBookCounttoNum = Number(bookCount);
+		return (
+			Number(inputBook / (currentBookCounttoNum + inputBook)) * 100
+		).toFixed(2);
 	}
+
 	return (
 		<Box
 			p={2}
