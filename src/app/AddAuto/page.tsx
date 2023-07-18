@@ -115,6 +115,7 @@ export default function AddAuto() {
 					<FormLabel>
 						Add book to database:
 						<Input
+							borderColor={"gray.400"}
 							disabled={loading}
 							ref={barcodeInputRef}
 							autoFocus

@@ -84,6 +84,7 @@ export default function ManualAdd() {
 												":"}
 										</InputLeftAddon>
 										<Input
+											borderColor={"gray.400"}
 											id={inputname}
 											autoComplete="off"
 											placeholder={placeholder}

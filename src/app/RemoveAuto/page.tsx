@@ -84,6 +84,7 @@ export default function RemoveAuto() {
 						Remove book from database:
 						<InputGroup size="lg">
 							<Input
+								borderColor={"gray.400"}
 								disabled={loading}
 								ref={barcodeInputRef}
 								name={"barcode"}
