@@ -1,14 +1,10 @@
 "use client";
 import { BookCountContext } from "@/app/BookCountContext";
 import { HStack, Text } from "@chakra-ui/react";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 export default function BookCount() {
-	const { currentBookCount, getBookCount } = useContext(BookCountContext);
-
-	useEffect(() => {
-		getBookCount(currentBookCount);
-	}, []);
+	const { currentBookCount } = useContext(BookCountContext);
 
 	return (
 		<HStack>
