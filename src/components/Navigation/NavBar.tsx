@@ -82,6 +82,11 @@ const Links = [
 		href: "Reports",
 		color: { light: "#836a8a", dark: "#65466D" },
 	},
+	{
+		name: "Admin",
+		href: "Admin",
+		color: { light: "purple.600", dark: "purple.500" },
+	},
 ];
 
 export default function NavBar({ children }: { children: ReactNode }) {
@@ -127,7 +132,7 @@ export default function NavBar({ children }: { children: ReactNode }) {
 									width="0"
 									height="0"
 									sizes="100vw"
-									style={{ width: '48px', height: 'auto' }}
+									style={{ width: "48px", height: "auto" }}
 								/>
 								<Text textColor={useColorModeValue("black", "white")}>
 									Book Store App
@@ -207,7 +212,7 @@ const DesktopNavLink = ({
 			alignItems={"center"}
 			rounded={"none"}
 			bgColor={dark}
-			isActive={currentLink == href ? true : false}
+			isActive={currentLink == href}
 			color={"white"}
 			_active={{
 				color: "black",
