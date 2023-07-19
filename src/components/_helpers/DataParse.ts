@@ -2,6 +2,12 @@
 import { normalizeAccents } from "@/app/api/BookAPI/CustomAPIBookSearch/_helpers/helpers";
 import { AxiosResponse } from "axios";
 
+/**
+ * Parses the OL Book Data for local database
+ * @param {AxiosResponse<any, any>} result the returned object from OL Book API
+ * @param {string} barcode the barcode of the book
+ * @returns BookObject in local database layout
+ */
 export async function BookDataParseOL(
 	result: AxiosResponse<any, any>,
 	barcode: string
@@ -57,6 +63,11 @@ export async function BookDataParseOL(
 	return bookObject;
 }
 
+/**
+ * Parses the Manual Entry Book Data for local database
+ * @param data the manually entered data
+ * @returns BookObject in local database layout
+ */
 export async function ManualBookDataParse(
 	data: IScannedBookLayout
 ): Promise<IScannedBookLayout> {
