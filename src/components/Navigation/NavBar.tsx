@@ -82,11 +82,11 @@ const Links = [
 		href: "Reports",
 		color: { light: "#836a8a", dark: "#65466D" },
 	},
-	{
-		name: "Admin",
-		href: "Admin",
-		color: { light: "purple.600", dark: "purple.500" },
-	},
+	// {
+	// 	name: "Admin",
+	// 	href: "Admin",
+	// 	color: { light: "purple.600", dark: "purple.500" },
+	// },
 ];
 
 export default function NavBar({ children }: { children: ReactNode }) {

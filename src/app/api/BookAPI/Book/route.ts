@@ -45,7 +45,7 @@ export async function GET(request: Request) {
 
 	if (searchTerm === null) {
 		return NextResponse.json(
-			{ error: "Failed Finding Local Book..." },
+			{ error: "No Search Term Entered..." },
 			{ status: 500 }
 		);
 	}

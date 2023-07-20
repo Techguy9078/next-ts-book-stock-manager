@@ -1,5 +1,5 @@
 import { Button, useColorModeValue } from "@chakra-ui/react";
-import createReport from "@/components/Report/ReportGenerator";
+import { createSalesReport } from "@/components/Report/ReportGenerator";
 import { Sales } from "@prisma/client";
 
 export default function ReportGenerateButton({
@@ -22,7 +22,7 @@ export default function ReportGenerateButton({
 			px={10}
 			mt={2}
 			onClick={() =>
-				createReport({
+				createSalesReport({
 					reportData: reportData,
 					selectedDates: selectedDates,
 				})

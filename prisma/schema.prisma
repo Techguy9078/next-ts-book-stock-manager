@@ -55,10 +55,11 @@ model SalesStats {
 // Customer Request Models
 model CustomerBookRequest {
   customerID          Int      @id @default(autoincrement())
-  customerPhoneNumber String
   customerName        String
-  bookTitle           String
-  bookAuthor          String
-  bookISBN            String
+  customerPhoneNumber String
+  bookTitle           String?
+  bookAuthor          String?
+  bookISBN            String?
+  comments            String?
   createdAt           DateTime @default(now())
 }
