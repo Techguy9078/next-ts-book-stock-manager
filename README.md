@@ -2,6 +2,26 @@ Created with Next.js, Prisma and PostgreSQL.
 
 Credit: DLParkin [bookStore-stock-manager](https://github.com/DLParkin/bookStore-stock-manager)
 
+## Features
+
+- Books:
+
+  - Add
+    - Auto Add
+    - Manual Add
+  - Remove
+  - Search
+
+- Sales
+  - Book Stock Stats
+  - Book Removal Report
+
+TODO:
+
+- Customer Requests
+  - Add
+  - Remove
+  - Search
 
 ## Getting Started
 
@@ -34,7 +54,6 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Further Schema edits
-
 
 Also if not working with database this is another fix.
 

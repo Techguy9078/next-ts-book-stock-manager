@@ -59,5 +59,6 @@ model CustomerBookRequest {
   customerName        String
   bookTitle           String
   bookAuthor          String
+  bookISBN            String
   createdAt           DateTime @default(now())
 }
