@@ -73,6 +73,16 @@ const Links = [
 		color: { light: "#00a9be", dark: "#008394" },
 	},
 	{
+		name: "Add Requests",
+		href: "AddRequest",
+		color: { light: "#B66878", dark: "#894553" },
+	},
+	{
+		name: "Search Requests",
+		href: "SearchRequests",
+		color: { light: "#736EA9", dark: "#554E9D" },
+	},
+	{
 		name: "Stats",
 		href: "Stats",
 		color: { light: "#ae9991", dark: "#86665a" },
@@ -204,9 +214,7 @@ const DesktopNavLink = ({
 	return (
 		<Button
 			as={Link}
-			py={4}
-			w={"125px"}
-			px={3}
+			w={"135px"}
 			display={"flex"}
 			h={"100%"}
 			alignItems={"center"}
