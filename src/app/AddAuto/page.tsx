@@ -1,6 +1,7 @@
 "use client";
 import {
 	Box,
+	Button,
 	FormLabel,
 	Input,
 	Text,
@@ -8,97 +9,87 @@ import {
 	useColorModeValue,
 } from "@chakra-ui/react";
 import { useContext, useRef, useState } from "react";
+import axios, { AxiosError } from "axios";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 
 import CustomDivider from "@/components/Divider/customDivider";
 import ResultCard from "@/components/ResultCard/ResultCard";
-import axios from "axios";
 import AddButton from "@/components/Buttons/AddButton";
 import BookCount from "@/components/BookCount/BookCount";
 import { SuccessToast, WarningToast } from "@/components/Toasts/Toasts";
 import { BookCountContext } from "../BookCountContext";
 
+const barcodeValidator = z.object({
+	barcode: z.string(),
+});
+
+type barcodeForm = z.infer<typeof barcodeValidator>;
+
 export default function AddAuto() {
 	const { currentBookCount, getBookCount } = useContext(BookCountContext);
+
 	const barcodeInputRef = useRef<HTMLInputElement>(null);
 
-	const [barcode, setBarcode] = useState<string>("");
-	const [loading, setLoading] = useState(false);
+	const { register, handleSubmit, getValues } = useForm<barcodeForm>({
+		resolver: zodResolver(barcodeValidator),
+	});
+
+	const {
+		mutate: barcodeSearch,
+		isLoading,
+		isError,
+		isSuccess,
+	} = useMutation({
+		mutationFn: async ({ barcode }: barcodeForm) => {
+			console.log(getValues().barcode);
+			try {
+				const { data } = await axios.get(
+					`/api/BookAPI/APIBookSearch?barcode=${barcode}`
+				);
+
+				if (!data) {
+					throw Error();
+				}
+
+				return data as IScannedBookLayout;
+			} catch {
+				const { data } = await axios.get(
+					`/api/BookAPI/CustomAPIBookSearch?barcode=${barcode}`
+				);
+
+				if (!data) {
+					throw Error();
+				}
+
+				return data as IScannedBookLayout;
+			}
+		},
+		onSuccess: async (data) => {
+			await axios.post("/api/BookAPI/Book", data);
+			await axios.put("/api/SalesAPI/SalesStats", {
+				updateField: "addBook",
+			});
+
+			getBookCount(currentBookCount);
+			setBookDetails(data);
+			setTimeout(() => {
+				barcodeInputRef.current?.focus();
+			}, 200);
+		},
+		onError: (err) => {
+			if (err instanceof AxiosError) {
+				if (err.response?.status === 500) {
+					return; // Error Toast of book not found
+				}
+			}
+			// Otherwise Something Went Wrong Toast
+		},
+	});
+
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
-	const [isError, setIsError] = useState(false);
-	const [toastDisplay, setToastDisplay] = useState(false);
-
-	function ResetValues(bookDetails: IScannedBookLayout | undefined) {
-		setLoading(false);
-		setBarcode("");
-		setBookDetails(bookDetails ? bookDetails : undefined);
-		getBookCount(currentBookCount);
-		setToastDisplay(true);
-
-		setTimeout(() => {
-			setToastDisplay(false);
-		}, 2000);
-		setTimeout(() => {
-			barcodeInputRef.current?.focus();
-		}, 200);
-	}
-
-	async function formSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		if (!barcode) return;
-		setIsError(false);
-		setLoading(true);
-
-		// Checks API For Book
-		try {
-			const bookResults = await axios.get(
-				`/api/BookAPI/APIBookSearch?barcode=${barcode}`
-			);
-			console.log(bookResults.data);
-
-			if (!bookResults) {
-				ResetValues(undefined);
-				return setIsError(true);
-			}
-
-			try {
-				await axios.post("/api/BookAPI/Book", bookResults.data);
-				await axios.put("/api/SalesAPI/SalesStats", {
-					updateField: "addBook",
-				});
-				return ResetValues(bookResults.data);
-			} catch {
-				ResetValues(undefined);
-				return setIsError(true);
-			}
-		} catch {}
-
-		// Checks Private API For Books
-		try {
-			const customBookResults = await axios.get(
-				`/api/BookAPI/CustomAPIBookSearch?barcode=${barcode}`
-			);
-			console.log(customBookResults.data);
-
-			if (!customBookResults) {
-				ResetValues(undefined);
-				return setIsError(true);
-			}
-
-			try {
-				await axios.post("/api/BookAPI/Book", customBookResults.data);
-				await axios.put("/api/SalesAPI/SalesStats", {
-					updateField: "addBook",
-				});
-				return ResetValues(customBookResults.data);
-			} catch {
-				ResetValues(undefined);
-				return setIsError(true);
-			}
-		} catch {
-			ResetValues(undefined);
-			return setIsError(true);
-		}
-	}
 
 	return (
 		<Box
@@ -111,24 +102,39 @@ export default function AddAuto() {
 				<CustomDivider />
 				<BookCount />
 				<CustomDivider />
-				<form onSubmit={(e) => formSubmit(e)}>
+				<form onSubmit={handleSubmit((data) => console.log(data))}>
 					<FormLabel>
 						Add book to database:
 						<Input
+							{...register("barcode")}
 							borderColor={"gray.400"}
-							disabled={loading}
+							disabled={isLoading}
 							ref={barcodeInputRef}
 							autoFocus
+							type="text"
 							autoComplete="off"
 							name="barcode"
-							type="text"
-							value={barcode}
 							placeholder="Start Scanning books..."
-							onChange={(e) => setBarcode(e.target.value)}
 						/>
 					</FormLabel>
 
-					<AddButton loading={loading} />
+					<Button
+						isLoading={isLoading}
+						loadingText={"Adding Book..."}
+						className={"bg-green-400"}
+						color={"white"}
+						_hover={{
+							bgColor: "green.600",
+							color: useColorModeValue("gray.300", "gray.300"),
+						}}
+						w={"100%"}
+						size="lg"
+						px={10}
+						mt={2}
+						type="submit"
+					>
+						Add
+					</Button>
 				</form>
 
 				{bookDetails && <ResultCard {...bookDetails} />}
@@ -141,9 +147,6 @@ export default function AddAuto() {
 					alt=""
 				/>
 			)} */}
-
-			{isError && toastDisplay && <WarningToast />}
-			{!isError && toastDisplay && bookDetails && <SuccessToast />}
 		</Box>
 	);
 }
