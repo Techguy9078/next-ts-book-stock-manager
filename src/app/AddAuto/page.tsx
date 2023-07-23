@@ -2,6 +2,8 @@
 import {
 	Box,
 	Button,
+	FormControl,
+	FormErrorMessage,
 	FormLabel,
 	Input,
 	Text,
@@ -15,15 +17,19 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 
+import { createStandaloneToast } from "@chakra-ui/react";
+const { ToastContainer, toast } = createStandaloneToast();
+
 import CustomDivider from "@/components/Divider/customDivider";
 import ResultCard from "@/components/ResultCard/ResultCard";
 import AddButton from "@/components/Buttons/AddButton";
 import BookCount from "@/components/BookCount/BookCount";
-import { SuccessToast, WarningToast } from "@/components/Toasts/Toasts";
+
 import { BookCountContext } from "../BookCountContext";
+import { AnySoaRecord } from "dns";
 
 const barcodeValidator = z.object({
-	barcode: z.string(),
+	barcode: z.string().min(1),
 });
 
 type barcodeForm = z.infer<typeof barcodeValidator>;
@@ -33,18 +39,19 @@ export default function AddAuto() {
 
 	const barcodeInputRef = useRef<HTMLInputElement>(null);
 
-	const { register, handleSubmit, getValues } = useForm<barcodeForm>({
+	const {
+		register,
+		handleSubmit,
+		getValues,
+		formState: { errors },
+	} = useForm<barcodeForm>({
 		resolver: zodResolver(barcodeValidator),
+		defaultValues: { barcode: "" },
 	});
 
-	const {
-		mutate: barcodeSearch,
-		isLoading,
-		isError,
-		isSuccess,
-	} = useMutation({
+	const { mutate: barcodeSearch, isLoading } = useMutation({
+		mutationKey: ["barcodeSearch"],
 		mutationFn: async ({ barcode }: barcodeForm) => {
-			console.log(getValues().barcode);
 			try {
 				const { data } = await axios.get(
 					`/api/BookAPI/APIBookSearch?barcode=${barcode}`
@@ -75,17 +82,56 @@ export default function AddAuto() {
 
 			getBookCount(currentBookCount);
 			setBookDetails(data);
+
 			setTimeout(() => {
 				barcodeInputRef.current?.focus();
 			}, 200);
+
+			return toast({
+				id: "success",
+				position: "top-right",
+				status: "success",
+				duration: 3000,
+				title: "Added Book",
+				description: "Book added successfully!",
+			});
 		},
-		onError: (err) => {
+		onError: (err: AnySoaRecord) => {
 			if (err instanceof AxiosError) {
 				if (err.response?.status === 500) {
-					return; // Error Toast of book not found
+					setBookDetails(undefined);
+
+					setTimeout(() => {
+						barcodeInputRef.current?.focus();
+					}, 200);
+
+					return toast({
+						id: "warning",
+						position: "top-right",
+						status: "warning",
+						duration: 3000,
+						title: "Adding Book Failed",
+						description:
+							"Book details have not been found, please enter manually!",
+					});
 				}
 			}
-			// Otherwise Something Went Wrong Toast
+
+			setBookDetails(undefined);
+
+			setTimeout(() => {
+				barcodeInputRef.current?.focus();
+			}, 200);
+
+			return toast({
+				id: "error",
+				position: "top-right",
+				status: "error",
+				duration: 3000,
+				title: "Something Went Wrong Try Again",
+				description:
+					"Try Scanning the book again, if this keeps happening contact the TECH GUY",
+			});
 		},
 	});
 
@@ -102,21 +148,28 @@ export default function AddAuto() {
 				<CustomDivider />
 				<BookCount />
 				<CustomDivider />
-				<form onSubmit={handleSubmit((data) => console.log(data))}>
-					<FormLabel>
-						Add book to database:
+				<form
+					onSubmit={handleSubmit((data) => {
+						barcodeSearch(data);
+					})}
+				>
+					<FormControl isInvalid={errors.barcode ? true : false}>
+						<FormLabel htmlFor="barcode">Add book to database:</FormLabel>
 						<Input
-							{...register("barcode")}
+							autoFocus
+							autoComplete="off"
 							borderColor={"gray.400"}
 							disabled={isLoading}
-							ref={barcodeInputRef}
-							autoFocus
-							type="text"
-							autoComplete="off"
-							name="barcode"
+							id="barcode"
 							placeholder="Start Scanning books..."
+							{...register("barcode", {
+								required: "You need to enter or scan a barcode...",
+							})}
 						/>
-					</FormLabel>
+						<FormErrorMessage>
+							{errors.barcode && errors.barcode?.message}
+						</FormErrorMessage>
+					</FormControl>
 
 					<Button
 						isLoading={isLoading}
@@ -133,7 +186,7 @@ export default function AddAuto() {
 						mt={2}
 						type="submit"
 					>
-						Add
+						Add Book
 					</Button>
 				</form>
 
@@ -147,6 +200,7 @@ export default function AddAuto() {
 					alt=""
 				/>
 			)} */}
+			<ToastContainer />
 		</Box>
 	);
 }
