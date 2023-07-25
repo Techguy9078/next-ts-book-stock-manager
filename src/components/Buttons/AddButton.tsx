@@ -1,9 +1,9 @@
 import { Button, useColorModeValue } from "@chakra-ui/react";
 
-export default function AddButton(loading: any) {
+export default function AddButton({ isLoading }: { isLoading: boolean }) {
 	return (
 		<Button
-			isLoading={loading.loading}
+			isLoading={isLoading}
 			loadingText={"Adding Book..."}
 			className={"bg-green-400"}
 			color={"white"}

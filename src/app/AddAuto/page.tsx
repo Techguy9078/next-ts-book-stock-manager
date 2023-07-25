@@ -27,6 +27,7 @@ import BookCount from "@/components/BookCount/BookCount";
 
 import { BookCountContext } from "../BookCountContext";
 import { AnySoaRecord } from "dns";
+import BarcodeForm from "@/components/Forms/BarcodeForm";
 
 const barcodeValidator = z.object({
 	barcode: z.string().min(1),
@@ -37,7 +38,7 @@ type barcodeForm = z.infer<typeof barcodeValidator>;
 export default function AddAuto() {
 	const { currentBookCount, getBookCount } = useContext(BookCountContext);
 
-	const barcodeInputRef = useRef<HTMLInputElement>(null);
+	// const barcodeInputRef = useRef<HTMLInputElement>(null);
 
 	const {
 		register,
@@ -83,9 +84,9 @@ export default function AddAuto() {
 			getBookCount(currentBookCount);
 			setBookDetails(data);
 
-			setTimeout(() => {
-				barcodeInputRef.current?.focus();
-			}, 200);
+			// setTimeout(() => {
+			// 	barcodeInputRef.current?.focus();
+			// }, 200);
 
 			return toast({
 				id: "success",
@@ -101,9 +102,9 @@ export default function AddAuto() {
 				if (err.response?.status === 500) {
 					setBookDetails(undefined);
 
-					setTimeout(() => {
-						barcodeInputRef.current?.focus();
-					}, 200);
+					// setTimeout(() => {
+					// 	barcodeInputRef.current?.focus();
+					// }, 200);
 
 					return toast({
 						id: "warning",
@@ -119,9 +120,9 @@ export default function AddAuto() {
 
 			setBookDetails(undefined);
 
-			setTimeout(() => {
-				barcodeInputRef.current?.focus();
-			}, 200);
+			// setTimeout(() => {
+			// 	barcodeInputRef.current?.focus();
+			// }, 200);
 
 			return toast({
 				id: "error",
@@ -148,7 +149,8 @@ export default function AddAuto() {
 				<CustomDivider />
 				<BookCount />
 				<CustomDivider />
-				<form
+				<BarcodeForm isLoading={isLoading} barcodeSearch={barcodeSearch} />
+				{/* <form
 					onSubmit={handleSubmit((data) => {
 						barcodeSearch(data);
 					})}
@@ -171,24 +173,8 @@ export default function AddAuto() {
 						</FormErrorMessage>
 					</FormControl>
 
-					<Button
-						isLoading={isLoading}
-						loadingText={"Adding Book..."}
-						className={"bg-green-400"}
-						color={"white"}
-						_hover={{
-							bgColor: "green.600",
-							color: useColorModeValue("gray.300", "gray.300"),
-						}}
-						w={"100%"}
-						size="lg"
-						px={10}
-						mt={2}
-						type="submit"
-					>
-						Add Book
-					</Button>
-				</form>
+					<AddButton isLoading={isLoading} />
+				</form> */}
 
 				{bookDetails && <ResultCard {...bookDetails} />}
 			</VStack>
