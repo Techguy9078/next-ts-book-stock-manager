@@ -9,9 +9,8 @@ export default async function PGDUMP(): Promise<Error | "Success!"> {
 	const path = process.env.DATABASE_URL;
 
 	if (!path) return Error("No DATABASE_URL environment variable.");
-
 	await stdoutData(path);
-	await stdoutSchema(path);
+	// await stdoutSchema(path);
 
 	return "Success!";
 }

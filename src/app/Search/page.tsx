@@ -67,22 +67,23 @@ export default function Search() {
 				<CustomDivider />
 				<BookCount />
 				<CustomDivider />
-				<form>
-					<FormLabel>
-						Find Book in database:
-						<Input
-							ref={barcodeInputRef}
-							borderColor={"gray.400"}
-							autoFocus
-							autoComplete="off"
-							name={"searchbox"}
-							type="text"
-							value={search}
-							placeholder="Enter Book to search for..."
-							onChange={(e) => setSearch(e.target.value)}
-						/>
-					</FormLabel>
-				</form>
+
+				<FormLabel>
+					Find Book in database:
+					<Input
+						ref={barcodeInputRef}
+						borderColor={"gray.400"}
+						autoFocus
+						autoComplete="off"
+						name={"searchbox"}
+						type="text"
+						value={search}
+						placeholder="Enter Book to search for..."
+						onChange={(e) => {
+							setSearch(e.target.value);
+						}}
+					/>
+				</FormLabel>
 			</VStack>
 
 			{books && <BookTable bookArray={books} handleRerender={handleRerender} />}

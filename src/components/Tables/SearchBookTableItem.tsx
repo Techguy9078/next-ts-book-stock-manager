@@ -11,7 +11,7 @@ export default function BookTableItem({
 }) {
 	const [loading, setLoading] = useState(false);
 
-	const { bookID, barcode, isbn, title, author, year, publisher, createdAt } =
+	const { bookID, barcode, title, author, year, publisher, createdAt } =
 		book;
 
 	async function removeBook() {
@@ -36,7 +36,6 @@ export default function BookTableItem({
 		>
 			<Tr>
 				<Td>{barcode}</Td>
-				<Td>{isbn}</Td>
 				<Td>{title}</Td>
 				<Td>{author}</Td>
 				<Td>{year}</Td>

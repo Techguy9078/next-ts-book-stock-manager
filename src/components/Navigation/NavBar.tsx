@@ -53,8 +53,8 @@ interface colorType {
 
 const Links = [
 	{
-		name: "Add Auto",
-		href: "AddAuto",
+		name: "Auto Add",
+		href: "AutoAdd",
 		color: { light: "#8bd346", dark: "#4caf50" },
 	},
 	{
@@ -63,8 +63,8 @@ const Links = [
 		color: { light: "#edda34", dark: "#d5c42e" },
 	},
 	{
-		name: "Remove Auto",
-		href: "RemoveAuto",
+		name: "Auto Remove",
+		href: "AutoRemove",
 		color: { light: "#8561c5", dark: "#673ab7" },
 	},
 	{

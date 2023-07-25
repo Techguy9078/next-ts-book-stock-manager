@@ -1,32 +1,19 @@
 "use client";
-import {
-	Box,
-	Button,
-	FormControl,
-	FormErrorMessage,
-	FormLabel,
-	Input,
-	Text,
-	VStack,
-	useColorModeValue,
-} from "@chakra-ui/react";
-import { useContext, useRef, useState } from "react";
+import { Box, Text, VStack, useColorModeValue } from "@chakra-ui/react";
+import { useContext, useState } from "react";
 import axios, { AxiosError } from "axios";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { AnySoaRecord } from "dns";
 
 import { createStandaloneToast } from "@chakra-ui/react";
 const { ToastContainer, toast } = createStandaloneToast();
 
 import CustomDivider from "@/components/Divider/customDivider";
 import ResultCard from "@/components/ResultCard/ResultCard";
-import AddButton from "@/components/Buttons/AddButton";
 import BookCount from "@/components/BookCount/BookCount";
 
 import { BookCountContext } from "../BookCountContext";
-import { AnySoaRecord } from "dns";
 import BarcodeForm from "@/components/Forms/BarcodeForm";
 
 const barcodeValidator = z.object({
@@ -35,20 +22,9 @@ const barcodeValidator = z.object({
 
 type barcodeForm = z.infer<typeof barcodeValidator>;
 
-export default function AddAuto() {
+export default function AutoAdd() {
 	const { currentBookCount, getBookCount } = useContext(BookCountContext);
-
-	// const barcodeInputRef = useRef<HTMLInputElement>(null);
-
-	const {
-		register,
-		handleSubmit,
-		getValues,
-		formState: { errors },
-	} = useForm<barcodeForm>({
-		resolver: zodResolver(barcodeValidator),
-		defaultValues: { barcode: "" },
-	});
+	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
 
 	const { mutate: barcodeSearch, isLoading } = useMutation({
 		mutationKey: ["barcodeSearch"],
@@ -84,10 +60,6 @@ export default function AddAuto() {
 			getBookCount(currentBookCount);
 			setBookDetails(data);
 
-			// setTimeout(() => {
-			// 	barcodeInputRef.current?.focus();
-			// }, 200);
-
 			return toast({
 				id: "success",
 				position: "top-right",
@@ -101,10 +73,6 @@ export default function AddAuto() {
 			if (err instanceof AxiosError) {
 				if (err.response?.status === 500) {
 					setBookDetails(undefined);
-
-					// setTimeout(() => {
-					// 	barcodeInputRef.current?.focus();
-					// }, 200);
 
 					return toast({
 						id: "warning",
@@ -120,10 +88,6 @@ export default function AddAuto() {
 
 			setBookDetails(undefined);
 
-			// setTimeout(() => {
-			// 	barcodeInputRef.current?.focus();
-			// }, 200);
-
 			return toast({
 				id: "error",
 				position: "top-right",
@@ -136,8 +100,6 @@ export default function AddAuto() {
 		},
 	});
 
-	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
-
 	return (
 		<Box
 			p={4}
@@ -145,36 +107,15 @@ export default function AddAuto() {
 			rounded={"md"}
 		>
 			<VStack spacing={4} align={"left"}>
-				<Text fontSize="2xl">Auto Find Books</Text>
+				<Text fontSize="2xl">Auto Add Books</Text>
 				<CustomDivider />
 				<BookCount />
 				<CustomDivider />
-				<BarcodeForm isLoading={isLoading} barcodeSearch={barcodeSearch} />
-				{/* <form
-					onSubmit={handleSubmit((data) => {
-						barcodeSearch(data);
-					})}
-				>
-					<FormControl isInvalid={errors.barcode ? true : false}>
-						<FormLabel htmlFor="barcode">Add book to database:</FormLabel>
-						<Input
-							autoFocus
-							autoComplete="off"
-							borderColor={"gray.400"}
-							disabled={isLoading}
-							id="barcode"
-							placeholder="Start Scanning books..."
-							{...register("barcode", {
-								required: "You need to enter or scan a barcode...",
-							})}
-						/>
-						<FormErrorMessage>
-							{errors.barcode && errors.barcode?.message}
-						</FormErrorMessage>
-					</FormControl>
-
-					<AddButton isLoading={isLoading} />
-				</form> */}
+				<BarcodeForm
+					isLoading={isLoading}
+					barcodeSearch={barcodeSearch}
+					formType="Add"
+				/>
 
 				{bookDetails && <ResultCard {...bookDetails} />}
 			</VStack>

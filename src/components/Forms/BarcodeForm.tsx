@@ -6,13 +6,26 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { ZodErrorMap, z } from "zod";
+import { useEffect } from "react";
 
-import AddButton from "../Buttons/AddButton";
-import { useRef } from "react";
-import { z } from "zod";
+import AddButton from "@/components/Buttons/AddButton";
+import RemoveButton from "../Buttons/RemoveButton";
+
+const customErrorMap: ZodErrorMap = (error, ctx) => {
+	if (error.code == "too_small") {
+		return { message: `No barcode entered please scan a book...` };
+	}
+
+	return { message: ctx.defaultError };
+};
 
 const barcodeValidator = z.object({
-	barcode: z.string().min(1),
+	barcode: z
+		.string({
+			errorMap: customErrorMap,
+		})
+		.min(1),
 });
 
 type barcodeForm = z.infer<typeof barcodeValidator>;
@@ -20,19 +33,29 @@ type barcodeForm = z.infer<typeof barcodeValidator>;
 export default function BarcodeForm({
 	barcodeSearch,
 	isLoading,
+	formType,
 }: {
-	isLoading: boolean;
 	barcodeSearch: Function;
+	isLoading: boolean;
+	formType: "Add" | "Remove";
 }) {
 	const {
 		register,
 		handleSubmit,
-		getValues,
+		setFocus,
+		resetField,
 		formState: { errors },
 	} = useForm<barcodeForm>({
 		resolver: zodResolver(barcodeValidator),
 		defaultValues: { barcode: "" },
 	});
+
+	useEffect(() => {
+		if (!isLoading) {
+			resetField("barcode");
+			setFocus("barcode");
+		}
+	}, [setFocus, resetField, isLoading]);
 
 	return (
 		<form
@@ -41,7 +64,11 @@ export default function BarcodeForm({
 			})}
 		>
 			<FormControl isInvalid={errors.barcode ? true : false}>
-				<FormLabel htmlFor="barcode">Add book to database:</FormLabel>
+				<FormLabel htmlFor="barcode">
+					{formType == "Add"
+						? "Add Book to Database:"
+						: "Remove Book From Database:"}
+				</FormLabel>
 				<Input
 					autoFocus
 					autoComplete="off"
@@ -58,7 +85,8 @@ export default function BarcodeForm({
 				</FormErrorMessage>
 			</FormControl>
 
-			<AddButton isLoading={isLoading} />
+			{formType == "Add" && <AddButton isLoading={isLoading} />}
+			{formType == "Remove" && <RemoveButton isLoading={isLoading} />}
 		</form>
 	);
 }
