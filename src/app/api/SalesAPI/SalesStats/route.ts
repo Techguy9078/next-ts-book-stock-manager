@@ -4,7 +4,10 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
 	try {
-		const dateSales = await prisma.salesStats.findMany({ take: 10 });
+		const dateSales = await prisma.salesStats.findMany({
+			take: 10,
+			orderBy: { date: "desc" },
+		});
 
 		return NextResponse.json(dateSales);
 	} catch (error: any) {

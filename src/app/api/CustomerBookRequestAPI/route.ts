@@ -54,6 +54,21 @@ export async function GET(request: Request) {
 							contains: searchTerm,
 						},
 					},
+					{
+						bookTitle: {
+							contains: searchTerm,
+						},
+					},
+					{
+						bookAuthor: {
+							contains: searchTerm,
+						},
+					},
+					{
+						bookISBN: {
+							contains: searchTerm,
+						},
+					},
 				],
 			},
 			orderBy: { createdAt: "desc" },

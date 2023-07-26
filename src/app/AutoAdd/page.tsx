@@ -73,6 +73,7 @@ export default function AutoAdd() {
 			if (err instanceof AxiosError) {
 				if (err.response?.status === 500) {
 					setBookDetails(undefined);
+					console.log("Could not Find Book Details...");
 
 					return toast({
 						id: "warning",

@@ -12,10 +12,10 @@ import { BookCountContext } from "../BookCountContext";
 export default function Stats() {
 	const { currentBookCount, getBookCount } = useContext(BookCountContext);
 
-	const [salesData, setSalesData] = useState<Array<SalesStats>>();
+	const [salesStatsData, setSalesStatsData] = useState<Array<SalesStats>>();
 	async function getSalesData() {
-		const responseSalesData = await axios.get("/api/SalesAPI/SalesStats");
-		setSalesData(responseSalesData.data);
+		const responseSalesStatsData = await axios.get("/api/SalesAPI/SalesStats");
+		setSalesStatsData(responseSalesStatsData.data);
 	}
 
 	useEffect(() => {
@@ -35,8 +35,8 @@ export default function Stats() {
 				<BookCount />
 				<CustomDivider />
 				<VStack overflowY={"scroll"} align={"flex-start"} h={"70vh"}>
-					{salesData?.length &&
-						salesData.map((data) => (
+					{salesStatsData?.length &&
+						salesStatsData.map((data) => (
 							<Suspense key={data.date}>
 								<StatItem data={data} bookCount={currentBookCount} />
 							</Suspense>

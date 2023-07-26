@@ -25,7 +25,12 @@ export async function BookDataParseOL(
 
 	bookObject.barcode = barcode.toString();
 	bookObject.isbn = bookData.identifiers.isbn_13[0];
-	bookObject.title = await normalizeAccents(bookData.title);
+
+	let title = await normalizeAccents(bookData.title);
+
+	if (!title) throw Error();
+	
+	bookObject.title = title;
 	bookObject.author = bookData.authors
 		.map((author: any) => author.name)
 		.join(", ");
@@ -34,21 +39,25 @@ export async function BookDataParseOL(
 		if (Number(bookData.publish_date[0])) {
 			Number(bookData.publish_date[0]) < 3000
 				? (bookObject.year = bookData.publish_date[0].replaceAll(" ", ""))
-				: (bookObject.year = "");
+				: (bookObject.year = "n/a");
 		} else {
-			bookObject.year = Number(bookData.publish_date[0].split(",")[0])
-				? bookData.publish_date.split(",")[0].replaceAll(" ", "")
-				: bookData.publish_date.split(",")[1].replaceAll(" ", "");
+			Number(bookData.publish_date[0].split(",")[0])
+				? (bookObject.year = bookData.publish_date
+						.split(",")[0]
+						.replaceAll(" ", ""))
+				: (bookObject.year = "n/a");
 		}
 	} else {
 		if (Number(bookData.publish_date)) {
 			Number(bookData.publish_date) < 3000
 				? (bookObject.year = bookData.publish_date.replaceAll(" ", ""))
-				: (bookObject.year = "");
+				: (bookObject.year = "n/a");
 		} else {
-			bookObject.year = Number(bookData.publish_date.split(",")[0])
-				? bookData.publish_date.split(",")[0].replaceAll(" ", "")
-				: bookData.publish_date.split(",")[1].replaceAll(" ", "");
+			Number(bookData.publish_date.split(",")[0])
+				? (bookObject.year = bookData.publish_date
+						.split(",")[0]
+						.replaceAll(" ", ""))
+				: (bookObject.year = "n/a");
 		}
 	}
 
@@ -57,7 +66,66 @@ export async function BookDataParseOL(
 			.map((publisher: any) => publisher.name)
 			.join(", ");
 	} else {
-		bookObject.publisher = "";
+		bookObject.publisher = "n/a";
+	}
+
+	return bookObject;
+}
+
+/**
+ * Parses the Google API Book Data for local database
+ * @param {AxiosResponse<any, any>} result the returned object from Google Book API
+ * @param {string} barcode the barcode of the book
+ * @returns BookObject in local database layout
+ */
+export async function BookDataParseGoogleAPI(
+	result: AxiosResponse<any, any>,
+	barcode: string
+): Promise<IScannedBookLayout> {
+	const bookData = result.data.items[0].volumeInfo;
+
+	let bookObject: IScannedBookLayout = {
+		barcode: "",
+		isbn: "",
+		title: "",
+		author: "",
+		year: "",
+		publisher: "",
+	};
+
+	bookObject.barcode = barcode.toString();
+
+	if (
+		bookData.industryIdentifiers.filter(
+			(identifier: any) => identifier.type == "ISBN_13"
+		).length
+	) {
+		bookObject.isbn = bookData.industryIdentifiers.filter(
+			(identifier: any) => identifier.type == "ISBN_13"
+		)[0].identifier;
+	} else {
+		bookObject.isbn = barcode.toString();
+	}
+
+	bookObject.title = await normalizeAccents(bookData.title);
+	bookObject.author = bookData.authors.map((author: any) => author).join(", ");
+
+	if (Number(bookData.publishedDate)) {
+		Number(bookData.publishedDate) < 3000
+			? (bookObject.year = bookData.publishedDate.replaceAll(" ", ""))
+			: (bookObject.year = "n/a");
+	} else {
+		Number(bookData.publishedDate.split("-")[0])
+			? (bookObject.year = bookData.publishedDate
+					.split("-")[0]
+					.replaceAll(" ", ""))
+			: (bookObject.year = "n/a");
+	}
+
+	if (bookData.publisher) {
+		bookObject.publisher = bookData.publisher;
+	} else {
+		bookObject.publisher = "n/a";
 	}
 
 	return bookObject;
