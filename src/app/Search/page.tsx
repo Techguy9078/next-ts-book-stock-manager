@@ -14,6 +14,7 @@ import axios from "axios";
 import BookCount from "@/components/BookCount/BookCount";
 import BookTable from "@/components/Tables/SearchBookTable";
 import { BookCountContext } from "../BookCountContext";
+import { BookPagesLoader } from "@/components/Loading/BookPagesLoading";
 
 export default function Search() {
 	const { currentBookCount, getBookCount } = useContext(BookCountContext);
@@ -85,6 +86,7 @@ export default function Search() {
 					/>
 				</FormLabel>
 			</VStack>
+			{!books && <BookPagesLoader />}
 
 			{books && <BookTable bookArray={books} handleRerender={handleRerender} />}
 		</Box>

@@ -1,0 +1,179 @@
+section {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100vh;
+}
+
+.book {
+	width: 150px;
+	border-bottom: #36354e solid 4px;
+	border-top: #c4bf8e solid 4px;
+	border-radius: 5px 0 5px 0;
+	position: relative;
+}
+
+.page:nth-of-type(1)::before {
+	position: absolute;
+	content: "";
+	width: 50%;
+	left: 0;
+	bottom: 1px;
+	border-bottom: #c4bf8e solid 2px;
+	transform: rotate(45deg);
+	transform-origin: right center;
+	animation: loading 1.2s ease-in-out infinite;
+}
+
+.page:nth-of-type(1)::after {
+	position: absolute;
+	content: "";
+	width: 50%;
+	left: 0;
+	bottom: 1px;
+	border-bottom: #c4bf8e solid 2px;
+	transform: rotate(145deg);
+	transform-origin: right center;
+	animation: loading 1.2s ease-in-out infinite;
+}
+
+.page:nth-of-type(2)::before {
+	position: absolute;
+	content: "";
+	width: 50%;
+	left: 0;
+	bottom: 1px;
+	border-bottom: #c4bf8e solid 2px;
+	transform: rotate(45deg);
+	transform-origin: right center;
+	animation: loading 1.2s ease-in-out infinite;
+	animation-delay: 0.25s;
+}
+
+.page:nth-of-type(2)::after {
+	position: absolute;
+	content: "";
+	width: 50%;
+	left: 0;
+	bottom: 1px;
+	border-bottom: #c4bf8e solid 2px;
+	transform: rotate(145deg);
+	transform-origin: right center;
+	animation: loading 1.2s ease-in-out infinite;
+	animation-delay: 0.25s;
+}
+
+.page:nth-of-type(3)::before {
+	position: absolute;
+	content: "";
+	width: 50%;
+	left: 0;
+	bottom: 1px;
+	border-bottom: #c4bf8e solid 2px;
+	transform: rotate(45deg);
+	transform-origin: right center;
+	animation: loading 1.2s ease-in-out infinite;
+	animation-delay: 0.5s;
+}
+
+.page:nth-of-type(3)::after {
+	position: absolute;
+	content: "";
+	width: 50%;
+	left: 0;
+	bottom: 1px;
+	border-bottom: #c4bf8e solid 2px;
+	transform: rotate(145deg);
+	transform-origin: right center;
+	animation: loading 1.2s ease-in-out infinite;
+	animation-delay: 0.5s;
+}
+
+.page:nth-of-type(4)::before {
+	position: absolute;
+	content: "";
+	width: 50%;
+	left: 0;
+	bottom: 1px;
+	border-bottom: #c4bf8e solid 2px;
+	transform: rotate(45deg);
+	transform-origin: right center;
+	animation: loading 1.2s ease-in-out infinite;
+	animation-delay: 0.75s;
+}
+
+.page:nth-of-type(4)::after {
+	position: absolute;
+	content: "";
+	width: 50%;
+	left: 0;
+	bottom: 1px;
+	border-bottom: #c4bf8e solid 2px;
+	transform: rotate(145deg);
+	transform-origin: right center;
+	animation: loading 1.2s ease-in-out infinite;
+	animation-delay: 0.75s;
+}
+
+.page:nth-of-type(5)::before {
+	position: absolute;
+	content: "";
+	width: 50%;
+	left: 0;
+	bottom: 1px;
+	border-bottom: #c4bf8e solid 2px;
+	transform: rotate(45deg);
+	transform-origin: right center;
+	animation: loading 1.2s ease-in-out infinite;
+	animation-delay: 1s;
+}
+
+.page:nth-of-type(5)::after {
+	position: absolute;
+	content: "";
+	width: 50%;
+	left: 0;
+	bottom: 1px;
+	border-bottom: #c4bf8e solid 2px;
+	transform: rotate(145deg);
+	transform-origin: right center;
+	animation: loading 1.2s ease-in-out infinite;
+	animation-delay: 1s;
+}
+
+.page:nth-of-type(6)::before {
+	position: absolute;
+	content: "";
+	width: 50%;
+	left: 0;
+	bottom: 1px;
+	border-bottom: #c4bf8e solid 2px;
+	transform: rotate(45deg);
+	transform-origin: right center;
+	animation: loading 1.2s ease-in-out infinite;
+	animation-delay: 1.25s;
+}
+
+.page:nth-of-type(6)::after {
+	position: absolute;
+	content: "";
+	width: 50%;
+	left: 0;
+	bottom: 1px;
+	border-bottom: #c4bf8e solid 2px;
+	transform: rotate(145deg);
+	transform-origin: right center;
+	animation: loading 1.2s ease-in-out infinite;
+	animation-delay: 1.25s;
+}
+
+@keyframes loading {
+	from {
+		transform: rotate(180deg);
+	}
+
+	to {
+		transform: rotate(0deg);
+	}
+}
