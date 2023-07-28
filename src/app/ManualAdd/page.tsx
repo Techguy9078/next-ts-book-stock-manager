@@ -96,7 +96,7 @@ export default function ManualAdd() {
 						</VStack>
 					</FormLabel>
 
-					<AddButton loading={loading} type="submit" />
+					<AddButton isLoading={loading} />
 				</form>
 
 				{bookDetails && <ResultCard {...bookDetails} />}

@@ -31,7 +31,6 @@ export default function AutoRemove() {
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
 
 	const { mutate: barcodeSearch, isLoading } = useMutation({
-		mutationKey: ["barcodeSearch"],
 		mutationFn: async ({ barcode }: barcodeForm) => {
 			const { data } = await axios.delete(
 				`/api/BookAPI/Book?barcode=${barcode}`
@@ -47,10 +46,11 @@ export default function AutoRemove() {
 			await axios.put("/api/SalesAPI/SalesStats", {
 				updateField: "removeBook",
 			});
-			await axios.post("/api/SalesAPI/Sales", data);
 
-			getBookCount(currentBookCount);
 			setBookDetails(data);
+			getBookCount(currentBookCount);
+
+			await axios.post("/api/SalesAPI/Sales", data);
 
 			return toast({
 				id: "success",

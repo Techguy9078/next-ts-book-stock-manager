@@ -27,7 +27,6 @@ export default function AutoAdd() {
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
 
 	const { mutate: barcodeSearch, isLoading } = useMutation({
-		mutationKey: ["barcodeSearch"],
 		mutationFn: async ({ barcode }: barcodeForm) => {
 			try {
 				const { data } = await axios.get(
@@ -53,12 +52,13 @@ export default function AutoAdd() {
 		},
 		onSuccess: async (data) => {
 			await axios.post("/api/BookAPI/Book", data);
-			await axios.put("/api/SalesAPI/SalesStats", {
-				updateField: "addBook",
-			});
 
 			getBookCount(currentBookCount);
 			setBookDetails(data);
+			
+			await axios.put("/api/SalesAPI/SalesStats", {
+				updateField: "addBook",
+			});
 
 			return toast({
 				id: "success",
