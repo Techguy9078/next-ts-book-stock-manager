@@ -88,6 +88,8 @@ export default function Search() {
 				<SearchForm isLoading={isLoading} barcodeSearch={barcodeSearch} />
 			</VStack>
 
+			<BookPagesLoader />
+
 			{isLoading && <BookPagesLoader />}
 
 			{books && <BookTable bookArray={books} handleRerender={handleRerender} />}
