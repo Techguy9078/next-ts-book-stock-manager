@@ -78,7 +78,7 @@ export async function GET(request: Request) {
 					},
 				],
 			},
-			orderBy: { createdAt: "desc" },
+			orderBy: { title: "asc" },
 		});
 
 		return NextResponse.json(bookResults);

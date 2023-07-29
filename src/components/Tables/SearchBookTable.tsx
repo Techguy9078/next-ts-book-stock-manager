@@ -60,11 +60,13 @@ export default function BookTable({
 					<Tbody>
 						<Tr>
 							<Th>
-								Unfortunately couldn&apos;t find any books by that search...
+								Unfortunately couldn&apos;t find any books by that search, maybe
+								try typing more or a different search...
 							</Th>
 						</Tr>
 					</Tbody>
 				)}
+
 				{bookArray.length > 0 &&
 					bookArray.map((book) => (
 						<BookTableItem
