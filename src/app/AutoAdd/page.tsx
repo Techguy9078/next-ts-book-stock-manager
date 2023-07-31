@@ -55,13 +55,12 @@ export default function AutoAdd() {
 
 			getBookCount(currentBookCount);
 			setBookDetails(data);
-			
+
 			await axios.put("/api/SalesAPI/SalesStats", {
 				updateField: "addBook",
 			});
 
 			return toast({
-				id: "success",
 				position: "top-right",
 				status: "success",
 				duration: 3000,
@@ -76,7 +75,6 @@ export default function AutoAdd() {
 					console.log("Could not Find Book Details...");
 
 					return toast({
-						id: "warning",
 						position: "top-right",
 						status: "warning",
 						duration: 3000,
@@ -90,7 +88,6 @@ export default function AutoAdd() {
 			setBookDetails(undefined);
 
 			return toast({
-				id: "error",
 				position: "top-right",
 				status: "error",
 				duration: 3000,

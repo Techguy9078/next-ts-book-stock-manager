@@ -9,56 +9,90 @@ import {
 	Text,
 	VStack,
 	useColorModeValue,
-	useToast,
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { createStandaloneToast } from "@chakra-ui/react";
+const { ToastContainer, toast } = createStandaloneToast();
 
 import ResultCard from "@/components/ResultCard/ResultCard";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import CustomDivider from "@/components/Divider/customDivider";
 import AddButton from "@/components/Buttons/AddButton";
 import BookCount from "@/components/BookCount/BookCount";
 import { ManualBookDataParse } from "@/components/_helpers/DataParse";
 import { BookCountContext } from "../BookCountContext";
+import { AnySoaRecord } from "dns";
+import { useMutation } from "@tanstack/react-query";
 
 export default function ManualAdd() {
 	const { currentBookCount, getBookCount } = useContext(BookCountContext);
-	const toast = useToast();
 
-	const [loading, setLoading] = useState(false);
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
-	const [isError, setIsError] = useState(false);
-	const [toastDisplay, setToastDisplay] = useState(false);
 
 	const { register, handleSubmit } = useForm<IScannedBookLayout>();
 
-	const onSubmit: SubmitHandler<IScannedBookLayout> = async (data) => {
-		setIsError(false);
-		setLoading(true);
-		try {
-			const parsedData = await ManualBookDataParse(data);
-			await axios.post("/api/BookAPI/Book", parsedData);
+	const { mutate: formSubmit, isLoading } = useMutation({
+		mutationFn: async (formData: IScannedBookLayout) => {
+			const parsedData = await ManualBookDataParse(formData);
+			const { data } = await axios.post("/api/BookAPI/Book", parsedData);
+
+			if (!data) {
+				throw Error();
+			}
+
+			return data as IScannedBookLayout;
+		},
+		onSuccess: async (data) => {
+			getBookCount(currentBookCount);
+			setBookDetails(data);
+
 			await axios.put("/api/SalesAPI/SalesStats", {
 				updateField: "addBook",
 			});
-			return ResetValues(parsedData);
-		} catch {
-			ResetValues(undefined);
-			return setIsError(true);
-		}
-	};
 
-	function ResetValues(bookDetails: IScannedBookLayout | undefined) {
-		setLoading(false);
-		setBookDetails(bookDetails ? bookDetails : undefined);
-		getBookCount(currentBookCount);
-		setToastDisplay(true);
+			return toast({
+				id: "success",
+				position: "top-right",
+				status: "success",
+				duration: 3000,
+				title: "Added Book",
+				description: "Book added successfully!",
+			});
+		},
+		onError: (err: AnySoaRecord) => {
+			if (err instanceof AxiosError) {
+				if (err.response?.status === 500) {
+					setBookDetails(undefined);
+					console.log(
+						"Could not Add Book Details...",
+						err.response?.statusText
+					);
 
-		setTimeout(() => {
-			setToastDisplay(false);
-		}, 2000);
-	}
+					return toast({
+						id: "warning",
+						position: "top-right",
+						status: "warning",
+						duration: 3000,
+						title: "Adding Book Failed",
+						description: "Error Adding Book Manually!",
+					});
+				}
+			}
+
+			setBookDetails(undefined);
+
+			return toast({
+				id: "error",
+				position: "top-right",
+				status: "error",
+				duration: 3000,
+				title: "Something Went Wrong Try Again",
+				description:
+					"Try Scanning the book again, if this keeps happening contact the TECH GUY",
+			});
+		},
+	});
 
 	return (
 		<Box
@@ -71,7 +105,7 @@ export default function ManualAdd() {
 				<CustomDivider />
 				<BookCount />
 				<CustomDivider />
-				<form onSubmit={handleSubmit(onSubmit)}>
+				<form onSubmit={handleSubmit((data) => formSubmit(data))}>
 					<FormLabel>
 						Manually enter the book details to add them to the database:
 						<VStack>
@@ -96,7 +130,7 @@ export default function ManualAdd() {
 						</VStack>
 					</FormLabel>
 
-					<AddButton isLoading={loading} />
+					<AddButton isLoading={isLoading} />
 				</form>
 
 				{bookDetails && <ResultCard {...bookDetails} />}
@@ -109,33 +143,7 @@ export default function ManualAdd() {
 					alt=""
 				/>
 			)} */}
-
-			{isError && toastDisplay && !toast.isActive("warning") && (
-				<Box display={"none"}>
-					{toast({
-						id: "warning",
-						status: "warning",
-						duration: 3000,
-						title: "Adding Book Failed",
-						description: "This is no good... Ah shit here we go again...",
-					})}
-				</Box>
-			)}
-
-			{!isError &&
-				toastDisplay &&
-				bookDetails &&
-				!toast.isActive("success") && (
-					<Box display={"none"}>
-						{toast({
-							id: "success",
-							status: "success",
-							duration: 3000,
-							title: "Added Book",
-							description: "Book added successfully!",
-						})}
-					</Box>
-				)}
+			<ToastContainer />
 		</Box>
 	);
 }

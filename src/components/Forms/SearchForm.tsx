@@ -33,9 +33,11 @@ type SearchForm = z.infer<typeof barcodeValidator>;
 export default function SearchForm({
 	setBooksArray,
 	setLoader,
+	refetchValue,
 }: {
 	setLoader: Function;
 	setBooksArray: Function;
+	refetchValue: boolean;
 }) {
 	const [debouncedSearchValue, setDebouncedSearchValue] = useState<
 		string | undefined
@@ -59,6 +61,10 @@ export default function SearchForm({
 		},
 		enabled: false,
 	});
+
+	useEffect(() => {
+		refetch();
+	}, [refetchValue]);
 
 	useEffect(() => {
 		const subscription = watch((value) => {
@@ -92,7 +98,6 @@ export default function SearchForm({
 	}, [data]);
 
 	useEffect(() => {
-		console.log(isRefetching);
 		if (isRefetching) {
 			if (search && search.length > 2) {
 				setBooksArray(undefined);

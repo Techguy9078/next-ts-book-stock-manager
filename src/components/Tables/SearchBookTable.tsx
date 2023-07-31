@@ -1,6 +1,6 @@
 import {
+	Box,
 	Table,
-	TableContainer,
 	Tbody,
 	Th,
 	Thead,
@@ -11,15 +11,16 @@ import BookTableItem from "./SearchBookTableItem";
 
 export default function BookTable({
 	bookArray,
-	handleRerender,
+	handleRefetch,
 }: {
 	bookArray: Array<IScannedBookLayout>;
-	handleRerender: Function;
+	handleRefetch: Function;
 }) {
 	return (
-		<TableContainer
+		<Box
 			overflowY={"scroll"}
-			maxHeight={"375px"}
+			maxHeight={"50vh"}
+			fontSize={{ sm: "sm", md: "md" }}
 			sx={{
 				"::-webkit-scrollbar": {
 					width: "8px",
@@ -34,13 +35,18 @@ export default function BookTable({
 				},
 			}}
 		>
-			<Table variant="simple">
+			<Table size="md" overflow={"scroll"}>
 				<Thead
 					borderWidth={2}
 					borderColor={useColorModeValue("gray.300", "gray.600")}
 					position={"sticky"}
 					top={-0.5}
 					zIndex={2}
+					sx={{
+						"@media screen and (max-width: 600px)": {
+							display: "none",
+						},
+					}}
 				>
 					<Tr>
 						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>Barcode</Th>
@@ -70,24 +76,24 @@ export default function BookTable({
 				{bookArray.length > 0 &&
 					bookArray.map((book) => (
 						<BookTableItem
-							key={book.bookID}
+							key={book.id}
 							book={book}
-							handleRerender={handleRerender}
+							handleRefetch={handleRefetch}
 						/>
 					))}
 
 				{/* <Tfoot>
 					<Tr>
-						<Th>Barcode</Th>
-						<Th>ISBN</Th>
-						<Th>Title</Th>
-						<Th>Author</Th>
-						<Th>Year</Th>
-						<Th>Publisher</Th>
+					<Th>Barcode</Th>
+					<Th>ISBN</Th>
+					<Th>Title</Th>
+					<Th>Author</Th>
+					<Th>Year</Th>
+					<Th>Publisher</Th>
 						<Th>Scanned Date</Th>
 					</Tr>
 				</Tfoot> */}
 			</Table>
-		</TableContainer>
+		</Box>
 	);
 }

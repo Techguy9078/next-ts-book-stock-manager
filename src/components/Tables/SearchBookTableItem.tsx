@@ -4,20 +4,19 @@ import { useState } from "react";
 
 export default function BookTableItem({
 	book,
-	handleRerender,
+	handleRefetch,
 }: {
 	book: any;
-	handleRerender: Function;
+	handleRefetch: Function;
 }) {
 	const [loading, setLoading] = useState(false);
 
-	const { bookID, barcode, title, author, year, publisher, createdAt } =
-		book;
+	const { id, barcode, title, author, year, publisher, createdAt } = book;
 
 	async function removeBook() {
 		setLoading(true);
-		await axios.delete(`/api/BookAPI/Book?bookID=${bookID}`);
-		handleRerender();
+		await axios.delete(`/api/BookAPI/Book?id=${id}`);
+		handleRefetch();
 
 		setTimeout(() => {
 			setLoading(false);
@@ -29,19 +28,81 @@ export default function BookTableItem({
 		date.getUTCDate() + "/" + date.getUTCMonth() + "/" + date.getFullYear();
 	return (
 		<Tbody
-			key={bookID}
+			key={id}
 			borderStyle={"solid"}
 			borderWidth={2}
 			borderColor={useColorModeValue("gray.300", "gray.800")}
 		>
 			<Tr>
-				<Td>{barcode}</Td>
-				<Td>{title}</Td>
-				<Td>{author}</Td>
-				<Td>{year}</Td>
-				<Td>{publisher}</Td>
-				<Td>{formattedDate}</Td>
-				<Td>
+				<Td
+					sx={{
+						"@media screen and (max-width: 600px)": {
+							fontWeight: "bold",
+							display: "flex",
+							maxWidth: "80vw",
+						},
+					}}
+				>
+					{barcode}
+				</Td>
+				<Td
+					sx={{
+						"@media screen and (max-width: 600px)": {
+							display: "flex",
+							maxWidth: "80vw",
+						},
+					}}
+				>
+					{title}
+				</Td>
+				<Td
+					sx={{
+						"@media screen and (max-width: 600px)": {
+							display: "flex",
+							maxWidth: "80vw",
+						},
+					}}
+				>
+					{author}
+				</Td>
+				<Td
+					sx={{
+						"@media screen and (max-width: 600px)": {
+							display: "flex",
+							maxWidth: "80vw",
+						},
+					}}
+				>
+					{year}
+				</Td>
+				<Td
+					sx={{
+						"@media screen and (max-width: 600px)": {
+							display: "flex",
+							maxWidth: "80vw",
+						},
+					}}
+				>
+					{publisher}
+				</Td>
+				<Td
+					sx={{
+						"@media screen and (max-width: 600px)": {
+							display: "flex",
+							maxWidth: "80vw",
+						},
+					}}
+				>
+					{formattedDate}
+				</Td>
+				<Td
+					sx={{
+						"@media screen and (max-width: 600px)": {
+							display: "flex",
+							maxWidth: "80vw",
+						},
+					}}
+				>
 					<Button
 						isLoading={loading}
 						loadingText={"Removing Book..."}

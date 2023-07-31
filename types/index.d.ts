@@ -1,5 +1,5 @@
 declare interface IScannedBookLayout {
-	bookID?: Int;
+	id?: Int;
 	barcode: string;
 	isbn: string;
 	title: string;
@@ -26,3 +26,13 @@ declare interface IBookResultLayout {
 declare type Prettify<T> = {
 	[K in keyof T]: T[K];
 } & {};
+
+declare interface ICustomerBookRequest {
+	id?: int;
+	customerName: string;
+	customerPhoneNumber: string;
+	bookTitle: string | null;
+	bookAuthor: string | null;
+	bookISBN: string | null;
+	comments: string | null;
+}

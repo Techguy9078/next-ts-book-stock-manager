@@ -26,7 +26,7 @@ model StoredBooks {
 }
 
 model ScannedBook {
-  bookID    Int         @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   barcode   String
   isbn      String
   title     String
@@ -39,7 +39,7 @@ model ScannedBook {
 
 // Sales Data Models
 model Sales {
-  saleID    Int      @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   isbn      String
   title     String
   author    String
@@ -54,7 +54,7 @@ model SalesStats {
 
 // Customer Request Models
 model CustomerBookRequest {
-  customerID          Int      @id @default(autoincrement())
+  id                  Int      @id @default(autoincrement())
   customerName        String
   customerPhoneNumber String
   bookTitle           String?

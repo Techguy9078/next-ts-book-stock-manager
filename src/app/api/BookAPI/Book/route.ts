@@ -94,7 +94,7 @@ export async function DELETE(request: Request) {
 	const { searchParams } = new URL(request.url);
 
 	const barcode = searchParams.get("barcode");
-	const bookID = searchParams.get("bookID");
+	const id = searchParams.get("id");
 
 	if (barcode) {
 		try {
@@ -109,7 +109,7 @@ export async function DELETE(request: Request) {
 
 			const deleteBook = await prisma.scannedBook.delete({
 				where: {
-					bookID: bookResult[0].bookID,
+					id: bookResult[0].id,
 				},
 			});
 
@@ -121,11 +121,11 @@ export async function DELETE(request: Request) {
 			);
 		}
 	}
-	if (bookID) {
+	if (id) {
 		try {
 			const deleteBook = await prisma.scannedBook.delete({
 				where: {
-					bookID: Number(bookID),
+					id: Number(id),
 				},
 			});
 
