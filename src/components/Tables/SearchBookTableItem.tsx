@@ -1,4 +1,5 @@
 import { Button, Tbody, Td, Tr, useColorModeValue } from "@chakra-ui/react";
+import { ScannedBook } from "@prisma/client";
 import axios from "axios";
 import { useState } from "react";
 
@@ -6,12 +7,21 @@ export default function BookTableItem({
 	book,
 	handleRefetch,
 }: {
+<<<<<<< Updated upstream
 	book: any;
 	handleRefetch: Function;
 }) {
 	const [loading, setLoading] = useState(false);
 
 	const { id, barcode, title, author, year, publisher, createdAt } = book;
+=======
+	book: ScannedBook;
+	handleRerender: Function;
+}) {
+	const [loading, setLoading] = useState(false);
+
+	const { bookID, isbn, title, author, bookDetails, createdAt } = book;
+>>>>>>> Stashed changes
 
 	async function removeBook() {
 		setLoading(true);
@@ -34,6 +44,7 @@ export default function BookTableItem({
 			borderColor={useColorModeValue("gray.300", "gray.800")}
 		>
 			<Tr>
+<<<<<<< Updated upstream
 				<Td
 					sx={{
 						"@media screen and (max-width: 600px)": {
@@ -103,6 +114,14 @@ export default function BookTableItem({
 						},
 					}}
 				>
+=======
+				<Td>{isbn}</Td>
+				<Td>{title}</Td>
+				<Td>{author}</Td>
+				<Td>{bookDetails}</Td>
+				<Td>{formattedDate}</Td>
+				<Td>
+>>>>>>> Stashed changes
 					<Button
 						isLoading={loading}
 						loadingText={"Removing Book..."}

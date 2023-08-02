@@ -31,8 +31,7 @@ export default function ResultCard({
 	barcode,
 	isbn,
 	author,
-	year,
-	publisher,
+	bookDetails
 }: IScannedBookLayout) {
 	return (
 		<Box
@@ -52,8 +51,7 @@ export default function ResultCard({
 				<Divider borderColor={useColorModeValue("black", "white")} />
 				<Stack>
 					<ResultItem cardBodyName={"Author"} item={author} />
-					<ResultItem cardBodyName={"Published"} item={year} />
-					<ResultItem cardBodyName={"Publisher"} item={publisher} />
+					<ResultItem cardBodyName={"Book Details"} item={bookDetails} />
 					<ResultItem cardBodyName={"ISBN"} item={isbn} />
 					<ResultItem cardBodyName={"Barcode"} item={barcode} />
 				</Stack>

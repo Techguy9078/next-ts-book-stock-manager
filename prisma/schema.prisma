@@ -13,19 +13,19 @@ datasource db {
 
 // Book Models
 model StoredBooks {
-  barcode   String        @id @unique
-  isbn      String
-  title     String
-  author    String
-  year      String
-  publisher String
-  createdAt DateTime      @default(now())
-  books     ScannedBook[]
+  barcode     String        @id @unique
+  isbn        String
+  title       String
+  author      String
+  bookDetails String
+  createdAt   DateTime      @default(now())
+  books       ScannedBook[]
 
-  @@unique([barcode, isbn, title, author, year, publisher])
+  @@unique([barcode, isbn, title, author, bookDetails])
 }
 
 model ScannedBook {
+<<<<<<< Updated upstream
   id        Int         @id @default(autoincrement())
   barcode   String
   isbn      String
@@ -35,6 +35,16 @@ model ScannedBook {
   publisher String
   book      StoredBooks @relation(fields: [barcode, isbn, title, author, year, publisher], references: [barcode, isbn, title, author, year, publisher])
   createdAt DateTime    @default(now())
+=======
+  bookID      Int         @id @default(autoincrement())
+  barcode     String
+  isbn        String
+  title       String
+  author      String
+  bookDetails String
+  book        StoredBooks @relation(fields: [barcode, isbn, title, author, bookDetails], references: [barcode, isbn, title, author, bookDetails])
+  createdAt   DateTime    @default(now())
+>>>>>>> Stashed changes
 }
 
 // Sales Data Models

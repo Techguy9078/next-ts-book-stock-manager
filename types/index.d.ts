@@ -4,8 +4,7 @@ declare interface IScannedBookLayout {
 	isbn: string;
 	title: string;
 	author: string;
-	year: string;
-	publisher: string;
+	bookDetails: string;
 	createdAt?: DateTime;
 }
 
@@ -14,8 +13,7 @@ declare interface IStoredBookLayout {
 	isbn: string;
 	title: string;
 	author: string;
-	year: string;
-	publisher: string;
+	bookDetails: string;
 }
 
 declare interface IBookResultLayout {

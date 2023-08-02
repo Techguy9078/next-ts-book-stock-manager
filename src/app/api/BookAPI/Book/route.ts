@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
 	const req = await request.json();
-	let { barcode, isbn, title, author, year, publisher } = req;
+	let { barcode, isbn, title, author, bookDetails } = req;
 	if (typeof barcode == "number") {
 		barcode = barcode.toString();
 	}
@@ -21,8 +21,7 @@ export async function POST(request: Request) {
 							isbn: isbn,
 							title: title,
 							author: author,
-							year: year,
-							publisher: publisher,
+							bookDetails: bookDetails,
 						},
 					},
 				},
@@ -125,7 +124,11 @@ export async function DELETE(request: Request) {
 		try {
 			const deleteBook = await prisma.scannedBook.delete({
 				where: {
+<<<<<<< Updated upstream
 					id: Number(id),
+=======
+					bookID: Number(id),
+>>>>>>> Stashed changes
 				},
 			});
 

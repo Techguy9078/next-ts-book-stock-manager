@@ -24,12 +24,21 @@ export async function BookDataParseOL(
 	};
 
 	bookObject.barcode = barcode.toString();
-	bookObject.isbn = bookData.identifiers.isbn_13[0];
+
+	if (bookData.identifiers.isbn_10[0]) {
+		bookObject.isbn = bookData.identifiers.isbn_10[0];
+	} else {
+		if (bookData.identifiers.isbn_13[0]) {
+			bookObject.isbn = bookData.identifiers.isbn_13[0];
+		} else {
+			bookObject.isbn = barcode.toString();
+		}
+	}
 
 	let title = await normalizeAccents(bookData.title);
 
 	if (!title) throw Error();
-	
+
 	bookObject.title = title;
 	bookObject.author = bookData.authors
 		.map((author: any) => author.name)
