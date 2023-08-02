@@ -25,18 +25,7 @@ model StoredBooks {
 }
 
 model ScannedBook {
-<<<<<<< Updated upstream
-  id        Int         @id @default(autoincrement())
-  barcode   String
-  isbn      String
-  title     String
-  author    String
-  year      String
-  publisher String
-  book      StoredBooks @relation(fields: [barcode, isbn, title, author, year, publisher], references: [barcode, isbn, title, author, year, publisher])
-  createdAt DateTime    @default(now())
-=======
-  bookID      Int         @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   barcode     String
   isbn        String
   title       String
@@ -44,7 +33,6 @@ model ScannedBook {
   bookDetails String
   book        StoredBooks @relation(fields: [barcode, isbn, title, author, bookDetails], references: [barcode, isbn, title, author, bookDetails])
   createdAt   DateTime    @default(now())
->>>>>>> Stashed changes
 }
 
 // Sales Data Models

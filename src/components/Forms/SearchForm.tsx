@@ -127,7 +127,7 @@ export default function SearchForm({
 				})}
 			/>
 			<FormHelperText color={"gray.400"}>
-				Only will search once 3 letters have been entered
+				Only will search once 3 characters have been entered
 			</FormHelperText>
 			<FormErrorMessage>
 				{errors.search && errors.search?.message}

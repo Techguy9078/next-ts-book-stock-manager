@@ -7,6 +7,7 @@ import {
 	Divider,
 	HStack,
 } from "@chakra-ui/react";
+import { ScannedBook } from "@prisma/client";
 
 function ResultItem({
 	item,
@@ -31,7 +32,7 @@ export default function ResultCard({
 	barcode,
 	isbn,
 	author,
-	bookDetails
+	bookDetails,
 }: IScannedBookLayout) {
 	return (
 		<Box

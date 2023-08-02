@@ -7,21 +7,12 @@ export default function BookTableItem({
 	book,
 	handleRefetch,
 }: {
-<<<<<<< Updated upstream
-	book: any;
+	book: IScannedBookLayout;
 	handleRefetch: Function;
 }) {
 	const [loading, setLoading] = useState(false);
 
-	const { id, barcode, title, author, year, publisher, createdAt } = book;
-=======
-	book: ScannedBook;
-	handleRerender: Function;
-}) {
-	const [loading, setLoading] = useState(false);
-
-	const { bookID, isbn, title, author, bookDetails, createdAt } = book;
->>>>>>> Stashed changes
+	const { id, isbn, title, author, bookDetails, createdAt } = book;
 
 	async function removeBook() {
 		setLoading(true);
@@ -44,7 +35,6 @@ export default function BookTableItem({
 			borderColor={useColorModeValue("gray.300", "gray.800")}
 		>
 			<Tr>
-<<<<<<< Updated upstream
 				<Td
 					sx={{
 						"@media screen and (max-width: 600px)": {
@@ -54,7 +44,7 @@ export default function BookTableItem({
 						},
 					}}
 				>
-					{barcode}
+					{isbn}
 				</Td>
 				<Td
 					sx={{
@@ -84,17 +74,7 @@ export default function BookTableItem({
 						},
 					}}
 				>
-					{year}
-				</Td>
-				<Td
-					sx={{
-						"@media screen and (max-width: 600px)": {
-							display: "flex",
-							maxWidth: "80vw",
-						},
-					}}
-				>
-					{publisher}
+					{bookDetails}
 				</Td>
 				<Td
 					sx={{
@@ -114,14 +94,6 @@ export default function BookTableItem({
 						},
 					}}
 				>
-=======
-				<Td>{isbn}</Td>
-				<Td>{title}</Td>
-				<Td>{author}</Td>
-				<Td>{bookDetails}</Td>
-				<Td>{formattedDate}</Td>
-				<Td>
->>>>>>> Stashed changes
 					<Button
 						isLoading={loading}
 						loadingText={"Removing Book..."}

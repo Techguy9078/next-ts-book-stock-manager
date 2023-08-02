@@ -124,11 +124,7 @@ export async function DELETE(request: Request) {
 		try {
 			const deleteBook = await prisma.scannedBook.delete({
 				where: {
-<<<<<<< Updated upstream
 					id: Number(id),
-=======
-					bookID: Number(id),
->>>>>>> Stashed changes
 				},
 			});
 

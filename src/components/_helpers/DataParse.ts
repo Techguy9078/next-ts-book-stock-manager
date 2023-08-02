@@ -19,8 +19,7 @@ export async function BookDataParseOL(
 		isbn: "",
 		title: "",
 		author: "",
-		year: "",
-		publisher: "",
+		bookDetails: "",
 	};
 
 	bookObject.barcode = barcode.toString();
@@ -44,38 +43,44 @@ export async function BookDataParseOL(
 		.map((author: any) => author.name)
 		.join(", ");
 
+	let bookDetailsArray = [];
+
 	if (typeof bookData.publish_date == "object") {
 		if (Number(bookData.publish_date[0])) {
-			Number(bookData.publish_date[0]) < 3000
-				? (bookObject.year = bookData.publish_date[0].replaceAll(" ", ""))
-				: (bookObject.year = "n/a");
+			if (Number(bookData.publish_date[0]) < 3000) {
+				bookDetailsArray.push(bookData.publish_date[0].replaceAll(" ", ""));
+			}
 		} else {
-			Number(bookData.publish_date[0].split(",")[0])
-				? (bookObject.year = bookData.publish_date
-						.split(",")[0]
-						.replaceAll(" ", ""))
-				: (bookObject.year = "n/a");
+			if (Number(bookData.publish_date[0].split(",")[0])) {
+				bookDetailsArray.push(
+					bookData.publish_date.split(",")[0].replaceAll(" ", "")
+				);
+			}
 		}
 	} else {
 		if (Number(bookData.publish_date)) {
-			Number(bookData.publish_date) < 3000
-				? (bookObject.year = bookData.publish_date.replaceAll(" ", ""))
-				: (bookObject.year = "n/a");
+			if (Number(bookData.publish_date) < 3000) {
+				bookDetailsArray.push(bookData.publish_date.replaceAll(" ", ""));
+			}
 		} else {
-			Number(bookData.publish_date.split(",")[0])
-				? (bookObject.year = bookData.publish_date
-						.split(",")[0]
-						.replaceAll(" ", ""))
-				: (bookObject.year = "n/a");
+			if (Number(bookData.publish_date.split(",")[0])) {
+				bookDetailsArray.push(
+					bookData.publish_date.split(",")[0].replaceAll(" ", "")
+				);
+			}
 		}
 	}
 
 	if (bookData.publishers) {
-		bookObject.publisher = bookData.publishers
-			.map((publisher: any) => publisher.name)
-			.join(", ");
+		bookDetailsArray.push(
+			bookData.publishers.map((publisher: any) => publisher.name).join(", ")
+		);
+	}
+
+	if (!bookDetailsArray.length) {
+		bookObject.bookDetails = "n/a";
 	} else {
-		bookObject.publisher = "n/a";
+		bookObject.bookDetails = bookDetailsArray.join(", ");
 	}
 
 	return bookObject;
@@ -98,43 +103,58 @@ export async function BookDataParseGoogleAPI(
 		isbn: "",
 		title: "",
 		author: "",
-		year: "",
-		publisher: "",
+		bookDetails: "",
 	};
 
 	bookObject.barcode = barcode.toString();
 
 	if (
 		bookData.industryIdentifiers.filter(
-			(identifier: any) => identifier.type == "ISBN_13"
+			(identifier: any) => identifier.type == "ISBN_10"
 		).length
 	) {
 		bookObject.isbn = bookData.industryIdentifiers.filter(
-			(identifier: any) => identifier.type == "ISBN_13"
+			(identifier: any) => identifier.type == "ISBN_10"
 		)[0].identifier;
 	} else {
-		bookObject.isbn = barcode.toString();
+		if (
+			bookData.industryIdentifiers.filter(
+				(identifier: any) => identifier.type == "ISBN_13"
+			).length
+		) {
+			bookObject.isbn = bookData.industryIdentifiers.filter(
+				(identifier: any) => identifier.type == "ISBN_13"
+			)[0].identifier;
+		} else {
+			bookObject.isbn = barcode.toString();
+		}
 	}
 
 	bookObject.title = await normalizeAccents(bookData.title);
 	bookObject.author = bookData.authors.map((author: any) => author).join(", ");
 
+	let bookDetailsArray = [];
+
 	if (Number(bookData.publishedDate)) {
-		Number(bookData.publishedDate) < 3000
-			? (bookObject.year = bookData.publishedDate.replaceAll(" ", ""))
-			: (bookObject.year = "n/a");
+		if (Number(bookData.publishedDate) < 3000) {
+			bookDetailsArray.push(bookData.publishedDate.replaceAll(" ", ""));
+		}
 	} else {
-		Number(bookData.publishedDate.split("-")[0])
-			? (bookObject.year = bookData.publishedDate
-					.split("-")[0]
-					.replaceAll(" ", ""))
-			: (bookObject.year = "n/a");
+		if (Number(bookData.publishedDate.split("-")[0])) {
+			bookDetailsArray.push(
+				bookData.publishedDate.split("-")[0].replaceAll(" ", "")
+			);
+		}
 	}
 
 	if (bookData.publisher) {
-		bookObject.publisher = bookData.publisher;
+		bookDetailsArray.push(bookData.publisher);
+	}
+
+	if (bookDetailsArray.length) {
+		bookObject.bookDetails = bookDetailsArray.join(", ");
 	} else {
-		bookObject.publisher = "n/a";
+		bookObject.bookDetails = "n/a";
 	}
 
 	return bookObject;
@@ -153,16 +173,14 @@ export async function ManualBookDataParse(
 		isbn: "",
 		title: "",
 		author: "",
-		year: "",
-		publisher: "",
+		bookDetails: "",
 	};
 
 	bookObject.barcode = data.barcode;
 	bookObject.isbn = data.isbn;
 	bookObject.title = data.title;
 	bookObject.author = data.author;
-	bookObject.year = data.year;
-	bookObject.publisher = data.publisher;
+	bookObject.bookDetails = data.bookDetails;
 
 	return bookObject;
 }
