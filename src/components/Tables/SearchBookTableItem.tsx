@@ -25,8 +25,7 @@ export default function BookTableItem({
 	}
 
 	const date = new Date(createdAt);
-	const formattedDate =
-		date.getUTCDate() + "/" + date.getUTCMonth() + "/" + date.getFullYear();
+	const formattedDate = date.toLocaleDateString("en-AU");
 	return (
 		<Tbody
 			key={id}

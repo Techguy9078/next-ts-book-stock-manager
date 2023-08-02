@@ -77,11 +77,7 @@ export async function BookDataParseOL(
 		);
 	}
 
-	if (!bookDetailsArray.length) {
-		bookObject.bookDetails = "n/a";
-	} else {
-		bookObject.bookDetails = bookDetailsArray.join(", ");
-	}
+	bookObject.bookDetails = bookDetailsArray.join(", ") || "n/a";
 
 	return bookObject;
 }
@@ -151,11 +147,7 @@ export async function BookDataParseGoogleAPI(
 		bookDetailsArray.push(bookData.publisher);
 	}
 
-	if (bookDetailsArray.length) {
-		bookObject.bookDetails = bookDetailsArray.join(", ");
-	} else {
-		bookObject.bookDetails = "n/a";
-	}
+	bookObject.bookDetails = bookDetailsArray.join(", ") || "n/a";
 
 	return bookObject;
 }

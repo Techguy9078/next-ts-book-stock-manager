@@ -72,6 +72,9 @@ export default function DatePicker({
 							},
 						},
 					}}
+					configs={{
+						dateFormat: "dd/MM/yyyy",
+					}}
 					selectedDates={selectedDates}
 					onDateChange={setDateRange}
 				/>

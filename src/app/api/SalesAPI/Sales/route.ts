@@ -35,11 +35,18 @@ export async function GET(request: Request) {
 		);
 	}
 
-	function ParseDate(date: string) {
-		const newDate = new Date(date);
-		return newDate.toISOString()
+	function ParseStartDate(date: string) {
+		let newStartDate = new Date(date);
+		newStartDate.setHours(1);
+		return newStartDate.toISOString();
 	}
-	
+
+	function ParseEndDate(date: string) {
+		let newEndDate = new Date(date);
+		newEndDate.setHours(23);
+		return newEndDate.toISOString();
+	}
+
 	// On how to do the date selection...
 	//
 	// LTE: Less Than or Equal to
@@ -57,8 +64,8 @@ export async function GET(request: Request) {
 		const salesResults = await prisma.sales.findMany({
 			where: {
 				createdAt: {
-					gte: ParseDate(startDate),
-					lte: ParseDate(endDate),
+					gte: ParseStartDate(startDate),
+					lte: ParseEndDate(endDate),
 				},
 			},
 		});

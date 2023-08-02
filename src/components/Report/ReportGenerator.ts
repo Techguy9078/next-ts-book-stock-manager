@@ -17,12 +17,12 @@ export function createSalesReport({
 			book.isbn,
 			book.title,
 			book.author,
-			new Date(book.createdAt).toLocaleDateString(),
+			new Date(book.createdAt).toLocaleDateString("en-AU"),
 		];
 		TableBody.push(bookData);
 	});
 
-	doc.text("Scanned Off Books", 80, 10);
+	doc.text(`Scanned Off Books`, 80, 10);
 	autoTable(doc, {
 		styles: { fillColor: "#fff", textColor: "#828282", lineColor: "#fff" },
 		headStyles: { fillColor: "#fff", textColor: "#828282", lineColor: "#fff" },
@@ -38,9 +38,9 @@ export function createSalesReport({
 
 	doc.save(
 		`salesreport_${selectedDates[0]
-			.toLocaleDateString()
+			.toLocaleDateString("en-AU")
 			.replaceAll("/", "_")}_to_${selectedDates[1]
-			.toLocaleDateString()
+			.toLocaleDateString("en-AU")
 			.replaceAll("/", "_")}.pdf`
 	);
 }
