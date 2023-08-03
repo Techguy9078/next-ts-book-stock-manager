@@ -86,13 +86,13 @@ export async function GET(request: Request) {
 export async function DELETE(request: Request) {
 	const { searchParams } = new URL(request.url);
 
-	const customerID = searchParams.get("customerID");
+	const id = searchParams.get("id");
 
-	if (customerID) {
+	if (id) {
 		try {
 			const deletedCustomer = await prisma.customerBookRequest.delete({
 				where: {
-					customerID: Number(customerID),
+					id: Number(id),
 				},
 			});
 
