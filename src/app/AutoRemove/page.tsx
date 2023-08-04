@@ -6,15 +6,17 @@ import {
 	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { AnySoaRecord } from "dns";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 
+import { createStandaloneToast } from "@chakra-ui/react";
+const { ToastContainer, toast } = createStandaloneToast();
+
 import CustomDivider from "@/components/Divider/customDivider";
 import ResultCard from "@/components/ResultCard/ResultCard";
-import { BookCountContext } from "../BookCountContext";
 import BookCount from "@/components/BookCount/BookCount";
 import BarcodeForm from "@/components/Forms/BarcodeForm";
 
@@ -25,10 +27,8 @@ const barcodeValidator = z.object({
 type barcodeForm = z.infer<typeof barcodeValidator>;
 
 export default function AutoRemove() {
-	const { currentBookCount, getBookCount } = useContext(BookCountContext);
-	const toast = useToast();
-
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
+	const [refreshBookCount, setRefreshBookCount] = useState<Boolean>(false);
 
 	const { mutate: barcodeSearch, isLoading } = useMutation({
 		mutationFn: async ({ barcode }: barcodeForm) => {
@@ -43,14 +43,14 @@ export default function AutoRemove() {
 			return data as IScannedBookLayout;
 		},
 		onSuccess: async (data) => {
+			await axios.post("/api/SalesAPI/Sales", data);
+
 			await axios.put("/api/SalesAPI/SalesStats", {
 				updateField: "removeBook",
 			});
 
+			setRefreshBookCount(!refreshBookCount);
 			setBookDetails(data);
-			getBookCount(currentBookCount);
-
-			await axios.post("/api/SalesAPI/Sales", data);
 
 			return toast({
 				id: "success",
@@ -101,7 +101,7 @@ export default function AutoRemove() {
 			<VStack spacing={4} align={"left"}>
 				<Text fontSize="2xl">Auto Remove Books</Text>
 				<CustomDivider />
-				<BookCount />
+				<BookCount refreshBookCount={refreshBookCount} />
 				<CustomDivider />
 				<BarcodeForm
 					isLoading={isLoading}

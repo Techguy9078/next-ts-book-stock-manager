@@ -1,10 +1,23 @@
 "use client";
-import { BookCountContext } from "@/app/BookCountContext";
 import { HStack, Text } from "@chakra-ui/react";
-import { useContext } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-export default function BookCount() {
-	const { currentBookCount } = useContext(BookCountContext);
+export default function BookCount({
+	refreshBookCount,
+}: {
+	refreshBookCount: Boolean;
+}) {
+	const [currentBookCount, setCurrentBookCount] = useState<string>("");
+
+	async function getBookCount() {
+		const responseBookCount = await axios.get("/api/BookAPI/BookCount");
+		setCurrentBookCount(responseBookCount.data);
+	}
+
+	useEffect(() => {
+		getBookCount();
+	}, [refreshBookCount]);
 
 	return (
 		<HStack>

@@ -12,7 +12,6 @@ const { ToastContainer, toast } = createStandaloneToast();
 import CustomDivider from "@/components/Divider/customDivider";
 import BookCount from "@/components/BookCount/BookCount";
 
-import { BookCountContext } from "../BookCountContext";
 import BarcodeForm from "@/components/Forms/BarcodeForm";
 import EditableResultCard from "@/components/ResultCard/EditableResultCard";
 
@@ -23,8 +22,8 @@ const barcodeValidator = z.object({
 type barcodeForm = z.infer<typeof barcodeValidator>;
 
 export default function AutoAdd() {
-	const { currentBookCount, getBookCount } = useContext(BookCountContext);
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
+	const [refreshBookCount, setRefreshBookCount] = useState<Boolean>(false);
 
 	const { mutate: barcodeSearch, isLoading } = useMutation({
 		mutationFn: async ({ barcode }: barcodeForm) => {
@@ -53,12 +52,12 @@ export default function AutoAdd() {
 		onSuccess: async (data) => {
 			await axios.post("/api/BookAPI/Book", data);
 
-			getBookCount(currentBookCount);
-			setBookDetails(data);
-
 			await axios.put("/api/SalesAPI/SalesStats", {
 				updateField: "addBook",
 			});
+
+			setRefreshBookCount(!refreshBookCount);
+			setBookDetails(data);
 
 			return toast({
 				position: "top-right",
@@ -107,7 +106,7 @@ export default function AutoAdd() {
 			<VStack spacing={4} align={"left"}>
 				<Text fontSize="2xl">Auto Add Books</Text>
 				<CustomDivider />
-				<BookCount />
+				<BookCount refreshBookCount={refreshBookCount} />
 				<CustomDivider />
 				<BarcodeForm
 					isLoading={isLoading}

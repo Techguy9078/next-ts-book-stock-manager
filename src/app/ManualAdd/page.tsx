@@ -21,16 +21,14 @@ import CustomDivider from "@/components/Divider/customDivider";
 import AddButton from "@/components/Buttons/AddButton";
 import BookCount from "@/components/BookCount/BookCount";
 import { ManualBookDataParse } from "@/components/_helpers/DataParse";
-import { BookCountContext } from "../BookCountContext";
 import { AnySoaRecord } from "dns";
 import { useMutation } from "@tanstack/react-query";
 
 export default function ManualAdd() {
-	const { currentBookCount, getBookCount } = useContext(BookCountContext);
-
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
+	const [refreshBookCount, setRefreshBookCount] = useState<Boolean>(false);
 
-	const { register, handleSubmit } = useForm<IScannedBookLayout>();
+	const { register, reset, handleSubmit } = useForm<IScannedBookLayout>();
 
 	const { mutate: formSubmit, isLoading } = useMutation({
 		mutationFn: async (formData: IScannedBookLayout) => {
@@ -44,8 +42,9 @@ export default function ManualAdd() {
 			return data as IScannedBookLayout;
 		},
 		onSuccess: async (data) => {
-			getBookCount(currentBookCount);
+			setRefreshBookCount(!refreshBookCount);
 			setBookDetails(data);
+			reset();
 
 			await axios.put("/api/SalesAPI/SalesStats", {
 				updateField: "addBook",
@@ -103,7 +102,7 @@ export default function ManualAdd() {
 			<VStack spacing={4} align={"left"}>
 				<Text fontSize="2xl">Manual Add Books</Text>
 				<CustomDivider />
-				<BookCount />
+				<BookCount refreshBookCount={refreshBookCount} />
 				<CustomDivider />
 				<form onSubmit={handleSubmit((data) => formSubmit(data))}>
 					<FormLabel>
