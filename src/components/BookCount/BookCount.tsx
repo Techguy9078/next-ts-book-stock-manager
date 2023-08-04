@@ -11,7 +11,7 @@ export default function BookCount({
 	const [currentBookCount, setCurrentBookCount] = useState<string>("");
 
 	async function getBookCount() {
-		const responseBookCount = await axios.get("/api/BookAPI/BookCount");
+		const responseBookCount = await axios.post("/api/BookAPI/BookCount");
 		setCurrentBookCount(responseBookCount.data);
 	}
 

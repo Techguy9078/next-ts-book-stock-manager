@@ -56,7 +56,7 @@ export default function AutoAdd() {
 				updateField: "addBook",
 			});
 
-			setRefreshBookCount(!refreshBookCount);
+			setRefreshBookCount(refreshBookCount == true ? false : true);
 			setBookDetails(data);
 
 			return toast({

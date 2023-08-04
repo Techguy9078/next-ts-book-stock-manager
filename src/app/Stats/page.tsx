@@ -27,7 +27,7 @@ export default function Stats() {
 		setRefreshBookCount(!refreshBookCount);
 		getBookCount();
 		getSalesData();
-	});
+	}, []);
 
 	return (
 		<Box
