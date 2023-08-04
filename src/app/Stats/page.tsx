@@ -19,7 +19,7 @@ export default function Stats() {
 	}
 
 	useEffect(() => {
-		getBookCount(currentBookCount);
+		getBookCount();
 		getSalesData();
 	}, [getBookCount, currentBookCount]);
 
