@@ -7,26 +7,37 @@ import {
 	Divider,
 	HStack,
 } from "@chakra-ui/react";
+import CustomEditableInput from "../Inputs/CustomEditableInput";
 
 function ResultItem({
 	item,
 	cardBodyName,
 }: {
-	item: string | null;
+	item: string;
 	cardBodyName: string;
 }) {
 	if (item != "") {
 		return (
 			<HStack>
 				<Text fontWeight={700}>{cardBodyName}:</Text>
-				<Text fontWeight={600}>{item}</Text>
+				<CustomEditableInput fontSize="lg" fontWeight={700} item={item} />
 			</HStack>
 		);
 	}
-	return;
+	return (
+		<HStack>
+			<Text fontWeight={700}>{cardBodyName}:</Text>
+			<CustomEditableInput
+				fontSize="md"
+				fontWeight={700}
+				item={"Edit This..."}
+			/>
+		</HStack>
+	);
 }
 
-export default function ResultCard({
+export default function EditableResultCard({
+	id,
 	title,
 	barcode,
 	isbn,
@@ -45,9 +56,17 @@ export default function ResultCard({
 			zIndex={1}
 		>
 			<Stack align={"Left"}>
-				<Heading fontSize={"2xl"} fontWeight={600}>
-					{title && title}
-				</Heading>
+				{title && (
+					<CustomEditableInput fontSize="2xl" fontWeight={600} item={title} />
+				)}
+				{!title && (
+					<CustomEditableInput
+						fontSize="2xl"
+						fontWeight={600}
+						item={"Enter a title..."}
+					/>
+				)}
+
 				<Divider borderColor={useColorModeValue("black", "white")} />
 				<Stack>
 					<ResultItem cardBodyName={"Author"} item={author} />

@@ -89,6 +89,10 @@ export async function GET(request: Request) {
 	}
 }
 
+export async function PATCH(request: Request) {
+	
+}
+
 export async function DELETE(request: Request) {
 	const { searchParams } = new URL(request.url);
 
