@@ -9,7 +9,7 @@ import StatItem from "@/components/StatItem/StatItem";
 import BookCount from "@/components/BookCount/BookCount";
 
 export default function Stats() {
-	const [refreshBookCount, setRefreshBookCount] = useState<Boolean>(false);
+	const [refreshBookCount, setRefreshBookCount] = useState<boolean>(false);
 	const [salesStatsData, setSalesStatsData] = useState<Array<SalesStats>>();
 	const [bookCount, setBookCount] = useState<string>("");
 

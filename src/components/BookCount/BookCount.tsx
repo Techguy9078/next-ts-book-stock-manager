@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 export default function BookCount({
 	refreshBookCount,
 }: {
-	refreshBookCount: Boolean;
+	refreshBookCount: boolean;
 }) {
 	const [currentBookCount, setCurrentBookCount] = useState<string>("");
 

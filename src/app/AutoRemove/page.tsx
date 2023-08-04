@@ -28,7 +28,7 @@ type barcodeForm = z.infer<typeof barcodeValidator>;
 
 export default function AutoRemove() {
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
-	const [refreshBookCount, setRefreshBookCount] = useState<Boolean>(false);
+	const [refreshBookCount, setRefreshBookCount] = useState<boolean>(false);
 
 	const { mutate: barcodeSearch, isLoading } = useMutation({
 		mutationFn: async ({ barcode }: barcodeForm) => {
