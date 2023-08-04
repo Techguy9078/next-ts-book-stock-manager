@@ -23,7 +23,7 @@ type barcodeForm = z.infer<typeof barcodeValidator>;
 
 export default function AutoAdd() {
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
-	const [refreshBookCount, setRefreshBookCount] = useState<Boolean>(false);
+	const [refreshBookCount, setRefreshBookCount] = useState<boolean>(false);
 
 	const { mutate: barcodeSearch, isLoading } = useMutation({
 		mutationFn: async ({ barcode }: barcodeForm) => {
@@ -56,7 +56,7 @@ export default function AutoAdd() {
 				updateField: "addBook",
 			});
 
-			setRefreshBookCount(!refreshBookCount);
+			setRefreshBookCount(refreshBookCount == true ? false : true);
 			setBookDetails(data);
 
 			return toast({

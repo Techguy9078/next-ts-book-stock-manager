@@ -26,7 +26,7 @@ import { useMutation } from "@tanstack/react-query";
 
 export default function ManualAdd() {
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
-	const [refreshBookCount, setRefreshBookCount] = useState<Boolean>(false);
+	const [refreshBookCount, setRefreshBookCount] = useState<boolean>(false);
 
 	const { register, reset, handleSubmit } = useForm<IScannedBookLayout>();
 
