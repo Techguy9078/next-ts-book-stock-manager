@@ -23,9 +23,6 @@ export default function Search() {
 
 	function handleRefetch() {
 		setRefetchValue(!refetchValue);
-		setTimeout(() => {
-			setRefetchValue(!refetchValue);
-		}, 100);
 	}
 
 	return (
@@ -38,7 +35,7 @@ export default function Search() {
 			<VStack spacing={4} align={"left"} pb={4}>
 				<Text fontSize="2xl">Search for Books</Text>
 				<CustomDivider />
-				<BookCount />
+				<BookCount refreshBookCount={refetchValue} />
 				<CustomDivider />
 
 				<SearchForm
