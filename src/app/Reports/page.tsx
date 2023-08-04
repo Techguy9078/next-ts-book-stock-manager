@@ -10,7 +10,6 @@ import ReportGenerateButton from "@/components/Buttons/ReportGenerateButton";
 
 export default function Reports() {
 	const [selectedDates, setSelectedDates] = useState<Array<Date>>([]);
-
 	const [reportData, setReportData] = useState<Array<Sales>>();
 
 	useEffect(() => {

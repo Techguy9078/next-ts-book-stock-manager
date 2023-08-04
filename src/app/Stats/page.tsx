@@ -1,27 +1,33 @@
 "use client";
 import { Box, Text, VStack, useColorModeValue } from "@chakra-ui/react";
-import { Suspense, useContext, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import CustomDivider from "@/components/Divider/customDivider";
 import axios from "axios";
 import { SalesStats } from "@prisma/client";
 import StatItem from "@/components/StatItem/StatItem";
 import BookCount from "@/components/BookCount/BookCount";
-import { BookCountContext } from "../BookCountContext";
 
 export default function Stats() {
-	const { currentBookCount, getBookCount } = useContext(BookCountContext);
-
+	const [refreshBookCount, setRefreshBookCount] = useState<Boolean>(false);
 	const [salesStatsData, setSalesStatsData] = useState<Array<SalesStats>>();
+	const [bookCount, setBookCount] = useState<string>("");
+
 	async function getSalesData() {
 		const responseSalesStatsData = await axios.get("/api/SalesAPI/SalesStats");
 		setSalesStatsData(responseSalesStatsData.data);
 	}
 
+	async function getBookCount() {
+		const responseBookCount = await axios.get("/api/BookAPI/BookCount");
+		setBookCount(responseBookCount.data);
+	}
+
 	useEffect(() => {
+		setRefreshBookCount(!refreshBookCount);
 		getBookCount();
 		getSalesData();
-	}, [getBookCount, currentBookCount]);
+	});
 
 	return (
 		<Box
@@ -32,13 +38,13 @@ export default function Stats() {
 			<VStack spacing={4} align={"left"} pb={4}>
 				<Text fontSize="2xl">Stats</Text>
 				<CustomDivider />
-				<BookCount />
+				<BookCount refreshBookCount={refreshBookCount} />
 				<CustomDivider />
 				<VStack overflowY={"scroll"} align={"flex-start"} h={"70vh"}>
 					{salesStatsData?.length &&
 						salesStatsData.map((data) => (
 							<Suspense key={data.date}>
-								<StatItem data={data} bookCount={currentBookCount} />
+								<StatItem data={data} bookCount={bookCount} />
 							</Suspense>
 						))}
 				</VStack>
