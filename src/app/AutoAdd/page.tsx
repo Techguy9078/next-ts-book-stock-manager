@@ -10,10 +10,10 @@ import { createStandaloneToast } from "@chakra-ui/react";
 const { ToastContainer, toast } = createStandaloneToast();
 
 import CustomDivider from "@/components/Divider/customDivider";
-import ResultCard from "@/components/ResultCard/ResultCard";
 import BookCount from "@/components/BookCount/BookCount";
 
 import BarcodeForm from "@/components/Forms/BarcodeForm";
+import EditableResultCard from "@/components/ResultCard/EditableResultCard";
 import { BookCountContext } from "../BookCountContext";
 
 const barcodeValidator = z.object({
@@ -115,7 +115,7 @@ export default function AutoAdd() {
 					formType="Add"
 				/>
 
-				{bookDetails && <ResultCard {...bookDetails} />}
+				{bookDetails && <EditableResultCard {...bookDetails} />}
 			</VStack>
 
 			{/* Use For Images */}

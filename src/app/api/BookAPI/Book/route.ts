@@ -5,9 +5,11 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
 	const req = await request.json();
 	let { barcode, isbn, title, author, bookDetails } = req;
+
 	if (typeof barcode == "number") {
 		barcode = barcode.toString();
 	}
+
 	try {
 		const combinedBookData = await prisma.scannedBook.create({
 			data: {
@@ -87,6 +89,104 @@ export async function GET(request: Request) {
 			{ status: 500 }
 		);
 	}
+}
+
+export async function PATCH(request: Request) {
+	const req = await request.json();
+	let { barcode, field, updateData } = req;
+
+	if (!barcode) {
+		return NextResponse.json(
+			{ error: "Unfortunately no barcode was provided..." },
+			{ status: 400 }
+		);
+	}
+
+	if (typeof barcode == "number") {
+		barcode = barcode.toString();
+	}
+
+	if (field == "title") {
+		try {
+			const bookResults = await prisma.storedBooks.update({
+				where: {
+					barcode: barcode.toString(),
+				},
+				data: {
+					title: updateData,
+				},
+			});
+
+			return NextResponse.json(bookResults);
+		} catch (error: any) {
+			return NextResponse.json(
+				{ error: "Failed Finding Local Book..." },
+				{ status: 500 }
+			);
+		}
+	}
+	if (field == "author") {
+		try {
+			const bookResults = await prisma.storedBooks.update({
+				where: {
+					barcode: barcode.toString(),
+				},
+				data: {
+					author: updateData,
+				},
+			});
+
+			return NextResponse.json(bookResults);
+		} catch (error: any) {
+			return NextResponse.json(
+				{ error: "Failed Finding Local Book..." },
+				{ status: 500 }
+			);
+		}
+	}
+	if (field == "bookDetails") {
+		try {
+			const bookResults = await prisma.storedBooks.update({
+				where: {
+					barcode: barcode.toString(),
+				},
+				data: {
+					bookDetails: updateData,
+				},
+			});
+
+			return NextResponse.json(bookResults);
+		} catch (error: any) {
+			return NextResponse.json(
+				{ error: "Failed Finding Local Book..." },
+				{ status: 500 }
+			);
+		}
+	}
+	if (field == "isbn") {
+		try {
+			const bookResults = await prisma.storedBooks.update({
+				where: {
+					barcode: barcode.toString(),
+				},
+				data: {
+					isbn: updateData,
+				},
+			});
+
+			return NextResponse.json(bookResults);
+		} catch (error: any) {
+			return NextResponse.json(
+				{ error: "Failed Finding Local Book..." },
+				{ status: 500 }
+			);
+		}
+	}
+
+	return NextResponse.json(
+		{ error: "I'm a little teapot, cannot handle that field." },
+		{ status: 418 }
+	);
 }
 
 export async function DELETE(request: Request) {
