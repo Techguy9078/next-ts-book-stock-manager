@@ -7,7 +7,6 @@ import {
 	Flex,
 	HStack,
 	IconButton,
-	Input,
 	useEditableControls,
 } from "@chakra-ui/react";
 
@@ -15,10 +14,12 @@ export default function CustomEditableInput({
 	item,
 	fontSize,
 	fontWeight,
+	onSubmit,
 }: {
 	item: string;
 	fontSize: "sm" | "md" | "lg" | "xl" | "2xl";
 	fontWeight: 600 | 700;
+	onSubmit: (nextValue: string) => void;
 }) {
 	function EditableControls() {
 		const {
@@ -58,11 +59,13 @@ export default function CustomEditableInput({
 			defaultValue={item}
 			fontSize={fontSize}
 			fontWeight={fontWeight}
-			isPreviewFocusable={false}
+			isPreviewFocusable={true}
+			selectAllOnFocus={false}
+			onSubmit={onSubmit}
 		>
 			<HStack>
-				<EditablePreview />
-				<Input as={EditableInput} />
+				<EditablePreview px={2} />
+				<EditableInput px={2} />
 				<EditableControls />
 			</HStack>
 		</Editable>

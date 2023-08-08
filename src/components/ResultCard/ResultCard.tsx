@@ -38,7 +38,7 @@ export default function ResultCard({
 			p={5}
 			maxW={"500px"}
 			// w={"full"}
-			bg={useColorModeValue("gray.100", "gray.700")}
+			bg={useColorModeValue("gray.100", "gray.600")}
 			boxShadow={"xl"}
 			rounded={"lg"}
 			pos={"relative"}

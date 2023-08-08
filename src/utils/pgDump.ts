@@ -9,10 +9,24 @@ export default async function PGDUMP(): Promise<Error | "Success!"> {
 	const path = process.env.DATABASE_URL;
 
 	if (!path) return Error("No DATABASE_URL environment variable.");
-	await stdoutData(path);
+	// await stdoutData(path);
+	const thisCSV = await csvOutput(path);
+	console.log(thisCSV);
 	// await stdoutSchema(path);
 
 	return "Success!";
+}
+
+async function csvOutput(path: string) {
+	const { stdout } = await execa(`D:\\Databases\\pgAdmin 4\\runtime\\psql`, [
+		`--dbname=${path}`,
+		"--csv",
+		`--output=./backups/${new Date()
+			.toLocaleDateString()
+			.replaceAll("/", "_")}_data_only.csv`,
+	]);
+
+	return stdout;
 }
 
 async function stdoutData(path: string) {
@@ -20,7 +34,6 @@ async function stdoutData(path: string) {
 		`--dbname=${path}`,
 		//  different formats can be 'plain', 'custom', 'directory', 'tar',
 		`--format=plain`,
-		`--inserts`,
 		`--data-only`,
 		`--quote-all-identifiers`,
 		`--no-acl`,
@@ -28,7 +41,7 @@ async function stdoutData(path: string) {
 		// File to write sql to
 		`--file=./backups/${new Date()
 			.toLocaleDateString()
-			.replaceAll("/", "_")}_data_only.sql`,
+			.replaceAll("/", "_")}_data_only.csv`,
 	]);
 
 	return stdout;
