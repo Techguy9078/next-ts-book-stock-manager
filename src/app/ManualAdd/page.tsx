@@ -23,10 +23,11 @@ import BookCount from "@/components/BookCount/BookCount";
 import { ManualBookDataParse } from "@/components/_helpers/DataParse";
 import { AnySoaRecord } from "dns";
 import { useMutation } from "@tanstack/react-query";
+import { BookCountContext } from "../BookCountContext";
 
 export default function ManualAdd() {
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
-	const [refreshBookCount, setRefreshBookCount] = useState<boolean>(false);
+	const { getBookCount } = useContext(BookCountContext);
 
 	const { register, reset, handleSubmit } = useForm<IScannedBookLayout>();
 
@@ -42,7 +43,7 @@ export default function ManualAdd() {
 			return data as IScannedBookLayout;
 		},
 		onSuccess: async (data) => {
-			setRefreshBookCount(!refreshBookCount);
+			getBookCount(null);
 			setBookDetails(data);
 			reset();
 
@@ -102,7 +103,7 @@ export default function ManualAdd() {
 			<VStack spacing={4} align={"left"}>
 				<Text fontSize="2xl">Manual Add Books</Text>
 				<CustomDivider />
-				<BookCount refreshBookCount={refreshBookCount} />
+				<BookCount />
 				<CustomDivider />
 				<form onSubmit={handleSubmit((data) => formSubmit(data))}>
 					<FormLabel>

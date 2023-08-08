@@ -35,7 +35,7 @@ export default function Search() {
 			<VStack spacing={4} align={"left"} pb={4}>
 				<Text fontSize="2xl">Search for Books</Text>
 				<CustomDivider />
-				<BookCount refreshBookCount={refetchValue} />
+				<BookCount />
 				<CustomDivider />
 
 				<SearchForm

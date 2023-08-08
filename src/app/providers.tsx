@@ -5,6 +5,7 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider } from "@chakra-ui/react";
+import BookCountProvider from "./BookCountContext";
 
 export function Providers({ children }: { children: React.ReactNode }) {
 	const [queryClient] = useState(() => new QueryClient());
@@ -13,7 +14,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 		<CacheProvider>
 			<ChakraProvider>
 				<QueryClientProvider client={queryClient}>
-					{children}
+					<BookCountProvider>{children}</BookCountProvider>
 				</QueryClientProvider>
 			</ChakraProvider>
 		</CacheProvider>
