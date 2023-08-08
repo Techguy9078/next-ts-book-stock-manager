@@ -6,7 +6,7 @@ import {
 	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { AnySoaRecord } from "dns";
 import { z } from "zod";
@@ -19,6 +19,7 @@ import CustomDivider from "@/components/Divider/customDivider";
 import ResultCard from "@/components/ResultCard/ResultCard";
 import BookCount from "@/components/BookCount/BookCount";
 import BarcodeForm from "@/components/Forms/BarcodeForm";
+import { BookCountContext } from "../BookCountContext";
 
 const barcodeValidator = z.object({
 	barcode: z.string().min(1),
@@ -28,7 +29,7 @@ type barcodeForm = z.infer<typeof barcodeValidator>;
 
 export default function AutoRemove() {
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
-	const [refreshBookCount, setRefreshBookCount] = useState<boolean>(false);
+	const { getBookCount } = useContext(BookCountContext);
 
 	const { mutate: barcodeSearch, isLoading } = useMutation({
 		mutationFn: async ({ barcode }: barcodeForm) => {
@@ -49,7 +50,7 @@ export default function AutoRemove() {
 				updateField: "removeBook",
 			});
 
-			setRefreshBookCount(!refreshBookCount);
+			getBookCount(null);
 			setBookDetails(data);
 
 			return toast({
@@ -101,7 +102,7 @@ export default function AutoRemove() {
 			<VStack spacing={4} align={"left"}>
 				<Text fontSize="2xl">Auto Remove Books</Text>
 				<CustomDivider />
-				<BookCount refreshBookCount={refreshBookCount} />
+				<BookCount />
 				<CustomDivider />
 				<BarcodeForm
 					isLoading={isLoading}

@@ -2,7 +2,7 @@
 import { prisma } from "@/db";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function POST() {
 	try {
 		const dateSales = await prisma.salesStats.findMany({
 			take: 10,

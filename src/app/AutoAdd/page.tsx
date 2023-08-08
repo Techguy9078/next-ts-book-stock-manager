@@ -14,6 +14,7 @@ import ResultCard from "@/components/ResultCard/ResultCard";
 import BookCount from "@/components/BookCount/BookCount";
 
 import BarcodeForm from "@/components/Forms/BarcodeForm";
+import { BookCountContext } from "../BookCountContext";
 
 const barcodeValidator = z.object({
 	barcode: z.string().min(1),
@@ -23,7 +24,7 @@ type barcodeForm = z.infer<typeof barcodeValidator>;
 
 export default function AutoAdd() {
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
-	const [refreshBookCount, setRefreshBookCount] = useState<boolean>(false);
+	const { getBookCount } = useContext(BookCountContext);
 
 	const { mutate: barcodeSearch, isLoading } = useMutation({
 		mutationFn: async ({ barcode }: barcodeForm) => {
@@ -56,7 +57,7 @@ export default function AutoAdd() {
 				updateField: "addBook",
 			});
 
-			setRefreshBookCount(refreshBookCount == true ? false : true);
+			getBookCount(null);
 			setBookDetails(data);
 
 			return toast({
@@ -106,7 +107,7 @@ export default function AutoAdd() {
 			<VStack spacing={4} align={"left"}>
 				<Text fontSize="2xl">Auto Add Books</Text>
 				<CustomDivider />
-				<BookCount refreshBookCount={refreshBookCount} />
+				<BookCount />
 				<CustomDivider />
 				<BarcodeForm
 					isLoading={isLoading}
