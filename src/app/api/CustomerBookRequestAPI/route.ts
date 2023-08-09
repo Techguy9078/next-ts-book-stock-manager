@@ -31,56 +31,91 @@ export async function POST(request: Request) {
 // Search Customer Requests
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
-	const searchTerm = searchParams.get("search");
+	const fullSearchTerm = searchParams.get("fullSearch");
+	const autoSearchTerm = searchParams.get("autoSearchTerm");
 
-	if (searchTerm === null) {
-		return NextResponse.json(
-			{ error: "No Search Term Entered..." },
-			{ status: 500 }
-		);
+	if (autoSearchTerm) {
+		try {
+			const customerResults = await prisma.customerBookRequest.findMany({
+				where: {
+					OR: [
+						{
+							bookTitle: {
+								contains: autoSearchTerm,
+							},
+						},
+						{
+							bookAuthor: {
+								contains: autoSearchTerm,
+							},
+						},
+						{
+							bookISBN: {
+								contains: autoSearchTerm,
+							},
+						},
+					],
+				},
+				orderBy: { createdAt: "desc" },
+			});
+
+			return NextResponse.json(customerResults);
+		} catch (error: any) {
+			return NextResponse.json(
+				{ error: "Failed Finding Customer Request by Search..." },
+				{ status: 500 }
+			);
+		}
 	}
 
-	try {
-		const customerResults = await prisma.customerBookRequest.findMany({
-			where: {
-				OR: [
-					{
-						customerName: {
-							contains: searchTerm,
+	if (fullSearchTerm) {
+		try {
+			const customerResults = await prisma.customerBookRequest.findMany({
+				where: {
+					OR: [
+						{
+							customerName: {
+								contains: fullSearchTerm,
+							},
 						},
-					},
-					{
-						customerPhoneNumber: {
-							contains: searchTerm,
+						{
+							customerPhoneNumber: {
+								contains: fullSearchTerm,
+							},
 						},
-					},
-					{
-						bookTitle: {
-							contains: searchTerm,
+						{
+							bookTitle: {
+								contains: fullSearchTerm,
+							},
 						},
-					},
-					{
-						bookAuthor: {
-							contains: searchTerm,
+						{
+							bookAuthor: {
+								contains: fullSearchTerm,
+							},
 						},
-					},
-					{
-						bookISBN: {
-							contains: searchTerm,
+						{
+							bookISBN: {
+								contains: fullSearchTerm,
+							},
 						},
-					},
-				],
-			},
-			orderBy: { createdAt: "desc" },
-		});
+					],
+				},
+				orderBy: { createdAt: "desc" },
+			});
 
-		return NextResponse.json(customerResults);
-	} catch (error: any) {
-		return NextResponse.json(
-			{ error: "Failed Finding Customer Request by Search..." },
-			{ status: 500 }
-		);
+			return NextResponse.json(customerResults);
+		} catch (error: any) {
+			return NextResponse.json(
+				{ error: "Failed Finding Customer Request by Search..." },
+				{ status: 500 }
+			);
+		}
 	}
+
+	return NextResponse.json(
+		{ error: "No Search Term Entered..." },
+		{ status: 500 }
+	);
 }
 
 export async function DELETE(request: Request) {
