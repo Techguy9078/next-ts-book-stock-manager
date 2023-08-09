@@ -28,6 +28,7 @@ export default function AutoAdd() {
 
 	const { mutate: barcodeSearch, isLoading } = useMutation({
 		mutationFn: async ({ barcode }: barcodeForm) => {
+			setBookDetails(undefined);
 			try {
 				const { data } = await axios.get(
 					`/api/BookAPI/APIBookSearch?barcode=${barcode}`
