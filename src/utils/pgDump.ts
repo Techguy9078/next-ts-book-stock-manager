@@ -19,7 +19,7 @@ async function csvOutput(path: string) {
 		`--dbname=${path}`,
 		`--command=SELECT * FROM public."ScannedBook"`,
 		"--csv",
-		`--output=./backups/${new Date()
+		`--output=%UserProfile%/Desktop/backups/${new Date()
 			.toLocaleDateString()
 			.replaceAll("/", "_")}_backup.csv`,
 	]);

@@ -1,5 +1,4 @@
 "use client";
-import PGDUMP from "@/utils/pgDump";
 import { Box, Button, Text, VStack, useColorModeValue } from "@chakra-ui/react";
 
 export default function Admin() {
@@ -11,7 +10,14 @@ export default function Admin() {
 		>
 			<VStack spacing={4} align={"left"} pb={4}>
 				<Text fontSize="2xl">Admin Functions</Text>
-				<Button onClick={() => PGDUMP()}>Export Database</Button>
+				<Button
+					bgColor={"green.200"}
+					onClick={() => {
+						import("@/utils/pgDump").then((module: any) => module.default());
+					}}
+				>
+					Export Database
+				</Button>
 			</VStack>
 		</Box>
 	);
