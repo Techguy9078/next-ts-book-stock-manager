@@ -20,7 +20,7 @@ export default function Reports() {
 			if (!selectedDates) return;
 			try {
 				let salesResults = await axios.get(
-					`/api/SalesAPI/Sales?startDate=${selectedDates[0].toLocaleDateString()}&endDate=${selectedDates[1].toLocaleDateString()}`,
+					`/api/SalesAPI/Sales?startDate=${selectedDates[0].toString()}&endDate=${selectedDates[1].toString()}`,
 					{
 						signal: signal,
 					}
