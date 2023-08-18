@@ -38,6 +38,7 @@ export default function Reports() {
 	}, [selectedDates]);
 
 	function setDateRange(date: []) {
+		setReportData(undefined);
 		setSelectedDates(date);
 	}
 
