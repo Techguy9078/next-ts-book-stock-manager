@@ -5,6 +5,7 @@ import { execa } from "execa";
  * Dumps all postgresql database to .csv file in ./backups/
  * @returns Success or returns Error
  */
+
 export default async function PGDUMP(): Promise<Error | "Success!"> {
 	const path = process.env.DATABASE_URL;
 
@@ -15,11 +16,11 @@ export default async function PGDUMP(): Promise<Error | "Success!"> {
 }
 
 async function csvOutput(path: string) {
-	const { stdout } = await execa(`D:\\Databases\\pgAdmin 4\\runtime\\psql`, [
+	const { stdout } = await execa(`${process.env.PGADMIN_PATH}`, [
 		`--dbname=${path}`,
 		`--command=SELECT * FROM public."ScannedBook"`,
 		"--csv",
-		`--output=%UserProfile%/Desktop/backups/${new Date()
+		`--output=${process.env.BACKUP_PATH}${new Date()
 			.toLocaleDateString()
 			.replaceAll("/", "_")}_backup.csv`,
 	]);
