@@ -44,6 +44,17 @@ export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
 	const searchTerm = searchParams.get("search");
 
+	let oldest = searchParams.get("oldest")?.toString();
+
+	if (oldest) {
+		const bookResults = await prisma.scannedBook.findMany({
+			take: Number(oldest),
+			orderBy: { createdAt: "asc" },
+		});
+
+		return NextResponse.json(bookResults);
+	}
+
 	if (searchTerm === null) {
 		return NextResponse.json(
 			{ error: "No Search Term Entered..." },

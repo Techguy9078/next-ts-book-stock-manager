@@ -58,8 +58,19 @@ export function createSalesReport({
 		TableBody.push(bookData);
 	});
 
-	doc.text(`Scanned Off Books`, 80, 10);
+	doc.text(`Scanned Off Books`, 100, 10, { align: "center" });
+	doc
+		.setFontSize(10)
+		.text(
+			`${selectedDates[0].toLocaleDateString(
+				"en-AU"
+			)} - ${selectedDates[1].toLocaleDateString("en-AU")}`,
+			100,
+			14,
+			{ align: "center" }
+		);
 	autoTable(doc, {
+		margin: { top: 18 },
 		styles: { fillColor: "#fff", textColor: "#828282", lineColor: "#fff" },
 		headStyles: { fillColor: "#fff", textColor: "#828282", lineColor: "#fff" },
 		bodyStyles: { fillColor: "#fff", textColor: "#828282", lineColor: "#fff" },
@@ -72,13 +83,8 @@ export function createSalesReport({
 		body: TableBody,
 	});
 
-	doc.save(
-		`salesreport_${selectedDates[0]
-			.toLocaleDateString("en-AU")
-			.replaceAll("/", "_")}_to_${selectedDates[1]
-			.toLocaleDateString("en-AU")
-			.replaceAll("/", "_")}.pdf`
-	);
+	doc.autoPrint();
+	doc.output("dataurlnewwindow");
 }
 
 export function createCustomerRequestsReport({
@@ -126,11 +132,6 @@ export function createCustomerRequestsReport({
 		body: TableBody,
 	});
 
-	doc.save(
-		`customer_requests_report_${selectedDates[0]
-			.toLocaleDateString()
-			.replaceAll("/", "_")}_to_${selectedDates[1]
-			.toLocaleDateString()
-			.replaceAll("/", "_")}.pdf`
-	);
+	doc.autoPrint();
+	doc.output("dataurlnewwindow");
 }

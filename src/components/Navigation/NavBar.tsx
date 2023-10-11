@@ -97,6 +97,11 @@ const Links = [
 		href: "Admin",
 		color: { light: "purple.600", dark: "purple.500" },
 	},
+	{
+		name: "Oldest",
+		href: "Oldest",
+		color: { light: "yellow.800", dark: "yellow.700" },
+	},
 ];
 
 export default function NavBar({ children }: { children: ReactNode }) {
