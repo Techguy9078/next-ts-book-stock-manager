@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import {
 	Box,
 	Flex,
@@ -105,6 +105,12 @@ export default function NavBar({ children }: { children: ReactNode }) {
 
 	const { colorMode, toggleColorMode } = useColorMode();
 	const { isOpen, onOpen, onClose } = useDisclosure();
+
+	useEffect(() => {
+		if (isOpen) {
+			onClose();
+		}
+	}, [pathname]);
 
 	return (
 		<Box
