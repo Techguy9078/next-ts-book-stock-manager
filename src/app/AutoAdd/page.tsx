@@ -6,8 +6,7 @@ import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { AnySoaRecord } from "dns";
 
-import { createStandaloneToast } from "@chakra-ui/react";
-const { ToastContainer, toast } = createStandaloneToast();
+import { Toaster, toast } from "sonner";
 
 import CustomDivider from "@/components/Divider/customDivider";
 import BookCount from "@/components/BookCount/BookCount";
@@ -61,11 +60,7 @@ export default function AutoAdd() {
 			getBookCount(null);
 			setBookDetails(data);
 
-			return toast({
-				position: "top-right",
-				status: "success",
-				duration: 3000,
-				title: "Added Book",
+			return toast.success("Added Book", {
 				description: "Book added successfully!",
 			});
 		},
@@ -75,11 +70,7 @@ export default function AutoAdd() {
 					setBookDetails(undefined);
 					console.log("Could not Find Book Details...");
 
-					return toast({
-						position: "top-right",
-						status: "warning",
-						duration: 3000,
-						title: "Adding Book Failed",
+					return toast.error("Adding Book Failed", {
 						description:
 							"Book details have not been found, please enter manually!",
 					});
@@ -88,11 +79,7 @@ export default function AutoAdd() {
 
 			setBookDetails(undefined);
 
-			return toast({
-				position: "top-right",
-				status: "error",
-				duration: 3000,
-				title: "Something Went Wrong Try Again",
+			return toast.error("Something Went Wrong Try Again", {
 				description:
 					"Try Scanning the book again, if this keeps happening contact the TECH GUY",
 			});
@@ -126,7 +113,7 @@ export default function AutoAdd() {
 					alt=""
 				/>
 			)} */}
-			<ToastContainer />
+			<Toaster richColors position="top-right" expand={true} />
 		</Box>
 	);
 }
