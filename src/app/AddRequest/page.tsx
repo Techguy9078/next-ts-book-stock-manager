@@ -34,9 +34,8 @@ export default function AddRequests() {
 		setIsError(false);
 		setLoading(true);
 		try {
-			throw Error();
 			const parsedData = await CustomerDataParse(data);
-			await axios.post("/api/customerAPI/customer", parsedData);
+			await axios.post("/api/CustomerBookRequestAPI", parsedData);
 			// return ResetValues(parsedData);
 		} catch {
 			ResetValues(undefined);

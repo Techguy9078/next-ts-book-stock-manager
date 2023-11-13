@@ -28,7 +28,7 @@ export default function SearchRequests() {
 			if (search == "") return setCustomers(undefined);
 			try {
 				let customerResults = await axios.get(
-					`/api/CustomerRequestAPI?search=${search}`,
+					`/api/CustomerBookRequestAPI?search=${search}`,
 					{
 						signal: signal,
 					}
