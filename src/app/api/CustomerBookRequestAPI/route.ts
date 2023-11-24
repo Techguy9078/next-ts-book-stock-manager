@@ -5,8 +5,14 @@ import { NextResponse } from "next/server";
 // Add Customer Request
 export async function POST(request: Request) {
 	const req = await request.json();
-	let { customerName, customerPhoneNumber, bookTitle, bookAuthor, bookISBN } =
-		req;
+	let {
+		customerName,
+		customerPhoneNumber,
+		bookTitle,
+		bookAuthor,
+		bookCategory,
+		bookISBN,
+	} = req;
 	try {
 		const customerBookRequest = await prisma.customerBookRequest.create({
 			data: {
@@ -14,6 +20,7 @@ export async function POST(request: Request) {
 				customerPhoneNumber: customerPhoneNumber,
 				bookTitle: bookTitle,
 				bookAuthor: bookAuthor,
+				bookCategory: bookCategory,
 				bookISBN: bookISBN,
 			},
 		});
@@ -35,7 +42,7 @@ export async function GET(request: Request) {
 
 	if (searchTerm === null) {
 		return NextResponse.json(
-			{ error: "No Search Term Entered..." },
+			{ error: "No Search Entered..." },
 			{ status: 500 }
 		);
 	}
