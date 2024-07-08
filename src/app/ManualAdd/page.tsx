@@ -18,7 +18,6 @@ const { ToastContainer, toast } = createStandaloneToast();
 import ResultCard from "@/components/ResultCard/ResultCard";
 import axios, { AxiosError } from "axios";
 import CustomDivider from "@/components/Divider/customDivider";
-import AddButton from "@/components/Buttons/AddButton";
 import BookCount from "@/components/BookCount/BookCount";
 import { ManualBookDataParse } from "@/components/_helpers/DataParse";
 import { AnySoaRecord } from "dns";
