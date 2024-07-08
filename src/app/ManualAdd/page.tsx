@@ -23,6 +23,7 @@ import { ManualBookDataParse } from "@/components/_helpers/DataParse";
 import { AnySoaRecord } from "dns";
 import { useMutation } from "@tanstack/react-query";
 import { BookCountContext } from "../BookCountContext";
+import GenericButton from "@/components/Buttons/GenericButton";
 
 export default function ManualAdd() {
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
@@ -129,7 +130,7 @@ export default function ManualAdd() {
 						</VStack>
 					</FormLabel>
 
-					<AddButton isLoading={isLoading} />
+					<GenericButton isLoading={isLoading} buttonType="Add" />
 				</form>
 
 				{bookDetails && <ResultCard {...bookDetails} />}
