@@ -9,8 +9,7 @@ import { useForm } from "react-hook-form";
 import { ZodErrorMap, z } from "zod";
 import { useEffect } from "react";
 
-import AddButton from "@/components/Buttons/AddButton";
-import RemoveButton from "../Buttons/RemoveButton";
+import GenericButton from "@/components/Buttons/GenericButton";
 
 const customErrorMap: ZodErrorMap = (error, ctx) => {
 	if (error.code == "too_small") {
@@ -85,8 +84,12 @@ export default function BarcodeForm({
 				</FormErrorMessage>
 			</FormControl>
 
-			{formType == "Add" && <AddButton isLoading={isLoading} />}
-			{formType == "Remove" && <RemoveButton isLoading={isLoading} />}
+			{formType == "Add" && (
+				<GenericButton isLoading={isLoading} buttonType={"Add"} />
+			)}
+			{formType == "Remove" && (
+				<GenericButton isLoading={isLoading} buttonType={"Remove"} />
+			)}
 		</form>
 	);
 }

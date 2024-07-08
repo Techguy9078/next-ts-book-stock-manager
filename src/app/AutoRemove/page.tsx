@@ -1,19 +1,12 @@
 "use client";
-import {
-	Box,
-	Text,
-	VStack,
-	useColorModeValue,
-	useToast,
-} from "@chakra-ui/react";
+import { Box, Text, VStack, useColorModeValue } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { AnySoaRecord } from "dns";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 
-import { createStandaloneToast } from "@chakra-ui/react";
-const { ToastContainer, toast } = createStandaloneToast();
+import { Toaster, toast } from "sonner";
 
 import CustomDivider from "@/components/Divider/customDivider";
 import ResultCard from "@/components/ResultCard/ResultCard";
@@ -53,12 +46,7 @@ export default function AutoRemove() {
 			getBookCount(null);
 			setBookDetails(data);
 
-			return toast({
-				id: "success",
-				position: "top-right",
-				status: "success",
-				duration: 3000,
-				title: "Removed Book",
+			return toast.success("Removed Book", {
 				description: "Book removed successfully!",
 			});
 		},
@@ -67,26 +55,16 @@ export default function AutoRemove() {
 				if (err.response?.status === 500) {
 					setBookDetails(undefined);
 
-					return toast({
-						id: "warning",
-						position: "top-right",
-						status: "warning",
-						duration: 3000,
-						title: "Removing Book Failed",
+					return toast.error("Removing Book Failed", {
 						description:
-							"Book details have not been found, please remove manually!",
+							"Book details have not been found, maybe it wasn't scanned on in the first place!",
 					});
 				}
 			}
 
 			setBookDetails(undefined);
 
-			return toast({
-				id: "error",
-				position: "top-right",
-				status: "error",
-				duration: 3000,
-				title: "Something Went Wrong Try Again",
+			return toast.error("Something Went Wrong Try Again", {
 				description:
 					"Try Scanning the book again, if this keeps happening contact the TECH GUY",
 			});
@@ -112,6 +90,12 @@ export default function AutoRemove() {
 
 				{bookDetails && <ResultCard {...bookDetails} />}
 			</VStack>
+			<Toaster
+				className={"h-0"}
+				richColors
+				position="top-right"
+				expand={true}
+			/>
 		</Box>
 	);
 }
