@@ -89,9 +89,9 @@ export default function BookTable({
 					<Th>Author</Th>
 					<Th>Year</Th>
 					<Th>Publisher</Th>
-						<Th>Scanned Date</Th>
+					<Th>Scanned Date</Th>
 					</Tr>
-				</Tfoot> */}
+					</Tfoot> */}
 			</Table>
 		</Box>
 	);
