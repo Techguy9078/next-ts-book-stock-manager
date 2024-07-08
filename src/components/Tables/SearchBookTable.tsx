@@ -35,7 +35,7 @@ export default function BookTable({
 				},
 			}}
 		>
-			<Table size="md" overflow={"scroll"}>
+			<Table size="md">
 				<Thead
 					borderWidth={2}
 					borderColor={useColorModeValue("gray.300", "gray.600")}
