@@ -35,7 +35,7 @@ export default function BookTable({
 				},
 			}}
 		>
-			<Table size="md" overflow={"scroll"}>
+			<Table size="md">
 				<Thead
 					borderWidth={2}
 					borderColor={useColorModeValue("gray.300", "gray.600")}
@@ -89,9 +89,9 @@ export default function BookTable({
 					<Th>Author</Th>
 					<Th>Year</Th>
 					<Th>Publisher</Th>
-						<Th>Scanned Date</Th>
+					<Th>Scanned Date</Th>
 					</Tr>
-				</Tfoot> */}
+					</Tfoot> */}
 			</Table>
 		</Box>
 	);

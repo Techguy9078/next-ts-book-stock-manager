@@ -113,7 +113,12 @@ export default function AutoAdd() {
 					alt=""
 				/>
 			)} */}
-			<Toaster richColors position="top-right" expand={true} />
+			<Toaster
+				className={"h-0"}
+				richColors
+				position="top-right"
+				expand={true}
+			/>
 		</Box>
 	);
 }
