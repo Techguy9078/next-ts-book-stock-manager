@@ -159,10 +159,10 @@ const manualInputs: Array<IManualInputs> = [
 		inputname: "author",
 		placeholder: "Enter Author's Full Name...",
 	},
-	{ inputname: "bookDetails", placeholder: "Enter Any Book Details..." },
+	{ inputname: "genre", placeholder: "Select The Genre..." },
 ];
 
 interface IManualInputs {
-	inputname: "barcode" | "isbn" | "title" | "author" | "bookDetails";
+	inputname: "barcode" | "isbn" | "title" | "author" | "genre";
 	placeholder: string;
 }

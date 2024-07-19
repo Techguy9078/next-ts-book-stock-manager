@@ -52,9 +52,7 @@ export default function BookTable({
 						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>ISBN</Th>
 						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>Title</Th>
 						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>Author</Th>
-						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>
-							Book Details
-						</Th>
+						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>Genre</Th>
 						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>
 							Scanned Date
 						</Th>

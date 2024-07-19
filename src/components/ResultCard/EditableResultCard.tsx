@@ -26,7 +26,7 @@ export default function EditableResultCard({
 	barcode,
 	isbn,
 	author,
-	bookDetails,
+	genre,
 }: IScannedBookLayout) {
 	return (
 		<Box
@@ -56,9 +56,9 @@ export default function EditableResultCard({
 					/>
 					<ResultItem
 						barcode={barcode}
-						cardBodyName={"Book Details"}
-						field={"bookDetails"}
-						item={bookDetails}
+						cardBodyName={"Genre"}
+						field={"genre"}
+						item={genre}
 					/>
 					<ResultItem
 						barcode={barcode}
@@ -87,7 +87,7 @@ function ResultItem({
 	barcode: string;
 	item: string;
 	cardBodyName: string;
-	field: "title" | "author" | "bookDetails" | "isbn";
+	field: "title" | "author" | "genre" | "isbn";
 }) {
 	return (
 		<HStack>

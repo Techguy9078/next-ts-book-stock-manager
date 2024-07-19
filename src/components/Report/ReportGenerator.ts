@@ -105,6 +105,7 @@ export function createCustomerRequestsReport({
 			bookTitle,
 			bookAuthor,
 			bookISBN,
+			bookGenre
 		} = customer;
 
 		const customerData = [
@@ -113,6 +114,7 @@ export function createCustomerRequestsReport({
 			bookTitle,
 			bookAuthor,
 			bookISBN,
+			bookGenre,
 			new Date(createdAt).toLocaleDateString(),
 		];
 		TableBody.push(customerData);
