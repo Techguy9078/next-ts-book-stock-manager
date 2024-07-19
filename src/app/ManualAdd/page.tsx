@@ -6,6 +6,7 @@ import {
 	Input,
 	InputGroup,
 	InputLeftAddon,
+	Select,
 	Text,
 	VStack,
 	useColorModeValue,
@@ -89,7 +90,7 @@ export default function ManualAdd() {
 				duration: 3000,
 				title: "Something Went Wrong Try Again",
 				description:
-					"Try Scanning the book again, if this keeps happening contact the TECH GUY",
+					"Try entering the book again, if this keeps happening contact the TECH GUY",
 			});
 		},
 	});
@@ -127,6 +128,21 @@ export default function ManualAdd() {
 									</InputGroup>
 								</FormControl>
 							))}
+							<FormControl key={"genre"}>
+								<InputGroup>
+									<InputLeftAddon inlineSize={110}>Genre:</InputLeftAddon>
+									<Select
+										borderColor={"gray.400"}
+										color={"gray.400"}
+										{...register("genre", { required: true })}
+										placeholder={"Select The Genre..."}
+									>
+										{genreList.map((genre) => (
+											<option value={genre}>{genre}</option>
+										))}
+									</Select>
+								</InputGroup>
+							</FormControl>
 						</VStack>
 					</FormLabel>
 
@@ -148,6 +164,19 @@ export default function ManualAdd() {
 	);
 }
 
+const genreList: Array<string> = [
+	"General",
+	"Crime",
+	"War / Spy Fiction",
+	"Contempory Romance",
+	"Historical Romance",
+	"Classics",
+	"Art",
+	"Comics",
+	"Childrens",
+	"Childrens Vintage",
+];
+
 const manualInputs: Array<IManualInputs> = [
 	{ inputname: "barcode", placeholder: "Enter Barcode..." },
 	{ inputname: "isbn", placeholder: "Enter ISBN..." },
@@ -159,7 +188,6 @@ const manualInputs: Array<IManualInputs> = [
 		inputname: "author",
 		placeholder: "Enter Author's Full Name...",
 	},
-	{ inputname: "genre", placeholder: "Select The Genre..." },
 ];
 
 interface IManualInputs {

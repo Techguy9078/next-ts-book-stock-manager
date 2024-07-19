@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import CustomEditableInput from "../Inputs/CustomEditableInput";
 import axios from "axios";
+import CustomEditableSelect from "../Inputs/CustomEditableSelect";
 
 function updateBookValue(barcode: string, field: string, updateData: string) {
 	updateValues();
@@ -89,6 +90,19 @@ function ResultItem({
 	cardBodyName: string;
 	field: "title" | "author" | "genre" | "isbn";
 }) {
+	if (field == "genre") {
+		return (
+			<HStack>
+				<Text fontWeight={700}>{cardBodyName}:</Text>
+				<CustomEditableSelect
+					fontSize="lg"
+					fontWeight={600}
+					item={item || `Edit ${field}...`}
+					onSubmit={(data) => updateBookValue(barcode, field, data)}
+				/>
+			</HStack>
+		);
+	}
 	return (
 		<HStack>
 			<Text fontWeight={700}>{cardBodyName}:</Text>
