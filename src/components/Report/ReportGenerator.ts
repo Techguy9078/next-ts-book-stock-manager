@@ -49,7 +49,7 @@ export function createSalesReport({
 	const TableBody: RowInput[] = [];
 
 	Object.keys(reportData).forEach(function (key, index) {
-		TableBody.push([key, "Books"]);
+		TableBody.push([key]);
 		reportData[key].forEach((book: Sales) => {
 			const bookData = [
 				book.isbn,
