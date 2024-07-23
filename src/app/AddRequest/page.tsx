@@ -16,9 +16,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 import axios from "axios";
 import CustomDivider from "@/components/Divider/customDivider";
-import AddButton from "@/components/Buttons/AddButton";
 import { CustomerBookRequest } from "@prisma/client";
 import CustomerDataParse from "@/components/_helpers/CustomerDataParse";
+import GenericButton from "@/components/Buttons/GenericButton";
 
 export default function AddRequests() {
 	const toast = useToast();
@@ -34,9 +34,8 @@ export default function AddRequests() {
 		setIsError(false);
 		setLoading(true);
 		try {
-			throw Error();
 			const parsedData = await CustomerDataParse(data);
-			await axios.post("/api/customerAPI/customer", parsedData);
+			await axios.post("/api/CustomerBookRequestAPI", parsedData);
 			// return ResetValues(parsedData);
 		} catch {
 			ResetValues(undefined);
@@ -88,7 +87,7 @@ export default function AddRequests() {
 						</VStack>
 					</FormLabel>
 
-					<AddButton isLoading={loading} />
+					<GenericButton isLoading={loading} buttonType="Add" />
 				</form>
 
 				{/* {customerDetails && <ResultCard {...customerDetails} />} */}

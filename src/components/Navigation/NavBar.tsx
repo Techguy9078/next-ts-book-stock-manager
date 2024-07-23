@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import {
 	Box,
 	Flex,
@@ -83,20 +83,25 @@ const Links = [
 	// 	color: { light: "#736EA9", dark: "#554E9D" },
 	// },
 	{
+		name: "Reports",
+		href: "Reports",
+		color: { light: "#836a8a", dark: "#65466D" },
+	},
+	{
+		name: "Oldest",
+		href: "Oldest",
+		color: { light: "yellow.800", dark: "yellow.700" },
+	},
+	{
 		name: "Stats",
 		href: "Stats",
 		color: { light: "#ae9991", dark: "#86665a" },
 	},
 	{
-		name: "Reports",
-		href: "Reports",
-		color: { light: "#836a8a", dark: "#65466D" },
+		name: "Admin",
+		href: "Admin",
+		color: { light: "purple.600", dark: "purple.500" },
 	},
-	// {
-	// 	name: "Admin",
-	// 	href: "Admin",
-	// 	color: { light: "purple.600", dark: "purple.500" },
-	// },
 ];
 
 export default function NavBar({ children }: { children: ReactNode }) {
@@ -105,6 +110,12 @@ export default function NavBar({ children }: { children: ReactNode }) {
 
 	const { colorMode, toggleColorMode } = useColorMode();
 	const { isOpen, onOpen, onClose } = useDisclosure();
+
+	useEffect(() => {
+		if (isOpen) {
+			onClose();
+		}
+	}, [pathname]);
 
 	return (
 		<Box

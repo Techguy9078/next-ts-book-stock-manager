@@ -19,7 +19,7 @@ export default function BookTable({
 	return (
 		<Box
 			overflowY={"scroll"}
-			maxHeight={"50vh"}
+			maxHeight={"65vh"}
 			fontSize={{ sm: "sm", md: "md" }}
 			sx={{
 				"::-webkit-scrollbar": {
@@ -35,7 +35,7 @@ export default function BookTable({
 				},
 			}}
 		>
-			<Table size="md">
+			<Table size="md" overflow={"scroll"}>
 				<Thead
 					borderWidth={2}
 					borderColor={useColorModeValue("gray.300", "gray.600")}
@@ -52,7 +52,9 @@ export default function BookTable({
 						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>ISBN</Th>
 						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>Title</Th>
 						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>Author</Th>
-						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>Genre</Th>
+						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>
+							Book Details
+						</Th>
 						<Th bgColor={useColorModeValue("gray.300", "gray.800")}>
 							Scanned Date
 						</Th>
@@ -87,9 +89,9 @@ export default function BookTable({
 					<Th>Author</Th>
 					<Th>Year</Th>
 					<Th>Publisher</Th>
-					<Th>Scanned Date</Th>
+						<Th>Scanned Date</Th>
 					</Tr>
-					</Tfoot> */}
+				</Tfoot> */}
 			</Table>
 		</Box>
 	);

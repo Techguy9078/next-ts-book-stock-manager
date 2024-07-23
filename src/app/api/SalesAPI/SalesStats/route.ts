@@ -5,8 +5,8 @@ import { NextResponse } from "next/server";
 export async function POST() {
 	try {
 		const dateSales = await prisma.salesStats.findMany({
-			take: 10,
-			orderBy: { date: "desc" },
+			take: 31,
+			orderBy: { date: "asc" },
 		});
 
 		return NextResponse.json(dateSales);

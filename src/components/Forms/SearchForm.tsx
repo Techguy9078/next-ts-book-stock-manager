@@ -1,10 +1,16 @@
 import {
+	Button,
 	FormControl,
 	FormErrorMessage,
 	FormHelperText,
 	FormLabel,
+	HStack,
 	Input,
+	InputGroup,
+	InputRightAddon,
+	InputRightElement,
 	Text,
+	useColorModeValue,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { ZodErrorMap, z } from "zod";
@@ -48,6 +54,8 @@ export default function SearchForm({
 		register,
 		watch,
 		formState: { errors },
+		setFocus,
+		resetField,
 	} = useForm<SearchForm>({
 		defaultValues: { search: "" },
 	});
@@ -116,16 +124,39 @@ export default function SearchForm({
 	return (
 		<FormControl isInvalid={errors.search ? true : false}>
 			<FormLabel htmlFor="search">Search for a book...</FormLabel>
-			<Input
-				autoFocus
-				autoComplete="off"
-				borderColor={"gray.400"}
-				id="search"
-				placeholder="Start Searching books..."
-				{...register("search", {
-					required: "You need to enter a search term...",
-				})}
-			/>
+			<InputGroup>
+				<Input
+					autoFocus
+					autoComplete="off"
+					borderColor={"gray.400"}
+					id="search"
+					placeholder="Start Searching books..."
+					{...register("search", {
+						required: "You need to enter a search term...",
+					})}
+				/>
+				<InputRightElement>
+					<Button
+						className={"bg-red-500"}
+						color={"white"}
+						_hover={{
+							bgColor: "red.700",
+							color: useColorModeValue("gray.300", "gray.300"),
+						}}
+						size="md"
+						paddingInline={10}
+						marginLeft={-10}
+						onClick={() => {
+							resetField("search"),
+								setBooksArray(undefined),
+								setFocus("search");
+						}}
+					>
+						Clear
+					</Button>
+				</InputRightElement>
+			</InputGroup>
+
 			<FormHelperText color={"gray.400"}>
 				Only will search once 3 characters have been entered
 			</FormHelperText>

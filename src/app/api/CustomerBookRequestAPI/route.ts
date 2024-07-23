@@ -5,8 +5,15 @@ import { NextResponse } from "next/server";
 // Add Customer Request
 export async function POST(request: Request) {
 	const req = await request.json();
-	let { customerName, customerPhoneNumber, bookTitle, bookAuthor, bookISBN } =
-		req;
+	let {
+		customerName,
+		customerPhoneNumber,
+		bookTitle,
+		bookAuthor,
+		bookGenre,
+		bookISBN,
+	} = req;
+
 	try {
 		const customerBookRequest = await prisma.customerBookRequest.create({
 			data: {
@@ -14,6 +21,7 @@ export async function POST(request: Request) {
 				customerPhoneNumber: customerPhoneNumber,
 				bookTitle: bookTitle,
 				bookAuthor: bookAuthor,
+				bookGenre: bookGenre,
 				bookISBN: bookISBN,
 			},
 		});
@@ -31,91 +39,56 @@ export async function POST(request: Request) {
 // Search Customer Requests
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
-	const fullSearchTerm = searchParams.get("fullSearch");
-	const autoSearchTerm = searchParams.get("autoSearchTerm");
+	const searchTerm = searchParams.get("search");
 
-	if (autoSearchTerm) {
-		try {
-			const customerResults = await prisma.customerBookRequest.findMany({
-				where: {
-					OR: [
-						{
-							bookTitle: {
-								contains: autoSearchTerm,
-							},
-						},
-						{
-							bookAuthor: {
-								contains: autoSearchTerm,
-							},
-						},
-						{
-							bookISBN: {
-								contains: autoSearchTerm,
-							},
-						},
-					],
-				},
-				orderBy: { createdAt: "desc" },
-			});
-
-			return NextResponse.json(customerResults);
-		} catch (error: any) {
-			return NextResponse.json(
-				{ error: "Failed Finding Customer Request by Search..." },
-				{ status: 500 }
-			);
-		}
+	if (searchTerm === null) {
+		return NextResponse.json(
+			{ error: "No Search Entered..." },
+			{ status: 500 }
+		);
 	}
 
-	if (fullSearchTerm) {
-		try {
-			const customerResults = await prisma.customerBookRequest.findMany({
-				where: {
-					OR: [
-						{
-							customerName: {
-								contains: fullSearchTerm,
-							},
+	try {
+		const customerResults = await prisma.customerBookRequest.findMany({
+			where: {
+				OR: [
+					{
+						customerName: {
+							contains: searchTerm,
 						},
-						{
-							customerPhoneNumber: {
-								contains: fullSearchTerm,
-							},
+					},
+					{
+						customerPhoneNumber: {
+							contains: searchTerm,
 						},
-						{
-							bookTitle: {
-								contains: fullSearchTerm,
-							},
+					},
+					{
+						bookTitle: {
+							contains: searchTerm,
 						},
-						{
-							bookAuthor: {
-								contains: fullSearchTerm,
-							},
+					},
+					{
+						bookAuthor: {
+							contains: searchTerm,
 						},
-						{
-							bookISBN: {
-								contains: fullSearchTerm,
-							},
+					},
+					{
+						bookISBN: {
+							contains: searchTerm,
 						},
-					],
-				},
-				orderBy: { createdAt: "desc" },
-			});
+					},
+				],
+			},
+			orderBy: { createdAt: "desc" },
+		});
 
-			return NextResponse.json(customerResults);
-		} catch (error: any) {
-			return NextResponse.json(
-				{ error: "Failed Finding Customer Request by Search..." },
-				{ status: 500 }
-			);
-		}
+		return NextResponse.json(customerResults);
+	} catch (error: any) {
+		return NextResponse.json(
+			{ error: "Failed Finding Customer Request by Search..." },
+			{ status: 500 }
+		);
 	}
-
-	return NextResponse.json(
-		{ error: "No Search Term Entered..." },
-		{ status: 500 }
-	);
 }
 
 export async function DELETE(request: Request) {

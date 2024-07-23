@@ -4,7 +4,7 @@ declare interface IScannedBookLayout {
 	isbn: string;
 	title: string;
 	author: string;
-	bookDetails: string;
+	genre: string;
 	createdAt?: DateTime;
 }
 
@@ -13,7 +13,7 @@ declare interface IStoredBookLayout {
 	isbn: string;
 	title: string;
 	author: string;
-	bookDetails: string;
+	genre: string;
 }
 
 declare interface IBookResultLayout {
@@ -32,5 +32,6 @@ declare interface ICustomerBookRequest {
 	bookTitle: string | null;
 	bookAuthor: string | null;
 	bookISBN: string | null;
+	bookGenre: string | null;
 	comments: string | null;
 }

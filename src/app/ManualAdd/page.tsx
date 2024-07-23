@@ -6,6 +6,7 @@ import {
 	Input,
 	InputGroup,
 	InputLeftAddon,
+	Select,
 	Text,
 	VStack,
 	useColorModeValue,
@@ -18,12 +19,12 @@ const { ToastContainer, toast } = createStandaloneToast();
 import ResultCard from "@/components/ResultCard/ResultCard";
 import axios, { AxiosError } from "axios";
 import CustomDivider from "@/components/Divider/customDivider";
-import AddButton from "@/components/Buttons/AddButton";
 import BookCount from "@/components/BookCount/BookCount";
 import { ManualBookDataParse } from "@/components/_helpers/DataParse";
 import { AnySoaRecord } from "dns";
 import { useMutation } from "@tanstack/react-query";
 import { BookCountContext } from "../BookCountContext";
+import GenericButton from "@/components/Buttons/GenericButton";
 
 export default function ManualAdd() {
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
@@ -89,7 +90,7 @@ export default function ManualAdd() {
 				duration: 3000,
 				title: "Something Went Wrong Try Again",
 				description:
-					"Try Scanning the book again, if this keeps happening contact the TECH GUY",
+					"Try entering the book again, if this keeps happening contact the TECH GUY",
 			});
 		},
 	});
@@ -127,10 +128,25 @@ export default function ManualAdd() {
 									</InputGroup>
 								</FormControl>
 							))}
+							<FormControl key={123}>
+								<InputGroup>
+									<InputLeftAddon inlineSize={110}>Genre:</InputLeftAddon>
+									<Select
+										borderColor={"gray.400"}
+										color={"gray.400"}
+										{...register("genre", { required: true })}
+										placeholder={"Select The Genre..."}
+									>
+										{genreList.map((genre) => (
+											<option value={genre}>{genre}</option>
+										))}
+									</Select>
+								</InputGroup>
+							</FormControl>
 						</VStack>
 					</FormLabel>
 
-					<AddButton isLoading={isLoading} />
+					<GenericButton isLoading={isLoading} buttonType="Add" />
 				</form>
 
 				{bookDetails && <ResultCard {...bookDetails} />}
@@ -148,6 +164,19 @@ export default function ManualAdd() {
 	);
 }
 
+const genreList: Array<string> = [
+	"General",
+	"Crime",
+	"War / Spy Fiction",
+	"Contempory Romance",
+	"Historical Romance",
+	"Classics",
+	"Art",
+	"Comics",
+	"Childrens",
+	"Childrens Vintage",
+];
+
 const manualInputs: Array<IManualInputs> = [
 	{ inputname: "barcode", placeholder: "Enter Barcode..." },
 	{ inputname: "isbn", placeholder: "Enter ISBN..." },
@@ -159,10 +188,9 @@ const manualInputs: Array<IManualInputs> = [
 		inputname: "author",
 		placeholder: "Enter Author's Full Name...",
 	},
-	{ inputname: "bookDetails", placeholder: "Enter Any Book Details..." },
 ];
 
 interface IManualInputs {
-	inputname: "barcode" | "isbn" | "title" | "author" | "bookDetails";
+	inputname: "barcode" | "isbn" | "title" | "author" | "genre";
 	placeholder: string;
 }

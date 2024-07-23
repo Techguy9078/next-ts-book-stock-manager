@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
 	const req = await request.json();
-	let { barcode, isbn, title, author, bookDetails } = req;
+	let { barcode, isbn, title, author, genre } = req;
 
 	if (typeof barcode == "number") {
 		barcode = barcode.toString();
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 							isbn: isbn,
 							title: title,
 							author: author,
-							bookDetails: bookDetails,
+							genre: genre,
 						},
 					},
 				},
@@ -43,6 +43,17 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
 	const searchTerm = searchParams.get("search");
+
+	let oldest = searchParams.get("oldest")?.toString();
+
+	if (oldest) {
+		const bookResults = await prisma.scannedBook.findMany({
+			take: Number(oldest),
+			orderBy: { createdAt: "asc" },
+		});
+
+		return NextResponse.json(bookResults);
+	}
 
 	if (searchTerm === null) {
 		return NextResponse.json(
@@ -144,14 +155,14 @@ export async function PATCH(request: Request) {
 			);
 		}
 	}
-	if (field == "bookDetails") {
+	if (field == "genre") {
 		try {
 			const bookResults = await prisma.storedBooks.update({
 				where: {
 					barcode: barcode.toString(),
 				},
 				data: {
-					bookDetails: updateData,
+					genre: updateData,
 				},
 			});
 
