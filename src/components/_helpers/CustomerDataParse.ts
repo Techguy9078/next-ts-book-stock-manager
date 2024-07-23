@@ -15,6 +15,7 @@ export default async function CustomerDataParse(
 		customerPhoneNumber: "",
 		bookTitle: null,
 		bookAuthor: null,
+		bookGenre: null,
 		bookISBN: null,
 		comments: null,
 	};

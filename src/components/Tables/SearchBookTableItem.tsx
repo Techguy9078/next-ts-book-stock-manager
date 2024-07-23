@@ -12,7 +12,7 @@ export default function BookTableItem({
 }) {
 	const [loading, setLoading] = useState(false);
 
-	const { id, isbn, title, author, bookDetails, createdAt } = book;
+	const { id, isbn, title, author, genre, createdAt } = book;
 
 	async function removeBook() {
 		setLoading(true);
@@ -73,7 +73,7 @@ export default function BookTableItem({
 						},
 					}}
 				>
-					{bookDetails}
+					{genre}
 				</Td>
 				<Td
 					sx={{

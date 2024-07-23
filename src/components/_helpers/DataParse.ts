@@ -19,7 +19,7 @@ export async function BookDataParseOL(
 		isbn: "",
 		title: "",
 		author: "",
-		bookDetails: "",
+		genre: "n/a",
 	};
 
 	bookObject.barcode = barcode.toString();
@@ -43,42 +43,6 @@ export async function BookDataParseOL(
 		.map((author: any) => author.name)
 		.join(", ");
 
-	let bookDetailsArray = [];
-
-	if (typeof bookData.publish_date == "object") {
-		if (Number(bookData.publish_date[0])) {
-			if (Number(bookData.publish_date[0]) < 3000) {
-				bookDetailsArray.push(bookData.publish_date[0].replaceAll(" ", ""));
-			}
-		} else {
-			if (Number(bookData.publish_date[0].split(",")[0])) {
-				bookDetailsArray.push(
-					bookData.publish_date.split(",")[0].replaceAll(" ", "")
-				);
-			}
-		}
-	} else {
-		if (Number(bookData.publish_date)) {
-			if (Number(bookData.publish_date) < 3000) {
-				bookDetailsArray.push(bookData.publish_date.replaceAll(" ", ""));
-			}
-		} else {
-			if (Number(bookData.publish_date.split(",")[0])) {
-				bookDetailsArray.push(
-					bookData.publish_date.split(",")[0].replaceAll(" ", "")
-				);
-			}
-		}
-	}
-
-	if (bookData.publishers) {
-		bookDetailsArray.push(
-			bookData.publishers.map((publisher: any) => publisher.name).join(", ")
-		);
-	}
-
-	bookObject.bookDetails = bookDetailsArray.join(", ") || "n/a";
-
 	return bookObject;
 }
 
@@ -99,7 +63,7 @@ export async function BookDataParseGoogleAPI(
 		isbn: "",
 		title: "",
 		author: "",
-		bookDetails: "",
+		genre: "",
 	};
 
 	bookObject.barcode = barcode.toString();
@@ -129,26 +93,6 @@ export async function BookDataParseGoogleAPI(
 	bookObject.title = await normalizeAccents(bookData.title);
 	bookObject.author = bookData.authors.map((author: any) => author).join(", ");
 
-	let bookDetailsArray = [];
-
-	if (Number(bookData.publishedDate)) {
-		if (Number(bookData.publishedDate) < 3000) {
-			bookDetailsArray.push(bookData.publishedDate.replaceAll(" ", ""));
-		}
-	} else {
-		if (Number(bookData.publishedDate.split("-")[0])) {
-			bookDetailsArray.push(
-				bookData.publishedDate.split("-")[0].replaceAll(" ", "")
-			);
-		}
-	}
-
-	if (bookData.publisher) {
-		bookDetailsArray.push(bookData.publisher);
-	}
-
-	bookObject.bookDetails = bookDetailsArray.join(", ") || "n/a";
-
 	return bookObject;
 }
 
@@ -165,14 +109,14 @@ export async function ManualBookDataParse(
 		isbn: "",
 		title: "",
 		author: "",
-		bookDetails: "",
+		genre: "",
 	};
 
 	bookObject.barcode = data.barcode;
 	bookObject.isbn = data.isbn;
 	bookObject.title = data.title;
 	bookObject.author = data.author;
-	bookObject.bookDetails = data.bookDetails;
+	bookObject.genre = data.genre;
 
 	return bookObject;
 }

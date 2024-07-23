@@ -72,15 +72,25 @@ const Links = [
 		href: "Search",
 		color: { light: "#00a9be", dark: "#008394" },
 	},
+	// {
+	// 	name: "Add Requests",
+	// 	href: "AddRequest",
+	// 	color: { light: "#B66878", dark: "#894553" },
+	// },
+	// {
+	// 	name: "Search Requests",
+	// 	href: "SearchRequests",
+	// 	color: { light: "#736EA9", dark: "#554E9D" },
+	// },
 	{
-		name: "Add Requests",
-		href: "AddRequest",
-		color: { light: "#B66878", dark: "#894553" },
+		name: "Reports",
+		href: "Reports",
+		color: { light: "#836a8a", dark: "#65466D" },
 	},
 	{
-		name: "Search Requests",
-		href: "SearchRequests",
-		color: { light: "#736EA9", dark: "#554E9D" },
+		name: "Oldest",
+		href: "Oldest",
+		color: { light: "yellow.800", dark: "yellow.700" },
 	},
 	{
 		name: "Stats",
@@ -88,19 +98,9 @@ const Links = [
 		color: { light: "#ae9991", dark: "#86665a" },
 	},
 	{
-		name: "Reports",
-		href: "Reports",
-		color: { light: "#836a8a", dark: "#65466D" },
-	},
-	{
 		name: "Admin",
 		href: "Admin",
 		color: { light: "purple.600", dark: "purple.500" },
-	},
-	{
-		name: "Oldest",
-		href: "Oldest",
-		color: { light: "yellow.800", dark: "yellow.700" },
 	},
 ];
 

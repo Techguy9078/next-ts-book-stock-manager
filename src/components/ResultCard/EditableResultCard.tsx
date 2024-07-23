@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import CustomEditableInput from "../Inputs/CustomEditableInput";
 import axios from "axios";
+import CustomEditableSelect from "../Inputs/CustomEditableSelect";
 
 function updateBookValue(barcode: string, field: string, updateData: string) {
 	updateValues();
@@ -26,7 +27,7 @@ export default function EditableResultCard({
 	barcode,
 	isbn,
 	author,
-	bookDetails,
+	genre,
 }: IScannedBookLayout) {
 	return (
 		<Box
@@ -53,18 +54,21 @@ export default function EditableResultCard({
 						cardBodyName={"Author"}
 						field={"author"}
 						item={author}
+						genre={""}
 					/>
 					<ResultItem
 						barcode={barcode}
-						cardBodyName={"Book Details"}
-						field={"bookDetails"}
-						item={bookDetails}
+						cardBodyName={"Genre"}
+						field={"genre"}
+						genre={genre}
+						item={genre}
 					/>
 					<ResultItem
 						barcode={barcode}
 						cardBodyName={"ISBN"}
 						field={"isbn"}
 						item={isbn}
+						genre={""}
 					/>
 					<HStack>
 						<Text fontWeight={700}>Barcode:</Text>
@@ -83,12 +87,28 @@ function ResultItem({
 	item,
 	cardBodyName,
 	field,
+	genre,
 }: {
 	barcode: string;
 	item: string;
 	cardBodyName: string;
-	field: "title" | "author" | "bookDetails" | "isbn";
+	field: "title" | "author" | "genre" | "isbn";
+	genre: string;
 }) {
+	if (field == "genre") {
+		return (
+			<HStack>
+				<Text fontWeight={700}>{cardBodyName}:</Text>
+				<CustomEditableSelect
+					fontSize="lg"
+					fontWeight={600}
+					item={item || `Edit ${field}...`}
+					onSubmit={(data) => updateBookValue(barcode, field, data)}
+					genre={genre}
+				/>
+			</HStack>
+		);
+	}
 	return (
 		<HStack>
 			<Text fontWeight={700}>{cardBodyName}:</Text>

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
 	const req = await request.json();
-	let { barcode, isbn, title, author, bookDetails } = req;
+	let { barcode, isbn, title, author, genre } = req;
 
 	if (typeof barcode == "number") {
 		barcode = barcode.toString();
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 							isbn: isbn,
 							title: title,
 							author: author,
-							bookDetails: bookDetails,
+							genre: genre,
 						},
 					},
 				},
@@ -155,14 +155,14 @@ export async function PATCH(request: Request) {
 			);
 		}
 	}
-	if (field == "bookDetails") {
+	if (field == "genre") {
 		try {
 			const bookResults = await prisma.storedBooks.update({
 				where: {
 					barcode: barcode.toString(),
 				},
 				data: {
-					bookDetails: updateData,
+					genre: updateData,
 				},
 			});
 

@@ -13,26 +13,26 @@ datasource db {
 
 // Book Models
 model StoredBooks {
-  barcode     String        @id @unique
-  isbn        String
-  title       String
-  author      String
-  bookDetails String
-  createdAt   DateTime      @default(now())
-  books       ScannedBook[]
+  barcode   String        @id @unique
+  isbn      String
+  title     String
+  author    String
+  genre     String        @default("n/a")
+  createdAt DateTime      @default(now())
+  books     ScannedBook[]
 
-  @@unique([barcode, isbn, title, author, bookDetails])
+  @@unique([barcode, isbn, title, author, genre])
 }
 
 model ScannedBook {
-  id          Int         @id @default(autoincrement())
-  barcode     String
-  isbn        String
-  title       String
-  author      String
-  bookDetails String
-  book        StoredBooks @relation(fields: [barcode, isbn, title, author, bookDetails], references: [barcode, isbn, title, author, bookDetails])
-  createdAt   DateTime    @default(now())
+  id        Int         @id @default(autoincrement())
+  barcode   String
+  isbn      String
+  title     String
+  author    String
+  genre     String      @default("n/a")
+  book      StoredBooks @relation(fields: [barcode, isbn, title, author, genre], references: [barcode, isbn, title, author, genre])
+  createdAt DateTime    @default(now())
 }
 
 // Sales Data Models
@@ -41,6 +41,7 @@ model Sales {
   isbn      String
   title     String
   author    String
+  genre     String   @default("n/a")
   createdAt DateTime @default(now())
 }
 
@@ -57,7 +58,7 @@ model CustomerBookRequest {
   customerPhoneNumber String
   bookTitle           String?
   bookAuthor          String?
-  bookCategory        String?
+  bookGenre           String?
   bookISBN            String?
   comments            String?
   createdAt           DateTime @default(now())

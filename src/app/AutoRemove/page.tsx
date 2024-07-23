@@ -91,7 +91,7 @@ export default function AutoRemove() {
 				{bookDetails && <ResultCard {...bookDetails} />}
 			</VStack>
 			<Toaster
-				className={"h-0"}
+				className={"h-1"}
 				richColors
 				position="top-right"
 				expand={true}

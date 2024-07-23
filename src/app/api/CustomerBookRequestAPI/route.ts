@@ -10,9 +10,10 @@ export async function POST(request: Request) {
 		customerPhoneNumber,
 		bookTitle,
 		bookAuthor,
-		bookCategory,
+		bookGenre,
 		bookISBN,
 	} = req;
+
 	try {
 		const customerBookRequest = await prisma.customerBookRequest.create({
 			data: {
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
 				customerPhoneNumber: customerPhoneNumber,
 				bookTitle: bookTitle,
 				bookAuthor: bookAuthor,
-				bookCategory: bookCategory,
+				bookGenre: bookGenre,
 				bookISBN: bookISBN,
 			},
 		});
