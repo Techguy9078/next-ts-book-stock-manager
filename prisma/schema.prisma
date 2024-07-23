@@ -41,6 +41,7 @@ model Sales {
   isbn      String
   title     String
   author    String
+  genre     String   @default("n/a")
   createdAt DateTime @default(now())
 }
 

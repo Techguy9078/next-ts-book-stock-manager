@@ -113,8 +113,9 @@ export default function AutoAdd() {
 					alt=""
 				/>
 			)} */}
+
 			<Toaster
-				className={"h-0"}
+				className={"h-1"}
 				richColors
 				position="top-right"
 				expand={true}

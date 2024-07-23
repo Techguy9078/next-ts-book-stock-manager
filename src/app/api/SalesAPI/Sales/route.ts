@@ -1,16 +1,18 @@
 "use server";
 import { prisma } from "@/db";
+import { Sales } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
 	const req = await request.json();
-	const { isbn, title, author } = req;
+	const { isbn, title, author, genre } = req;
 	try {
 		const updateStatCount = await prisma.sales.create({
 			data: {
 				isbn: isbn,
 				title: title,
 				author: author,
+				genre: genre,
 			},
 		});
 
@@ -70,7 +72,23 @@ export async function GET(request: Request) {
 			},
 		});
 
-		return NextResponse.json(salesResults);
+		const groupedSalesResults: { [key: string]: Sales[] } = salesResults.reduce(
+			(acc: any, result) => {
+				const { genre } = result;
+				if (acc[genre]) {
+					acc[genre].push(result);
+				} else {
+					acc[genre] = [result];
+				}
+				return acc;
+			},
+			{}
+		);
+		console.log(groupedSalesResults);
+
+		return NextResponse.json(
+			Object.keys(groupedSalesResults).length ? groupedSalesResults : "no results"
+		);
 	} catch (error: any) {
 		return NextResponse.json(
 			{ error: "Failed Finding Sales Report..." },

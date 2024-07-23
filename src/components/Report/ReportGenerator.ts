@@ -42,20 +42,23 @@ export function createSalesReport({
 	reportData,
 	selectedDates,
 }: {
-	reportData: Array<Sales>;
+	reportData: any;
 	selectedDates: Array<Date>;
 }) {
 	const doc = new jsPDF();
 	const TableBody: RowInput[] = [];
 
-	reportData.forEach((book) => {
-		const bookData = [
-			book.isbn,
-			book.title,
-			book.author,
-			new Date(book.createdAt).toLocaleDateString("en-AU"),
-		];
-		TableBody.push(bookData);
+	Object.keys(reportData).forEach(function (key, index) {
+		reportData[key].forEach((book: Sales) => {
+			const bookData = [
+				book.isbn,
+				book.title,
+				book.author,
+				book.genre,
+				new Date(book.createdAt).toLocaleDateString("en-AU"),
+			];
+			TableBody.push(bookData);
+		});
 	});
 
 	doc.text(`Scanned Off Books`, 100, 10, { align: "center" });
@@ -69,6 +72,7 @@ export function createSalesReport({
 			14,
 			{ align: "center" }
 		);
+
 	autoTable(doc, {
 		margin: { top: 18 },
 		styles: { fillColor: "#fff", textColor: "#828282", lineColor: "#fff" },
@@ -79,7 +83,7 @@ export function createSalesReport({
 			textColor: "#828282",
 			lineColor: "#fff",
 		},
-		head: [["ISBN", "Title", "Author", "Scanned Off"]],
+		head: [["ISBN", "Title", "Author", "Genre", "Scanned Off"]],
 		body: TableBody,
 	});
 
@@ -105,7 +109,7 @@ export function createCustomerRequestsReport({
 			bookTitle,
 			bookAuthor,
 			bookISBN,
-			bookGenre
+			bookGenre,
 		} = customer;
 
 		const customerData = [

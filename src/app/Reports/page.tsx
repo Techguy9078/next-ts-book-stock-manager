@@ -10,7 +10,7 @@ import ReportGenerateButton from "@/components/Buttons/ReportGenerateButton";
 
 export default function Reports() {
 	const [selectedDates, setSelectedDates] = useState<Array<Date>>([]);
-	const [reportData, setReportData] = useState<Array<Sales>>();
+	const [reportData, setReportData] = useState<any>();
 
 	useEffect(() => {
 		const controller = new AbortController();
@@ -25,6 +25,7 @@ export default function Reports() {
 						signal: signal,
 					}
 				);
+
 				return setReportData(salesResults.data);
 			} catch {
 				return;
@@ -59,10 +60,10 @@ export default function Reports() {
 						to begin
 					</Text>
 				)}
-				{reportData && !reportData?.length && selectedDates && (
+				{reportData == "no results" && selectedDates && (
 					<Text>Unfortunately there is no data for these days...</Text>
 				)}
-				{reportData?.length && (
+				{reportData != "no results" && reportData != null && (
 					<ReportGenerateButton
 						reportData={reportData}
 						selectedDates={selectedDates}
