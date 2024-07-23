@@ -76,7 +76,6 @@ export default function CustomEditableSelect({
 				<EditablePreview px={2} />
 				{edit && (
 					<Select
-					
 						key={123}
 						borderColor={"gray.400"}
 						color={"gray.400"}
@@ -85,7 +84,9 @@ export default function CustomEditableSelect({
 						defaultValue={morphGenre}
 					>
 						{genreList.map((genre) => (
-							<option value={genre}>{genre}</option>
+							<option key={genre} value={genre}>
+								{genre}
+							</option>
 						))}
 					</Select>
 				)}
