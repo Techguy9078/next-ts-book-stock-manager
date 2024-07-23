@@ -54,11 +54,13 @@ export default function EditableResultCard({
 						cardBodyName={"Author"}
 						field={"author"}
 						item={author}
+						genre={""}
 					/>
 					<ResultItem
 						barcode={barcode}
 						cardBodyName={"Genre"}
 						field={"genre"}
+						genre={genre}
 						item={genre}
 					/>
 					<ResultItem
@@ -66,6 +68,7 @@ export default function EditableResultCard({
 						cardBodyName={"ISBN"}
 						field={"isbn"}
 						item={isbn}
+						genre={""}
 					/>
 					<HStack>
 						<Text fontWeight={700}>Barcode:</Text>
@@ -84,11 +87,13 @@ function ResultItem({
 	item,
 	cardBodyName,
 	field,
+	genre,
 }: {
 	barcode: string;
 	item: string;
 	cardBodyName: string;
 	field: "title" | "author" | "genre" | "isbn";
+	genre: string;
 }) {
 	if (field == "genre") {
 		return (
@@ -99,6 +104,7 @@ function ResultItem({
 					fontWeight={600}
 					item={item || `Edit ${field}...`}
 					onSubmit={(data) => updateBookValue(barcode, field, data)}
+					genre={genre}
 				/>
 			</HStack>
 		);

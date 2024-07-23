@@ -128,7 +128,7 @@ export default function ManualAdd() {
 									</InputGroup>
 								</FormControl>
 							))}
-							<FormControl key={"genre"}>
+							<FormControl key={123}>
 								<InputGroup>
 									<InputLeftAddon inlineSize={110}>Genre:</InputLeftAddon>
 									<Select

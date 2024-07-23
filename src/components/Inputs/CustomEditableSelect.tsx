@@ -6,20 +6,27 @@ import {
 	Flex,
 	HStack,
 	IconButton,
+	Select,
 	useEditableControls,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 export default function CustomEditableSelect({
 	item,
 	fontSize,
 	fontWeight,
 	onSubmit,
+	genre,
 }: {
 	item: string;
 	fontSize: "sm" | "md" | "lg" | "xl" | "2xl";
 	fontWeight: 600 | 700;
 	onSubmit: (nextValue: string) => void;
+	genre: string;
 }) {
+	const [edit, setEdit] = useState(false);
+	const [morphGenre, setMorphGenre] = useState(genre);
+
 	function EditableControls() {
 		const {
 			isEditing,
@@ -52,20 +59,52 @@ export default function CustomEditableSelect({
 			</Flex>
 		);
 	}
-
 	return (
 		<Editable
-			defaultValue={item}
+			defaultValue={morphGenre}
+			value={morphGenre}
 			fontSize={fontSize}
 			fontWeight={fontWeight}
 			isPreviewFocusable={true}
 			selectAllOnFocus={false}
-			onSubmit={onSubmit}
+			onSubmit={() => {
+				onSubmit(morphGenre), setEdit(false);
+			}}
+			onEdit={() => setEdit(true)}
 		>
 			<HStack>
 				<EditablePreview px={2} />
+				{edit && (
+					<Select
+					
+						key={123}
+						borderColor={"gray.400"}
+						color={"gray.400"}
+						placeholder={"Select The Genre..."}
+						onChange={(e) => setMorphGenre(e.currentTarget.value)}
+						defaultValue={morphGenre}
+					>
+						{genreList.map((genre) => (
+							<option value={genre}>{genre}</option>
+						))}
+					</Select>
+				)}
+
 				<EditableControls />
 			</HStack>
 		</Editable>
 	);
 }
+
+const genreList: Array<string> = [
+	"General",
+	"Crime",
+	"War / Spy Fiction",
+	"Contempory Romance",
+	"Historical Romance",
+	"Classics",
+	"Art",
+	"Comics",
+	"Childrens",
+	"Childrens Vintage",
+];
