@@ -49,12 +49,12 @@ export function createSalesReport({
 	const TableBody: RowInput[] = [];
 
 	Object.keys(reportData).forEach(function (key, index) {
+		TableBody.push([key, "Books"]);
 		reportData[key].forEach((book: Sales) => {
 			const bookData = [
 				book.isbn,
 				book.title,
 				book.author,
-				book.genre,
 				new Date(book.createdAt).toLocaleDateString("en-AU"),
 			];
 			TableBody.push(bookData);
@@ -83,7 +83,7 @@ export function createSalesReport({
 			textColor: "#828282",
 			lineColor: "#fff",
 		},
-		head: [["ISBN", "Title", "Author", "Genre", "Scanned Off"]],
+		head: [["ISBN", "Title", "Author", "Scanned Off"]],
 		body: TableBody,
 	});
 
