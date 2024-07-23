@@ -138,7 +138,7 @@ export default function ManualAdd() {
 										placeholder={"Select The Genre..."}
 									>
 										{genreList.map((genre) => (
-											<option value={genre}>{genre}</option>
+											<option key={genre} value={genre}>{genre}</option>
 										))}
 									</Select>
 								</InputGroup>
