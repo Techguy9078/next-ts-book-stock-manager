@@ -41,3 +41,4 @@ yarn-error.log*
 prisma/migrations
 
 src/app/api/BookAPI/CustomAPIBookSearch/
+start.cmd
