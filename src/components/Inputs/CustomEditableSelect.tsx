@@ -1,3 +1,4 @@
+import { genreList } from "@/config/genreList";
 import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 import {
 	ButtonGroup,
@@ -12,11 +13,13 @@ import {
 import { useState } from "react";
 
 export default function CustomEditableSelect({
+	item,
 	fontSize,
 	fontWeight,
 	onSubmit,
 	genre,
 }: {
+	item: string;
 	fontSize: "sm" | "md" | "lg" | "xl" | "2xl";
 	fontWeight: 600 | 700;
 	onSubmit: (nextValue: string) => void;
@@ -76,12 +79,9 @@ export default function CustomEditableSelect({
 					<Select
 						key={123}
 						borderColor={"gray.400"}
-						color={"gray.700"}
-						fontSize={17}
+						color={"gray.400"}
 						placeholder={"Select The Genre..."}
-						onChange={(e) => {
-							setMorphGenre(e.currentTarget.value);
-						}}
+						onChange={(e) => setMorphGenre(e.currentTarget.value)}
 						defaultValue={morphGenre}
 					>
 						{genreList.map((genre) => (
@@ -97,16 +97,3 @@ export default function CustomEditableSelect({
 		</Editable>
 	);
 }
-
-const genreList: Array<string> = [
-	"General",
-	"Crime",
-	"War / Spy Fiction",
-	"Contempory Romance",
-	"Historical Romance",
-	"Classics",
-	"Art",
-	"Comics",
-	"Childrens",
-	"Childrens Vintage",
-];

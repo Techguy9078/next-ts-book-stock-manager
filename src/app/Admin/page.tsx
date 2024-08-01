@@ -19,8 +19,8 @@ export default function Admin() {
           onClick={() => {
             setExported(false);
             import("@/utils/pgDump").then((module: any) =>
-              module.default().then((result: any) => {
-                console.log(result), setExported(true);
+              module.default().then(() => {
+                setExported(true);
               })
             );
           }}

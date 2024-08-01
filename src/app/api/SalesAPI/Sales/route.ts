@@ -84,7 +84,6 @@ export async function GET(request: Request) {
 			},
 			{}
 		);
-		console.log(groupedSalesResults);
 
 		return NextResponse.json(
 			Object.keys(groupedSalesResults).length ? groupedSalesResults : "no results"

@@ -12,7 +12,7 @@ export default async function PGDUMP(): Promise<Error | string> {
   if (!path) return Error("No DATABASE_URL environment variable.");
 
   const stdout = await csvOutput(path);
-  return stdout;
+  return "Exported";
 }
 
 async function csvOutput(path: string) {

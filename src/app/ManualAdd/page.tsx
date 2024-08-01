@@ -25,6 +25,7 @@ import { AnySoaRecord } from "dns";
 import { useMutation } from "@tanstack/react-query";
 import { BookCountContext } from "../BookCountContext";
 import GenericButton from "@/components/Buttons/GenericButton";
+import { genreList } from "@/config/genreList";
 
 export default function ManualAdd() {
 	const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
@@ -163,19 +164,6 @@ export default function ManualAdd() {
 		</Box>
 	);
 }
-
-const genreList: Array<string> = [
-	"General",
-	"Crime",
-	"War / Spy Fiction",
-	"Contempory Romance",
-	"Historical Romance",
-	"Classics",
-	"Art",
-	"Comics",
-	"Childrens",
-	"Childrens Vintage",
-];
 
 const manualInputs: Array<IManualInputs> = [
 	{ inputname: "barcode", placeholder: "Enter Barcode..." },
