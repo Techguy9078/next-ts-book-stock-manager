@@ -18,6 +18,7 @@ model StoredBooks {
   title     String
   author    String
   genre     String        @default("n/a")
+  park      Boolean       @default(false)
   createdAt DateTime      @default(now())
   books     ScannedBook[]
 
