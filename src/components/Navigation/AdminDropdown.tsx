@@ -9,6 +9,16 @@ const AdminDropdown = () => {
 
   const adminLinks = [
     {
+      name: "Admin Add",
+      href: "AutoAdd",
+      color: { light: "#8bd346", dark: "#4caf50" },
+    },
+    {
+      name: "Admin Manual Add",
+      href: "ManualAdd",
+      color: { light: "#edda34", dark: "#d5c42e" },
+    },
+    {
       name: "Reports",
       href: "Reports",
       color: { light: "#836a8a", dark: "#65466D" },

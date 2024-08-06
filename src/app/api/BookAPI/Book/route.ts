@@ -24,6 +24,7 @@ export async function POST(request: Request) {
               title: title,
               author: author,
               genre: genre,
+              park: true,
             },
           },
         },
@@ -111,10 +112,6 @@ export async function PATCH(request: Request) {
       { error: "Unfortunately no barcode was provided..." },
       { status: 400 }
     );
-  }
-
-  if (typeof barcode == "number") {
-    barcode = barcode.toString();
   }
 
   if (field == "title") {
@@ -211,6 +208,7 @@ export async function DELETE(request: Request) {
       const bookResult = await prisma.scannedBook.findMany({
         where: {
           barcode: barcode.toString(),
+          park: false, // Stops The Parked Books From Being Deleted
         },
         orderBy: {
           createdAt: "asc",

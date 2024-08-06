@@ -1,12 +1,5 @@
 "use client";
-import {
-  Box,
-  Flex,
-  Spacer,
-  Text,
-  VStack,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Text, VStack, useColorModeValue } from "@chakra-ui/react";
 import { useState } from "react";
 
 import CustomDivider from "@/components/Divider/customDivider";
@@ -16,6 +9,7 @@ import SearchForm from "@/components/Forms/SearchForm";
 import { BookPagesLoader } from "@/components/Loading/BookPagesLoading";
 import SearchReportGenerateButton from "@/components/Buttons/SearchReportGenerateButton";
 import { useIsMobile } from "@/utils/isMobile";
+import MobileBookTable from "@/components/Tables/MobileBookTable";
 
 export default function Search() {
   const [refetchValue, setRefetchValue] = useState<boolean>(false);
@@ -55,7 +49,7 @@ export default function Search() {
           </VStack>
           {isLoading && <BookPagesLoader />}
           {books && (
-            <BookTable bookArray={books} handleRefetch={handleRefetch} />
+            <MobileBookTable bookArray={books} handleRefetch={handleRefetch} />
           )}
         </Box>
       ) : (
@@ -68,11 +62,8 @@ export default function Search() {
           <VStack spacing={4} align={"left"} pb={4}>
             <Text fontSize="2xl">Search for Books</Text>
             <CustomDivider />
-            <Flex>
-              <BookCount />
-              <Spacer />
-              {books && <SearchReportGenerateButton searchData={books} />}
-            </Flex>
+            <BookCount />
+            {books && <SearchReportGenerateButton searchData={books} />}
             <CustomDivider />
 
             <SearchForm

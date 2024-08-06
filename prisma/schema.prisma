@@ -32,7 +32,7 @@ model ScannedBook {
   title     String
   author    String
   genre     String      @default("n/a")
-  park      Boolean       @default(false)
+  park      Boolean     @default(false)
   book      StoredBooks @relation(fields: [barcode, isbn, title, author, genre], references: [barcode, isbn, title, author, genre])
   createdAt DateTime    @default(now())
 }
@@ -44,6 +44,7 @@ model Sales {
   title     String
   author    String
   genre     String   @default("n/a")
+  park      Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 

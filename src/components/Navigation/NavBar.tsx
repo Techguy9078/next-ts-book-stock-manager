@@ -55,14 +55,9 @@ interface colorType {
 
 const links = [
   {
-    name: "Auto Add",
-    href: "AutoAdd",
-    color: { light: "#8bd346", dark: "#4caf50" },
-  },
-  {
-    name: "Manual Add",
-    href: "ManualAdd",
-    color: { light: "#edda34", dark: "#d5c42e" },
+    name: "Activate",
+    href: "Activate",
+    color: { light: "#f44336", dark: "#f44336" },
   },
   {
     name: "Auto Remove",
@@ -83,28 +78,6 @@ const links = [
   // 	name: "Search Requests",
   // 	href: "SearchRequests",
   // 	color: { light: "#736EA9", dark: "#554E9D" },
-  // },
-
-  // Now Admin controls
-  // {
-  //   name: "Reports",
-  //   href: "Reports",
-  //   color: { light: "#836a8a", dark: "#65466D" },
-  // },
-  // {
-  //   name: "Oldest",
-  //   href: "Oldest",
-  //   color: { light: "yellow.800", dark: "yellow.700" },
-  // },
-  // {
-  //   name: "Stats",
-  //   href: "Stats",
-  //   color: { light: "#ae9991", dark: "#86665a" },
-  // },
-  // {
-  //   name: "Admin",
-  //   href: "Admin",
-  //   color: { light: "purple.600", dark: "purple.500" },
   // },
 ];
 
