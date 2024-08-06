@@ -1,12 +1,10 @@
 "use client";
 import { Box, Text, VStack, useColorModeValue } from "@chakra-ui/react";
 import { useContext, useState } from "react";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { AnySoaRecord } from "dns";
-
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 
 import CustomDivider from "@/components/Divider/customDivider";
 import BookCount from "@/components/BookCount/BookCount";
@@ -31,15 +29,15 @@ export default function Activate() {
         const updatedBook = await axios.post("/api/BookAPI/ActivateBook", {
           barcode,
         });
-        console.log(updatedBook);
         if (!updatedBook) {
           throw Error();
         }
         setBookDetails(updatedBook.data);
         toast.success("Book Activated Successfully");
-      } catch (err) {
+      } catch (err: any) {
+        console.log(err);
         toast.error("Something went wrong", {
-          description: `Error: ${err}`,
+          description: `${err?.response?.data?.error || (err as any).message}`,
         });
       } finally {
         getBookCount(null);
@@ -70,17 +68,11 @@ export default function Activate() {
         <BarcodeForm
           isLoading={isLoading}
           barcodeSearch={barcodeSearch}
-          formType="Add"
+          formType="Activate"
         />
 
         {bookDetails && <EditableResultCard {...bookDetails} />}
       </VStack>
-      <Toaster
-        className={"h-1"}
-        richColors
-        position="top-right"
-        expand={true}
-      />
     </Box>
   );
 }

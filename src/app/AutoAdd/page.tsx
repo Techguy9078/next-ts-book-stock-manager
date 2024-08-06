@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { AnySoaRecord } from "dns";
 
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 
 import CustomDivider from "@/components/Divider/customDivider";
 import BookCount from "@/components/BookCount/BookCount";
@@ -85,6 +85,7 @@ export default function AutoAdd() {
     },
   });
 
+  console.log(bookDetails);
   return (
     <Box
       p={4}
@@ -112,13 +113,6 @@ export default function AutoAdd() {
 					alt=""
 				/>
 			)} */}
-
-      <Toaster
-        className={"h-1"}
-        richColors
-        position="top-right"
-        expand={true}
-      />
     </Box>
   );
 }

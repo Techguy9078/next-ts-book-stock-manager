@@ -1,8 +1,8 @@
 import {
-	FormControl,
-	FormErrorMessage,
-	FormLabel,
-	Input,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,84 +12,91 @@ import { useEffect } from "react";
 import GenericButton from "@/components/Buttons/GenericButton";
 
 const customErrorMap: ZodErrorMap = (error, ctx) => {
-	if (error.code == "too_small") {
-		return { message: `No barcode entered please scan a book...` };
-	}
+  if (error.code == "too_small") {
+    return { message: `No barcode entered please scan a book...` };
+  }
 
-	return { message: ctx.defaultError };
+  return { message: ctx.defaultError };
 };
 
 const barcodeValidator = z.object({
-	barcode: z
-		.string({
-			errorMap: customErrorMap,
-		})
-		.min(1),
+  barcode: z
+    .string({
+      errorMap: customErrorMap,
+    })
+    .min(1),
 });
 
 type barcodeForm = z.infer<typeof barcodeValidator>;
 
 export default function BarcodeForm({
-	barcodeSearch,
-	isLoading,
-	formType,
+  barcodeSearch,
+  isLoading,
+  formType,
 }: {
-	barcodeSearch: Function;
-	isLoading: boolean;
-	formType: "Add" | "Remove";
+  barcodeSearch: Function;
+  isLoading: boolean;
+  formType: "Add" | "Remove" | "Activate";
 }) {
-	const {
-		register,
-		handleSubmit,
-		setFocus,
-		resetField,
-		formState: { errors },
-	} = useForm<barcodeForm>({
-		resolver: zodResolver(barcodeValidator),
-		defaultValues: { barcode: "" },
-	});
+  const {
+    register,
+    handleSubmit,
+    setFocus,
+    resetField,
+    formState: { errors },
+  } = useForm<barcodeForm>({
+    resolver: zodResolver(barcodeValidator),
+    defaultValues: { barcode: "" },
+  });
 
-	useEffect(() => {
-		if (!isLoading) {
-			resetField("barcode");
-			setFocus("barcode");
-		}
-	}, [setFocus, resetField, isLoading]);
+  useEffect(() => {
+    if (!isLoading) {
+      resetField("barcode");
+      setFocus("barcode");
+    }
+  }, [setFocus, resetField, isLoading]);
 
-	return (
-		<form
-			onSubmit={handleSubmit((data) => {
-				barcodeSearch(data);
-			})}
-		>
-			<FormControl isInvalid={errors.barcode ? true : false}>
-				<FormLabel htmlFor="barcode">
-					{formType == "Add"
-						? "Add Book to Database:"
-						: "Remove Book From Database:"}
-				</FormLabel>
-				<Input
-					autoFocus
-					autoComplete="off"
-					borderColor={"gray.400"}
-					disabled={isLoading}
-					id="barcode"
-					placeholder="Start Scanning books..."
-					{...register("barcode", {
-						required: "You need to enter or scan a barcode...",
-					})}
-				/>
-				<FormErrorMessage>
-					{errors.barcode && errors.barcode?.message}
-				</FormErrorMessage>
-			</FormControl>
+  let formLabel = "";
+  switch (formType) {
+    case "Add":
+      formLabel = "Add Book to Database:";
+      break;
+    case "Activate":
+      formLabel = "Activate the book to put on shelf:";
+      break;
+    case "Remove":
+      formLabel = "Remove Book From Database:";
+      break;
+    default:
+      formLabel = "If you are seeing this the formType is not set";
+      break;
+  }
 
-			{formType == "Add" && (
-				<GenericButton isLoading={isLoading} buttonType={"Add"} />
-			)}
-			{formType == "Remove" && (
-				<GenericButton isLoading={isLoading} buttonType={"Remove"} />
-			)}
-		</form>
-	);
+  return (
+    <form
+      onSubmit={handleSubmit((data) => {
+        barcodeSearch(data);
+      })}
+    >
+      <FormControl isInvalid={errors.barcode ? true : false}>
+        <FormLabel htmlFor="barcode">{formLabel}</FormLabel>
+        <Input
+          autoFocus
+          autoComplete="off"
+          borderColor={"gray.400"}
+          disabled={isLoading}
+          id="barcode"
+          placeholder="Start Scanning books..."
+          {...register("barcode", {
+            required: "You need to enter or scan a barcode...",
+          })}
+        />
+        <FormErrorMessage>
+          {errors.barcode && errors.barcode?.message}
+        </FormErrorMessage>
+      </FormControl>
+
+      <GenericButton isLoading={isLoading} buttonType={formType} />
+    </form>
+  );
 }

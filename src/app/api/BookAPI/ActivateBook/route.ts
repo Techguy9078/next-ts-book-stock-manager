@@ -13,9 +13,9 @@ export async function POST(request: Request) {
   }
 
   try {
-    // Find the oldest record by barcode and date
+    // Find the oldest record by barcode, parked and date
     const record = await prisma.scannedBook.findFirst({
-      where: { barcode },
+      where: { barcode, park: true },
       orderBy: { createdAt: "asc" },
     });
 
