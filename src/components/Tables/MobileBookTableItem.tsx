@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import CustomDivider from "../Divider/customDivider";
 import ParkedToggle from "../Shared/ParkedToggle";
+import { toast } from "sonner";
 
 export default function MobileBookTableItem({
   book,
@@ -20,7 +21,13 @@ export default function MobileBookTableItem({
     await axios
       .delete(`/api/BookAPI/Book?id=${id}`)
       .catch((err) => {
-        console.log(err);
+        toast.error("Something went wrong", {
+          description: `${
+            err?.response?.data?.error ||
+            (err as any).message ||
+            "Unknown Error"
+          }`,
+        });
       })
       .finally(() => {
         handleRefetch();

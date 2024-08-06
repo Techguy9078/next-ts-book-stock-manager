@@ -35,7 +35,6 @@ export default function Activate() {
         setBookDetails(updatedBook.data);
         toast.success("Book Activated Successfully");
       } catch (err: any) {
-        console.log(err);
         toast.error("Something went wrong", {
           description: `${err?.response?.data?.error || (err as any).message}`,
         });

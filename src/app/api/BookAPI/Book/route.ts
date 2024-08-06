@@ -34,7 +34,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json(combinedBookData);
   } catch (error: any) {
-    console.log(error);
     return NextResponse.json(
       { error: "Failed Adding Local Book..." },
       { status: 500 }
