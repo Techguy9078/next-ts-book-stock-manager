@@ -1,6 +1,10 @@
 "use server";
-import { normalizeAccents } from "@/app/api/BookAPI/CustomAPIBookSearch/_helpers/helpers";
+// import { normalizeAccents } from "@/app/api/BookAPI/CustomAPIBookSearch/_helpers/helpers";
 import { AxiosResponse } from "axios";
+
+const removeAccents = (str: string) => {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+};
 
 /**
  * Parses the OL Book Data for local database
@@ -34,7 +38,7 @@ export async function BookDataParseOL(
     }
   }
 
-  let title = await normalizeAccents(bookData.title);
+  let title = await removeAccents(bookData.title);
 
   if (!title) throw Error();
 
@@ -90,7 +94,7 @@ export async function BookDataParseGoogleAPI(
     }
   }
 
-  bookObject.title = await normalizeAccents(bookData.title);
+  bookObject.title = await removeAccents(bookData.title);
   bookObject.author = bookData.authors.map((author: any) => author).join(", ");
 
   return bookObject;

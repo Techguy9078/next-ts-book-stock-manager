@@ -11,7 +11,6 @@ export async function POST(request: Request) {
   }
 
   try {
-    // TODO this is not setting it to park but should, must be some stored shit going on
     const combinedBookData = await prisma.scannedBook.create({
       data: {
         book: {
@@ -25,7 +24,6 @@ export async function POST(request: Request) {
               title: title,
               author: author,
               genre: genre,
-              park: true,
             },
           },
         },
