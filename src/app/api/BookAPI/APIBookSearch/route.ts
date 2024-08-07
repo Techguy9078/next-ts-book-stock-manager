@@ -4,8 +4,8 @@ import axios, { AxiosResponse } from "axios";
 import { NextResponse } from "next/server";
 import { prisma } from "@/db";
 import {
-	BookDataParseGoogleAPI,
-	BookDataParseOL,
+  BookDataParseGoogleAPI,
+  BookDataParseOL,
 } from "@/components/_helpers/DataParse";
 
 const sessionId = process.env.Secure1PSID!;
@@ -22,74 +22,74 @@ const sessionId = process.env.Secure1PSID!;
 // https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&printType=books
 
 async function OLAPISearch(barcode: string): Promise<AxiosResponse<any, any>> {
-	const result = await axios.get(
-		`https://openlibrary.org/api/books?bibkeys=ISBN:${barcode}&jscmd=data&format=json`
-	);
-	return result;
+  const result = await axios.get(
+    `https://openlibrary.org/api/books?bibkeys=ISBN:${barcode}&jscmd=data&format=json`
+  );
+  return result;
 }
 
 async function GoogleAPISearch(
-	barcode: string
+  barcode: string
 ): Promise<AxiosResponse<any, any>> {
-	const result = await axios.get(
-		`https://www.googleapis.com/books/v1/volumes?q=isbn:${barcode}&printType=books`
-	);
-	return result;
+  const result = await axios.get(
+    `https://www.googleapis.com/books/v1/volumes?q=isbn:${barcode}&printType=books`
+  );
+  return result;
 }
 
 export async function GET(request: Request) {
-	const { searchParams } = new URL(request.url);
-	const barcode = searchParams.get("barcode");
+  const { searchParams } = new URL(request.url);
+  const barcode = searchParams.get("barcode");
 
-	if (barcode === null) {
-		return NextResponse.json(
-			{ error: "No Barcode Provided Finding Book Using API..." },
-			{ status: 500 }
-		);
-	}
+  if (barcode === null) {
+    return NextResponse.json(
+      { error: "No Barcode Provided Finding Book Using API..." },
+      { status: 500 }
+    );
+  }
 
-	try {
-		const bookResults = await prisma.storedBooks.findUnique({
-			where: {
-				barcode: barcode,
-			},
-		});
+  try {
+    const bookResults = await prisma.storedBooks.findUnique({
+      where: {
+        barcode: barcode,
+      },
+    });
 
-		if (!bookResults) {
-			throw Error();
-		}
+    if (!bookResults) {
+      throw Error();
+    }
 
-		console.log("Local", bookResults);
+    console.log("Local", bookResults);
 
-		return NextResponse.json(bookResults);
-	} catch {
-		console.log("Could not Find Book In Local Database...");
-		try {
-			const result = await OLAPISearch(barcode);
-			const BookDataOLParsed = await BookDataParseOL(result, barcode);
+    return NextResponse.json(bookResults);
+  } catch {
+    console.log("Could not Find Book In Local Database...");
+    try {
+      const result = await OLAPISearch(barcode);
+      const BookDataOLParsed = await BookDataParseOL(result, barcode);
 
-			console.log("OL", BookDataOLParsed);
+      console.log("OL", BookDataOLParsed);
 
-			return NextResponse.json(BookDataOLParsed);
-		} catch {
-			try {
-				const result = await GoogleAPISearch(barcode);
-				const BookDataGoogleParsed = await BookDataParseGoogleAPI(
-					result,
-					barcode
-				);
+      return NextResponse.json(BookDataOLParsed);
+    } catch {
+      try {
+        const result = await GoogleAPISearch(barcode);
+        const BookDataGoogleParsed = await BookDataParseGoogleAPI(
+          result,
+          barcode
+        );
 
-				console.log("Google", BookDataGoogleParsed);
+        console.log("Google", BookDataGoogleParsed);
 
-				return NextResponse.json(BookDataGoogleParsed);
-			} catch (error: any) {
-				return NextResponse.json(
-					{ error: "Failed Finding Book Using API..." },
-					{ status: 500 }
-				);
-			}
-		}
-	}
+        return NextResponse.json(BookDataGoogleParsed);
+      } catch (error: any) {
+        return NextResponse.json(
+          { error: "Failed Finding Book Using API..." },
+          { status: 500 }
+        );
+      }
+    }
+  }
 }
 
 // try {
