@@ -6,32 +6,26 @@ export async function POST(request: Request) {
   const req = await request.json();
   let { barcode, isbn, title, author, genre } = req;
 
-  if (typeof barcode == "number") {
+  // Ensure barcode is a string
+  if (typeof barcode === "number") {
     barcode = barcode.toString();
   }
 
   try {
-    const combinedBookData = await prisma.scannedBook.create({
+    // Create a new book entry
+    const newBookData = await prisma.scannedBook.create({
       data: {
-        book: {
-          connectOrCreate: {
-            where: {
-              barcode: barcode,
-            },
-            create: {
-              barcode: barcode,
-              isbn: isbn,
-              title: title,
-              author: author,
-              genre: genre,
-            },
-          },
-        },
+        barcode: barcode,
+        isbn: isbn,
+        title: title,
+        author: author,
+        genre: genre,
+        park: true,
       },
     });
 
-    return NextResponse.json(combinedBookData);
-  } catch (error: any) {
+    return NextResponse.json(newBookData);
+  } catch (error) {
     return NextResponse.json(
       { error: "Failed Adding Local Book..." },
       { status: 500 }

@@ -67,7 +67,7 @@ export async function BookDataParseGoogleAPI(
     isbn: "",
     title: "",
     author: "",
-    genre: "",
+    genre: "n/a",
   };
 
   bookObject.barcode = barcode.toString();
@@ -96,7 +96,9 @@ export async function BookDataParseGoogleAPI(
 
   bookObject.title = await removeAccents(bookData.title);
   bookObject.author = bookData.authors.map((author: any) => author).join(", ");
-
+  // TODO this is the genre but will need to be attached once a list of them is created to check against otherwise could end up with anything
+  // Example been 9781473667730 which is a categorie of "Chick lit"
+  //bookObject.genre = bookData.categories ? bookData.categories[0] : "n/a";
   return bookObject;
 }
 
