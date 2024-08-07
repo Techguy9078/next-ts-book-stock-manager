@@ -6,26 +6,35 @@ export async function POST(request: Request) {
   const req = await request.json();
   let { barcode, isbn, title, author, genre } = req;
 
-  // Ensure barcode is a string
   if (typeof barcode === "number") {
     barcode = barcode.toString();
   }
 
+  // This is still an issue, a simple create works as expected but when connectOrCreate
+  // is used it seems to pull the park of the stored book as false regardless of how it is set
   try {
-    // Create a new book entry
-    const newBookData = await prisma.scannedBook.create({
+    const combinedBookData = await prisma.scannedBook.create({
       data: {
-        barcode: barcode,
-        isbn: isbn,
-        title: title,
-        author: author,
-        genre: genre,
-        park: true,
+        book: {
+          connectOrCreate: {
+            where: {
+              barcode: barcode,
+            },
+            create: {
+              barcode: barcode,
+              isbn: isbn,
+              title: title,
+              author: author,
+              genre: genre,
+              park: true,
+            },
+          },
+        },
       },
     });
 
-    return NextResponse.json(newBookData);
-  } catch (error) {
+    return NextResponse.json(combinedBookData);
+  } catch (error: any) {
     return NextResponse.json(
       { error: "Failed Adding Local Book..." },
       { status: 500 }
