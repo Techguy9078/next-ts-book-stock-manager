@@ -5,24 +5,33 @@ import { NextResponse } from 'next/server';
 // Add Customer Request
 export async function POST(request: Request) {
   const req = await request.json();
-  let {
-    customerName,
-    customerPhoneNumber,
-    bookTitle,
-    bookAuthor,
-    bookGenre,
-    bookISBN,
+
+  const {
+    name: requestName,
+    phone: requestNumber,
+    title: requestTitle,
+    author: requestAuthor,
+    isbn: requestISBN,
+    comments: requestComment,
   } = req;
+
+  // Check required fields
+  if (!requestName || !requestNumber) {
+    return NextResponse.json(
+      { error: 'Customer name and number are the minimum required details...' },
+      { status: 400 },
+    );
+  }
 
   try {
     const customerBookRequest = await prisma.customerBookRequest.create({
       data: {
-        customerName: customerName,
-        customerPhoneNumber: customerPhoneNumber,
-        bookTitle: bookTitle,
-        bookAuthor: bookAuthor,
-        bookGenre: bookGenre,
-        bookISBN: bookISBN,
+        requestName,
+        requestNumber,
+        requestTitle,
+        requestAuthor,
+        requestISBN,
+        requestComment,
       },
     });
 
@@ -52,27 +61,32 @@ export async function GET(request: Request) {
       where: {
         OR: [
           {
-            customerName: {
+            requestName: {
               contains: searchTerm,
             },
           },
           {
-            customerPhoneNumber: {
+            requestNumber: {
               contains: searchTerm,
             },
           },
           {
-            bookTitle: {
+            requestTitle: {
               contains: searchTerm,
             },
           },
           {
-            bookAuthor: {
+            requestAuthor: {
               contains: searchTerm,
             },
           },
           {
-            bookISBN: {
+            requestISBN: {
+              contains: searchTerm,
+            },
+          },
+          {
+            requestComment: {
               contains: searchTerm,
             },
           },

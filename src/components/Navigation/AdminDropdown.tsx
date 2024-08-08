@@ -19,6 +19,16 @@ const AdminDropdown = () => {
       color: { light: '#edda34', dark: '#d5c42e' },
     },
     {
+      name: 'Add Customer Request',
+      href: 'AddCustomerRequest',
+      color: { light: '#B66878', dark: '#894553' },
+    },
+    {
+      name: 'Search Customer Requests',
+      href: 'SearchCustomerRequests',
+      color: { light: '#736EA9', dark: '#554E9D' },
+    },
+    {
       name: 'Reports',
       href: 'Reports',
       color: { light: '#836a8a', dark: '#65466D' },

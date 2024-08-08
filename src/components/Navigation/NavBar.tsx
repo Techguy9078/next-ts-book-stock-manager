@@ -69,16 +69,6 @@ const links = [
     href: 'Search',
     color: { light: '#00a9be', dark: '#008394' },
   },
-  // {
-  // 	name: "Add Requests",
-  // 	href: "AddRequest",
-  // 	color: { light: "#B66878", dark: "#894553" },
-  // },
-  // {
-  // 	name: "Search Requests",
-  // 	href: "SearchRequests",
-  // 	color: { light: "#736EA9", dark: "#554E9D" },
-  // },
 ];
 
 export default function NavBar({ children }: { children: ReactNode }) {
@@ -92,6 +82,7 @@ export default function NavBar({ children }: { children: ReactNode }) {
     if (isOpen) {
       onClose();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   const isMobile = useIsMobile();

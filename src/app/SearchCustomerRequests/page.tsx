@@ -13,7 +13,7 @@ import CustomDivider from '@/components/Divider/customDivider';
 import axios from 'axios';
 import { CustomerBookRequest } from '@prisma/client';
 
-export default function SearchRequests() {
+export default function SearchCustomerRequests() {
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [reload, setReload] = useState(false);
