@@ -1,5 +1,5 @@
-"use server";
-import { execa } from "execa";
+'use server';
+import { execa } from 'execa';
 
 /**
  * Dumps all postgresql database to .csv file in ./backups/
@@ -9,22 +9,22 @@ import { execa } from "execa";
 export default async function PGDUMP(): Promise<Error | string> {
   const path = process.env.DATABASE_URL;
 
-  if (!path) return Error("No DATABASE_URL environment variable.");
+  if (!path) return Error('No DATABASE_URL environment variable.');
 
   const stdout = await csvOutput(path);
-  return "Exported";
+  return 'Exported';
 }
 
 async function csvOutput(path: string) {
   try {
     const { stdout } = await execa(`${process.env.PGADMIN_PATH}`, [
       `--dbname=${path}`,
-	  `--tuples-only`,
+      `--tuples-only`,
       `--command=SELECT * FROM public."ScannedBook"`,
-      "--csv",
+      '--csv',
       `--output=${process.env.BACKUP_PATH}${new Date()
         .toLocaleDateString()
-        .replaceAll("/", "_")}_backup.csv`,
+        .replaceAll('/', '_')}_backup.csv`,
     ]);
 
     return stdout;

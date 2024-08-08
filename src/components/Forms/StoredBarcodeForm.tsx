@@ -7,17 +7,17 @@ import {
   InputGroup,
   InputRightAddon,
   Switch,
-} from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { ZodErrorMap, z } from "zod";
-import { useEffect } from "react";
+} from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { ZodErrorMap, z } from 'zod';
+import { useEffect } from 'react';
 
-import AddButton from "@/components/Buttons/AddButton";
-import RemoveButton from "../Buttons/RemoveButton";
+import AddButton from '@/components/Buttons/AddButton';
+import RemoveButton from '../Buttons/RemoveButton';
 
 const customErrorMap: ZodErrorMap = (error, ctx) => {
-  if (error.code == "too_small") {
+  if (error.code == 'too_small') {
     return { message: `No barcode entered please scan a book...` };
   }
 
@@ -41,7 +41,7 @@ export default function StoredBarcodeForm({
 }: {
   barcodeSearch: Function;
   isLoading: boolean;
-  formType: "Add" | "Remove";
+  formType: 'Add' | 'Remove';
 }) {
   const {
     register,
@@ -51,13 +51,13 @@ export default function StoredBarcodeForm({
     formState: { errors },
   } = useForm<barcodeForm>({
     resolver: zodResolver(barcodeValidator),
-    defaultValues: { barcode: "" },
+    defaultValues: { barcode: '' },
   });
 
   useEffect(() => {
     if (!isLoading) {
-      resetField("barcode");
-      setFocus("barcode");
+      resetField('barcode');
+      setFocus('barcode');
     }
   }, [setFocus, resetField, isLoading]);
 
@@ -69,20 +69,20 @@ export default function StoredBarcodeForm({
     >
       <FormControl isInvalid={errors.barcode ? true : false}>
         <FormLabel htmlFor="barcode">
-          {formType == "Add"
-            ? "Add Book to Database:"
-            : "Remove Book From Database:"}
+          {formType == 'Add'
+            ? 'Add Book to Database:'
+            : 'Remove Book From Database:'}
         </FormLabel>
         <InputGroup>
           <Input
             autoFocus
             autoComplete="off"
-            borderColor={"gray.400"}
+            borderColor={'gray.400'}
             disabled={isLoading}
             id="barcode"
             placeholder="Start Scanning books..."
-            {...register("barcode", {
-              required: "You need to enter or scan a barcode...",
+            {...register('barcode', {
+              required: 'You need to enter or scan a barcode...',
             })}
           />
           <InputRightAddon>
@@ -96,8 +96,8 @@ export default function StoredBarcodeForm({
         </FormErrorMessage>
       </FormControl>
 
-      {formType == "Add" && <AddButton isLoading={isLoading} />}
-      {formType == "Remove" && <RemoveButton isLoading={isLoading} />}
+      {formType == 'Add' && <AddButton isLoading={isLoading} />}
+      {formType == 'Remove' && <RemoveButton isLoading={isLoading} />}
     </form>
   );
 }
