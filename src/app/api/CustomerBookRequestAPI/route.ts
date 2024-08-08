@@ -1,6 +1,6 @@
-"use server";
-import { prisma } from "@/db";
-import { NextResponse } from "next/server";
+'use server';
+import { prisma } from '@/db';
+import { NextResponse } from 'next/server';
 
 // Add Customer Request
 export async function POST(request: Request) {
@@ -29,8 +29,8 @@ export async function POST(request: Request) {
     return NextResponse.json(customerBookRequest);
   } catch (error: any) {
     return NextResponse.json(
-      { error: "Failed Adding Book Request..." },
-      { status: 500 }
+      { error: 'Failed Adding Book Request...' },
+      { status: 500 },
     );
   }
 }
@@ -38,12 +38,12 @@ export async function POST(request: Request) {
 // Search Customer Requests
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const searchTerm = searchParams.get("search");
+  const searchTerm = searchParams.get('search');
 
   if (searchTerm === null) {
     return NextResponse.json(
-      { error: "No Search Entered..." },
-      { status: 500 }
+      { error: 'No Search Entered...' },
+      { status: 500 },
     );
   }
 
@@ -78,14 +78,14 @@ export async function GET(request: Request) {
           },
         ],
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
     });
 
     return NextResponse.json(customerResults);
   } catch (error: any) {
     return NextResponse.json(
-      { error: "Failed Finding Customer Request by Search..." },
-      { status: 500 }
+      { error: 'Failed Finding Customer Request by Search...' },
+      { status: 500 },
     );
   }
 }
@@ -93,7 +93,7 @@ export async function GET(request: Request) {
 export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  const id = searchParams.get("id");
+  const id = searchParams.get('id');
 
   if (id) {
     try {
@@ -106,14 +106,14 @@ export async function DELETE(request: Request) {
       return NextResponse.json(deletedCustomer);
     } catch (error: any) {
       return NextResponse.json(
-        { error: "Failed Removing Customer Request by ID..." },
-        { status: 500 }
+        { error: 'Failed Removing Customer Request by ID...' },
+        { status: 500 },
       );
     }
   }
 
   return NextResponse.json(
     { error: "I'm a little teapot, cannot handle that method." },
-    { status: 418 }
+    { status: 418 },
   );
 }

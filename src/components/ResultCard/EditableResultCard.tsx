@@ -5,17 +5,17 @@ import {
   Stack,
   Divider,
   HStack,
-} from "@chakra-ui/react";
-import CustomEditableInput from "../Inputs/CustomEditableInput";
-import axios from "axios";
-import CustomEditableSelect from "../Inputs/CustomEditableSelect";
-import ParkedToggle from "../Shared/ParkedToggle";
+} from '@chakra-ui/react';
+import CustomEditableInput from '../Inputs/CustomEditableInput';
+import axios from 'axios';
+import CustomEditableSelect from '../Inputs/CustomEditableSelect';
+import ParkedToggle from '../Shared/ParkedToggle';
 
 function updateBookValue(barcode: string, field: string, updateData: string) {
   updateValues();
 
   async function updateValues() {
-    await axios.patch("/api/BookAPI/Book", {
+    await axios.patch('/api/BookAPI/Book', {
       barcode: barcode,
       field: field,
       updateData: updateData,
@@ -35,47 +35,47 @@ export default function EditableResultCard({
   return (
     <Box
       p={5}
-      maxW={"500px"}
-      bg={useColorModeValue("gray.100", "gray.600")}
-      boxShadow={"xl"}
-      rounded={"lg"}
-      pos={"relative"}
+      maxW={'500px'}
+      bg={useColorModeValue('gray.100', 'gray.600')}
+      boxShadow={'xl'}
+      rounded={'lg'}
+      pos={'relative'}
       zIndex={1}
     >
-      <Stack align={"Left"}>
+      <Stack align={'Left'}>
         <CustomEditableInput
           fontSize="2xl"
           fontWeight={600}
-          item={title || "Enter a title..."}
-          onSubmit={(data) => updateBookValue(barcode, "title", data)}
+          item={title || 'Enter a title...'}
+          onSubmit={(data) => updateBookValue(barcode, 'title', data)}
         />
 
-        <Divider borderColor={useColorModeValue("black", "white")} />
+        <Divider borderColor={useColorModeValue('black', 'white')} />
         <Stack>
           <ResultItem
             barcode={barcode}
-            cardBodyName={"Author"}
-            field={"author"}
+            cardBodyName={'Author'}
+            field={'author'}
             item={author}
-            genre={""}
+            genre={''}
           />
           <ResultItem
             barcode={barcode}
-            cardBodyName={"Genre"}
-            field={"genre"}
+            cardBodyName={'Genre'}
+            field={'genre'}
             genre={genre}
             item={genre}
           />
           <ResultItem
             barcode={barcode}
-            cardBodyName={"ISBN"}
-            field={"isbn"}
+            cardBodyName={'ISBN'}
+            field={'isbn'}
             item={isbn}
-            genre={""}
+            genre={''}
           />
           <HStack>
             <Text fontWeight={700}>Barcode:</Text>
-            <Text fontSize={"lg"} fontWeight={600}>
+            <Text fontSize={'lg'} fontWeight={600}>
               {barcode}
             </Text>
           </HStack>
@@ -96,10 +96,10 @@ function ResultItem({
   barcode: string;
   item: string;
   cardBodyName: string;
-  field: "title" | "author" | "genre" | "isbn";
+  field: 'title' | 'author' | 'genre' | 'isbn';
   genre: string;
 }) {
-  if (field == "genre") {
+  if (field == 'genre') {
     return (
       <HStack>
         <Text fontWeight={700}>{cardBodyName}:</Text>

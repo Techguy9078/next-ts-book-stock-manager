@@ -1,9 +1,9 @@
-"use server";
+'use server';
 // import { normalizeAccents } from "@/app/api/BookAPI/CustomAPIBookSearch/_helpers/helpers";
-import { AxiosResponse } from "axios";
+import { AxiosResponse } from 'axios';
 
 const removeAccents = (str: string) => {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 };
 
 /**
@@ -14,16 +14,16 @@ const removeAccents = (str: string) => {
  */
 export async function BookDataParseOL(
   result: AxiosResponse<any, any>,
-  barcode: string
+  barcode: string,
 ): Promise<IScannedBookLayout> {
   const bookData = result.data[`ISBN:${barcode}`];
 
   let bookObject: IScannedBookLayout = {
-    barcode: "",
-    isbn: "",
-    title: "",
-    author: "",
-    genre: "n/a",
+    barcode: '',
+    isbn: '',
+    title: '',
+    author: '',
+    genre: 'n/a',
   };
 
   bookObject.barcode = barcode.toString();
@@ -45,7 +45,7 @@ export async function BookDataParseOL(
   bookObject.title = title;
   bookObject.author = bookData.authors
     .map((author: any) => author.name)
-    .join(", ");
+    .join(', ');
 
   return bookObject;
 }
@@ -58,36 +58,36 @@ export async function BookDataParseOL(
  */
 export async function BookDataParseGoogleAPI(
   result: AxiosResponse<any, any>,
-  barcode: string
+  barcode: string,
 ): Promise<IScannedBookLayout> {
   const bookData = result.data.items[0].volumeInfo;
 
   let bookObject: IScannedBookLayout = {
-    barcode: "",
-    isbn: "",
-    title: "",
-    author: "",
-    genre: "n/a",
+    barcode: '',
+    isbn: '',
+    title: '',
+    author: '',
+    genre: 'n/a',
   };
 
   bookObject.barcode = barcode.toString();
 
   if (
     bookData.industryIdentifiers.filter(
-      (identifier: any) => identifier.type == "ISBN_10"
+      (identifier: any) => identifier.type == 'ISBN_10',
     ).length
   ) {
     bookObject.isbn = bookData.industryIdentifiers.filter(
-      (identifier: any) => identifier.type == "ISBN_10"
+      (identifier: any) => identifier.type == 'ISBN_10',
     )[0].identifier;
   } else {
     if (
       bookData.industryIdentifiers.filter(
-        (identifier: any) => identifier.type == "ISBN_13"
+        (identifier: any) => identifier.type == 'ISBN_13',
       ).length
     ) {
       bookObject.isbn = bookData.industryIdentifiers.filter(
-        (identifier: any) => identifier.type == "ISBN_13"
+        (identifier: any) => identifier.type == 'ISBN_13',
       )[0].identifier;
     } else {
       bookObject.isbn = barcode.toString();
@@ -95,7 +95,7 @@ export async function BookDataParseGoogleAPI(
   }
 
   bookObject.title = await removeAccents(bookData.title);
-  bookObject.author = bookData.authors.map((author: any) => author).join(", ");
+  bookObject.author = bookData.authors.map((author: any) => author).join(', ');
   // TODO this is the genre but will need to be attached once a list of them is created to check against otherwise could end up with anything
   // Example been 9781473667730 which is a categorie of "Chick lit"
   //bookObject.genre = bookData.categories ? bookData.categories[0] : "n/a";
@@ -108,14 +108,14 @@ export async function BookDataParseGoogleAPI(
  * @returns BookObject in local database layout
  */
 export async function ManualBookDataParse(
-  data: IScannedBookLayout
+  data: IScannedBookLayout,
 ): Promise<IScannedBookLayout> {
   let bookObject: IScannedBookLayout = {
-    barcode: "",
-    isbn: "",
-    title: "",
-    author: "",
-    genre: "",
+    barcode: '',
+    isbn: '',
+    title: '',
+    author: '',
+    genre: '',
   };
 
   bookObject.barcode = data.barcode;

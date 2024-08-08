@@ -3,16 +3,16 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
-} from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { ZodErrorMap, z } from "zod";
-import { useEffect } from "react";
+} from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { ZodErrorMap, z } from 'zod';
+import { useEffect } from 'react';
 
-import GenericButton from "@/components/Buttons/GenericButton";
+import GenericButton from '@/components/Buttons/GenericButton';
 
 const customErrorMap: ZodErrorMap = (error, ctx) => {
-  if (error.code == "too_small") {
+  if (error.code == 'too_small') {
     return { message: `No barcode entered please scan a book...` };
   }
 
@@ -36,7 +36,7 @@ export default function BarcodeForm({
 }: {
   barcodeSearch: Function;
   isLoading: boolean;
-  formType: "Add" | "Remove" | "Activate";
+  formType: 'Add' | 'Remove' | 'Activate';
 }) {
   const {
     register,
@@ -46,29 +46,29 @@ export default function BarcodeForm({
     formState: { errors },
   } = useForm<barcodeForm>({
     resolver: zodResolver(barcodeValidator),
-    defaultValues: { barcode: "" },
+    defaultValues: { barcode: '' },
   });
 
   useEffect(() => {
     if (!isLoading) {
-      resetField("barcode");
-      setFocus("barcode");
+      resetField('barcode');
+      setFocus('barcode');
     }
   }, [setFocus, resetField, isLoading]);
 
-  let formLabel = "";
+  let formLabel = '';
   switch (formType) {
-    case "Add":
-      formLabel = "Add Book to Database:";
+    case 'Add':
+      formLabel = 'Add Book to Database:';
       break;
-    case "Activate":
-      formLabel = "Activate the book to put on shelf:";
+    case 'Activate':
+      formLabel = 'Activate the book to put on shelf:';
       break;
-    case "Remove":
-      formLabel = "Remove Book From Database:";
+    case 'Remove':
+      formLabel = 'Remove Book From Database:';
       break;
     default:
-      formLabel = "If you are seeing this the formType is not set";
+      formLabel = 'If you are seeing this the formType is not set';
       break;
   }
 
@@ -83,12 +83,12 @@ export default function BarcodeForm({
         <Input
           autoFocus
           autoComplete="off"
-          borderColor={"gray.400"}
+          borderColor={'gray.400'}
           disabled={isLoading}
           id="barcode"
           placeholder="Start Scanning books..."
-          {...register("barcode", {
-            required: "You need to enter or scan a barcode...",
+          {...register('barcode', {
+            required: 'You need to enter or scan a barcode...',
           })}
         />
         <FormErrorMessage>

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Text, Switch, Flex } from "@chakra-ui/react";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import { Text, Switch, Flex } from '@chakra-ui/react';
+import axios from 'axios';
 
 interface ParkedToggleProps {
   book: IScannedBookLayout;
@@ -21,7 +21,7 @@ function ParkedToggle({ book, fontSize, fontWeight }: ParkedToggleProps) {
     const handleParkBook = async () => {
       setLoading(true);
       await axios
-        .patch("/api/BookAPI/ParkBook", {
+        .patch('/api/BookAPI/ParkBook', {
           book: book,
           updateData: parked,
         })
@@ -43,7 +43,7 @@ function ParkedToggle({ book, fontSize, fontWeight }: ParkedToggleProps) {
   return (
     <Flex align="center">
       <Text fontSize={fontSize} fontWeight={fontWeight}>
-        Status: {parked ? "Parked" : "Active"}
+        Status: {parked ? 'Parked' : 'Active'}
       </Text>
       <Switch
         ml={2}

@@ -1,7 +1,7 @@
-import { Button, Tbody, Td, Tr, useColorModeValue } from "@chakra-ui/react";
-import axios from "axios";
-import { useState } from "react";
-import ParkedToggle from "../Shared/ParkedToggle";
+import { Button, Tbody, Td, Tr, useColorModeValue } from '@chakra-ui/react';
+import axios from 'axios';
+import { useState } from 'react';
+import ParkedToggle from '../Shared/ParkedToggle';
 
 export default function BookTableItem({
   book,
@@ -25,13 +25,13 @@ export default function BookTableItem({
   }
 
   const date = new Date(createdAt);
-  const formattedDate = date.toLocaleDateString("en-AU");
+  const formattedDate = date.toLocaleDateString('en-AU');
   return (
     <Tbody
       key={id}
-      borderStyle={"solid"}
+      borderStyle={'solid'}
       borderWidth={2}
-      borderColor={useColorModeValue("gray.300", "gray.800")}
+      borderColor={useColorModeValue('gray.300', 'gray.800')}
     >
       <Tr>
         <Td>{isbn}</Td>
@@ -40,19 +40,19 @@ export default function BookTableItem({
         <Td>{genre}</Td>
         <Td>{formattedDate}</Td>
         <Td>
-          <ParkedToggle book={book} fontSize={"md"} />
+          <ParkedToggle book={book} fontSize={'md'} />
         </Td>
         <Td>
           <Button
             isLoading={loading}
-            loadingText={"Removing Book..."}
-            className={"bg-red-400"}
-            color={"white"}
+            loadingText={'Removing Book...'}
+            className={'bg-red-400'}
+            color={'white'}
             _hover={{
-              bgColor: "red.600",
-              color: useColorModeValue("gray.300", "gray.300"),
+              bgColor: 'red.600',
+              color: useColorModeValue('gray.300', 'gray.300'),
             }}
-            w={"100%"}
+            w={'100%'}
             size="lg"
             px={10}
             onClick={removeBook}

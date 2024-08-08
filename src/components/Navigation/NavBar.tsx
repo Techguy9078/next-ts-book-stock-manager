@@ -1,5 +1,5 @@
-"use client";
-import { ReactNode, useEffect } from "react";
+'use client';
+import { ReactNode, useEffect } from 'react';
 import {
   Box,
   Flex,
@@ -11,13 +11,13 @@ import {
   Stack,
   useColorMode,
   Text,
-} from "@chakra-ui/react";
-import { Link } from "@chakra-ui/next-js";
-import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import AdminDropdown from "./AdminDropdown";
-import { useIsMobile } from "@/utils/isMobile";
+} from '@chakra-ui/react';
+import { Link } from '@chakra-ui/next-js';
+import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from '@chakra-ui/icons';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import AdminDropdown from './AdminDropdown';
+import { useIsMobile } from '@/utils/isMobile';
 
 // ##################################################
 // Colours
@@ -55,19 +55,19 @@ interface colorType {
 
 const links = [
   {
-    name: "Activate",
-    href: "Activate",
-    color: { light: "#f44336", dark: "#f44336" },
+    name: 'Activate',
+    href: 'Activate',
+    color: { light: '#f44336', dark: '#f44336' },
   },
   {
-    name: "Auto Remove",
-    href: "AutoRemove",
-    color: { light: "#8561c5", dark: "#673ab7" },
+    name: 'Auto Remove',
+    href: 'AutoRemove',
+    color: { light: '#8561c5', dark: '#673ab7' },
   },
   {
-    name: "Search",
-    href: "Search",
-    color: { light: "#00a9be", dark: "#008394" },
+    name: 'Search',
+    href: 'Search',
+    color: { light: '#00a9be', dark: '#008394' },
   },
   // {
   // 	name: "Add Requests",
@@ -98,43 +98,43 @@ export default function NavBar({ children }: { children: ReactNode }) {
 
   return (
     <Box
-      width={"100%"}
-      height={"100%"}
+      width={'100%'}
+      height={'100%'}
       position="fixed"
       bgColor={useColorModeValue(
-        linkObject?.color.dark ? linkObject?.color.dark : "white",
-        linkObject?.color.dark ? linkObject?.color.dark : "gray.400"
+        linkObject?.color.dark ? linkObject?.color.dark : 'white',
+        linkObject?.color.dark ? linkObject?.color.dark : 'gray.400',
       )}
     >
-      <Box bg={useColorModeValue("gray.200", "gray.900")} px={8}>
-        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+      <Box bg={useColorModeValue('gray.200', 'gray.900')} px={8}>
+        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
-            size={"md"}
+            size={'md'}
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            aria-label={"Open Menu"}
-            display={{ md: "none" }}
+            aria-label={'Open Menu'}
+            display={{ md: 'none' }}
             onClick={isOpen ? onClose : onOpen}
           />
-          <HStack spacing={8} alignItems={"center"}>
+          <HStack spacing={8} alignItems={'center'}>
             <Link
-              href={"/"}
+              href={'/'}
               p={1}
-              rounded={"md"}
+              rounded={'md'}
               _hover={{
-                textDecoration: "none",
-                bg: useColorModeValue("gray.200", "gray.700"),
+                textDecoration: 'none',
+                bg: useColorModeValue('gray.200', 'gray.700'),
               }}
             >
               <HStack>
                 <Image
-                  src={"/bookworm.png"}
+                  src={'/bookworm.png'}
                   alt=""
                   width="0"
                   height="0"
                   sizes="100vw"
-                  style={{ width: "48px", height: "auto" }}
+                  style={{ width: '48px', height: 'auto' }}
                 />
-                <Text textColor={useColorModeValue("black", "white")}>
+                <Text textColor={useColorModeValue('black', 'white')}>
                   Book Store App
                 </Text>
               </HStack>
@@ -142,10 +142,10 @@ export default function NavBar({ children }: { children: ReactNode }) {
 
             <HStack
               h={16}
-              as={"nav"}
+              as={'nav'}
               spacing={0}
-              display={{ base: "none", md: "flex" }}
-              textColor={useColorModeValue("gray.900", "gray.200")}
+              display={{ base: 'none', md: 'flex' }}
+              textColor={useColorModeValue('gray.900', 'gray.200')}
             >
               {links.map(({ name, href, color }, i) => (
                 <DesktopNavLink
@@ -157,19 +157,19 @@ export default function NavBar({ children }: { children: ReactNode }) {
                   {name}
                 </DesktopNavLink>
               ))}
-              {colorMode === "dark" && !isMobile ? <AdminDropdown /> : null}
+              {colorMode === 'dark' && !isMobile ? <AdminDropdown /> : null}
             </HStack>
           </HStack>
-          <Flex alignItems={"center"}>
+          <Flex alignItems={'center'}>
             <Button onClick={toggleColorMode}>
-              {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+              {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
             </Button>
           </Flex>
         </Flex>
 
         {isOpen ? (
-          <Box pb={4} display={{ md: "none" }}>
-            <Stack as={"nav"} spacing={1}>
+          <Box pb={4} display={{ md: 'none' }}>
+            <Stack as={'nav'} spacing={1}>
               {links.map(({ name, href, color }, i) => (
                 <MobileNavLink
                   key={i}
@@ -181,7 +181,7 @@ export default function NavBar({ children }: { children: ReactNode }) {
                 </MobileNavLink>
               ))}
             </Stack>
-            {colorMode === "dark" ? <AdminDropdown /> : null}
+            {colorMode === 'dark' ? <AdminDropdown /> : null}
           </Box>
         ) : null}
       </Box>
@@ -206,22 +206,22 @@ const DesktopNavLink = ({
   return (
     <Button
       as={Link}
-      w={"135px"}
-      display={"flex"}
-      h={"100%"}
-      alignItems={"center"}
-      rounded={"none"}
+      w={'135px'}
+      display={'flex'}
+      h={'100%'}
+      alignItems={'center'}
+      rounded={'none'}
       bgColor={dark}
       isActive={currentLink == href}
-      color={"white"}
+      color={'white'}
       _active={{
-        color: "black",
+        color: 'black',
         bgColor: light,
       }}
       _hover={{
-        textDecoration: "none",
+        textDecoration: 'none',
         bg: light,
-        color: "black",
+        color: 'black',
       }}
       href={href}
     >
@@ -247,21 +247,21 @@ const MobileNavLink = ({
       as={Link}
       py={4}
       px={3}
-      display={"flex"}
-      h={"100%"}
-      alignItems={"center"}
-      rounded={"none"}
+      display={'flex'}
+      h={'100%'}
+      alignItems={'center'}
+      rounded={'none'}
       bgColor={dark}
       isActive={currentLink == href ? true : false}
-      color={"white"}
+      color={'white'}
       _active={{
-        color: "black",
+        color: 'black',
         bgColor: light,
       }}
       _hover={{
-        textDecoration: "none",
+        textDecoration: 'none',
         bg: light,
-        color: "black",
+        color: 'black',
       }}
       href={href}
     >

@@ -6,8 +6,8 @@ import {
   Thead,
   Tr,
   useColorModeValue,
-} from "@chakra-ui/react";
-import BookTableItem from "./SearchBookTableItem";
+} from '@chakra-ui/react';
+import BookTableItem from './SearchBookTableItem';
 
 export default function BookTable({
   bookArray,
@@ -18,46 +18,46 @@ export default function BookTable({
 }) {
   return (
     <Box
-      overflowY={"scroll"}
-      maxHeight={"50vh"}
-      fontSize={{ sm: "sm", md: "md" }}
+      overflowY={'scroll'}
+      maxHeight={'50vh'}
+      fontSize={{ sm: 'sm', md: 'md' }}
       sx={{
-        "::-webkit-scrollbar": {
-          width: "4px",
+        '::-webkit-scrollbar': {
+          width: '4px',
         },
-        "::-webkit-scrollbar-track": {
-          bgColor: useColorModeValue("gray.300", "gray.600"),
-          borderRadius: "100px",
+        '::-webkit-scrollbar-track': {
+          bgColor: useColorModeValue('gray.300', 'gray.600'),
+          borderRadius: '100px',
         },
-        "::-webkit-scrollbar-thumb": {
-          bgColor: useColorModeValue("gray.400", "gray.800"),
-          borderRadius: "100px",
+        '::-webkit-scrollbar-thumb': {
+          bgColor: useColorModeValue('gray.400', 'gray.800'),
+          borderRadius: '100px',
         },
       }}
     >
       <Table size="md">
         <Thead
           borderWidth={2}
-          borderColor={useColorModeValue("gray.300", "gray.600")}
-          position={"sticky"}
+          borderColor={useColorModeValue('gray.300', 'gray.600')}
+          position={'sticky'}
           top={-0.5}
           zIndex={2}
           sx={{
-            "@media screen and (max-width: 600px)": {
-              display: "none",
+            '@media screen and (max-width: 600px)': {
+              display: 'none',
             },
           }}
         >
           <Tr>
-            <Th bgColor={useColorModeValue("gray.300", "gray.800")}>ISBN</Th>
-            <Th bgColor={useColorModeValue("gray.300", "gray.800")}>Title</Th>
-            <Th bgColor={useColorModeValue("gray.300", "gray.800")}>Author</Th>
-            <Th bgColor={useColorModeValue("gray.300", "gray.800")}>Genre</Th>
-            <Th bgColor={useColorModeValue("gray.300", "gray.800")}>
+            <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>ISBN</Th>
+            <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>Title</Th>
+            <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>Author</Th>
+            <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>Genre</Th>
+            <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>
               Scanned Date
             </Th>
-            <Th bgColor={useColorModeValue("gray.300", "gray.800")}>Status</Th>
-            <Th bgColor={useColorModeValue("gray.300", "gray.800")}>Delete</Th>
+            <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>Status</Th>
+            <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>Delete</Th>
           </Tr>
         </Thead>
         {!bookArray.length && (

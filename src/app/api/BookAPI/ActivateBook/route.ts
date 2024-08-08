@@ -1,5 +1,5 @@
-import { prisma } from "@/db";
-import { NextResponse } from "next/server";
+import { prisma } from '@/db';
+import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   const req = await request.json();
@@ -7,8 +7,8 @@ export async function POST(request: Request) {
 
   if (!barcode) {
     return NextResponse.json(
-      { error: "No barcode was found!" },
-      { status: 400 }
+      { error: 'No barcode was found!' },
+      { status: 400 },
     );
   }
 
@@ -16,13 +16,13 @@ export async function POST(request: Request) {
     // Find the oldest record by barcode, parked and date
     const record = await prisma.scannedBook.findFirst({
       where: { barcode, park: true },
-      orderBy: { createdAt: "asc" },
+      orderBy: { createdAt: 'asc' },
     });
 
     if (!record) {
       return NextResponse.json(
-        { error: "Not found, was it parked first?" },
-        { status: 404 }
+        { error: 'Not found, was it parked first?' },
+        { status: 404 },
       );
     }
 
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     return NextResponse.json(
       { error: `Internal server error, ${error.message}` },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
