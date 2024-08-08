@@ -18,7 +18,6 @@ model StoredBooks {
   title     String
   author    String
   genre     String        @default("n/a")
-  park      Boolean       @default(true)
   createdAt DateTime      @default(now())
   books     ScannedBook[]
 
@@ -44,7 +43,6 @@ model Sales {
   title     String
   author    String
   genre     String   @default("n/a")
-  park      Boolean  @default(true)
   createdAt DateTime @default(now())
 }
 
