@@ -6,13 +6,13 @@ export async function POST(request: Request) {
   const req = await request.json();
   let { barcode, isbn, title, author, genre } = req;
 
+  // Ensure barcode is a string
   if (typeof barcode === "number") {
     barcode = barcode.toString();
   }
 
-  // This is still an issue, a simple create works as expected but when connectOrCreate
-  // is used it seems to pull the park of the stored book as false regardless of how it is set
   try {
+    // Create a new book entry
     const combinedBookData = await prisma.scannedBook.create({
       data: {
         book: {
@@ -26,7 +26,6 @@ export async function POST(request: Request) {
               title: title,
               author: author,
               genre: genre,
-              park: true,
             },
           },
         },
@@ -34,7 +33,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(combinedBookData);
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       { error: "Failed Adding Local Book..." },
       { status: 500 }
