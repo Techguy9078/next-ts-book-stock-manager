@@ -16,7 +16,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <ChakraProvider>
         <QueryClientProvider client={queryClient}>
           <BookCountProvider>
-            {children}{' '}
+            {children}
             <Toaster
               className={'h-1'}
               richColors

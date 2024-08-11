@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useRef, useState } from 'react';
 import {
   Box,
   FormLabel,
@@ -6,51 +7,82 @@ import {
   Text,
   VStack,
   useColorModeValue,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react';
-import { useEffect, useRef, useState } from 'react';
-
+import { toast } from 'sonner';
 import CustomDivider from '@/components/Divider/customDivider';
 import axios from 'axios';
 import { CustomerBookRequest } from '@prisma/client';
+import CustomerRequests from '@/components/Requests/CustomerRequests';
 
 export default function SearchCustomerRequests() {
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
 
-  const [reload, setReload] = useState(false);
   const [search, setSearch] = useState<string>('');
-  const [customers, setCustomers] = useState<Array<CustomerBookRequest>>();
+  const [requests, setRequests] = useState<Array<CustomerBookRequest> | null>(
+    null,
+  );
+  const [noResults, setNoResults] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    async function FindCustomer() {
-      if (search == '') return setCustomers(undefined);
+    const findCustomer = async () => {
       try {
-        let customerResults = await axios.get(
+        const customerResults = await axios.get(
           `/api/CustomerBookRequestAPI?search=${search}`,
           {
             signal: signal,
           },
         );
-        return setCustomers(customerResults.data);
+
+        const results = customerResults.data;
+        setRequests(results);
+
+        if (results.length === 0) {
+          setNoResults(true);
+        } else {
+          setNoResults(false);
+        }
       } catch {
-        return;
+        setRequests(null);
+        setNoResults(true);
       }
+    };
+
+    if (search !== '') {
+      findCustomer();
+    } else {
+      setRequests([]);
+      setNoResults(false);
     }
-    FindCustomer();
 
     return () => {
       controller.abort();
     };
-  }, [search, reload]);
+  }, [search]);
 
-  function handleRerender() {
-    setReload(true);
-    setTimeout(() => {
-      setReload(false);
-    }, 2000);
-  }
+  const removeRequest = async (requestId: string) => {
+    setLoading(true);
+    await axios
+      .delete(`/api/CustomerBookRequestAPI?id=${requestId}`)
+      .then(() => {
+        toast.success('Request has been removed successfully');
+      })
+      .catch((err) => {
+        toast.error(
+          err?.response?.data?.error || (err as any).message || 'Unknown Error',
+        );
+      })
+      .finally(() => {
+        setSearch('');
+        searchInputRef.current?.focus();
+        setLoading(false);
+      });
+  };
 
   return (
     <Box
@@ -63,7 +95,7 @@ export default function SearchCustomerRequests() {
         <CustomDivider />
         <form>
           <FormLabel>
-            Find Customer in database:
+            Search Customers:
             <Input
               ref={searchInputRef}
               borderColor={'gray.400'}
@@ -72,19 +104,31 @@ export default function SearchCustomerRequests() {
               name={'searchbox'}
               type="text"
               value={search}
-              placeholder="Enter Customer to search for..."
+              placeholder="Search by name, number, title, author, or ISBN..."
               onChange={(e) => setSearch(e.target.value)}
             />
           </FormLabel>
         </form>
       </VStack>
 
-      {/* {customers && (
-				<CustomerTable
-					customerArray={customers}
-					handleRerender={handleRerender}
-				/>
-			)} */}
+      {noResults && (
+        <Alert status="warning" borderRadius={6} w={'fit-content'}>
+          <AlertIcon />
+          No customer requests found.
+        </Alert>
+      )}
+
+      {requests && requests.length > 0 && (
+        <Box mt={4}>
+          {requests && (
+            <CustomerRequests
+              requests={requests}
+              loading={loading}
+              removeRequest={removeRequest}
+            />
+          )}
+        </Box>
+      )}
     </Box>
   );
 }

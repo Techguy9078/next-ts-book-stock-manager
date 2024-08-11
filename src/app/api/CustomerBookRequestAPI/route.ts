@@ -49,51 +49,53 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const searchTerm = searchParams.get('search');
 
-  if (searchTerm === null) {
-    return NextResponse.json(
-      { error: 'No Search Entered...' },
-      { status: 500 },
-    );
-  }
-
   try {
-    const customerResults = await prisma.customerBookRequest.findMany({
-      where: {
-        OR: [
-          {
-            requestName: {
-              contains: searchTerm,
+    let customerResults;
+
+    if (searchTerm) {
+      customerResults = await prisma.customerBookRequest.findMany({
+        where: {
+          OR: [
+            {
+              requestName: {
+                contains: searchTerm,
+              },
             },
-          },
-          {
-            requestNumber: {
-              contains: searchTerm,
+            {
+              requestNumber: {
+                contains: searchTerm,
+              },
             },
-          },
-          {
-            requestTitle: {
-              contains: searchTerm,
+            {
+              requestTitle: {
+                contains: searchTerm,
+              },
             },
-          },
-          {
-            requestAuthor: {
-              contains: searchTerm,
+            {
+              requestAuthor: {
+                contains: searchTerm,
+              },
             },
-          },
-          {
-            requestISBN: {
-              contains: searchTerm,
+            {
+              requestISBN: {
+                contains: searchTerm,
+              },
             },
-          },
-          {
-            requestComment: {
-              contains: searchTerm,
+            {
+              requestComment: {
+                contains: searchTerm,
+              },
             },
-          },
-        ],
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+          ],
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+    } else {
+      // If no search term is provided, fetch all results
+      customerResults = await prisma.customerBookRequest.findMany({
+        orderBy: { createdAt: 'desc' },
+      });
+    }
 
     return NextResponse.json(customerResults);
   } catch (error: any) {

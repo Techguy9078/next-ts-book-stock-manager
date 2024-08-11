@@ -2,6 +2,7 @@ import { Button, Tbody, Td, Tr, useColorModeValue } from '@chakra-ui/react';
 import axios from 'axios';
 import { useState } from 'react';
 import ParkedToggle from '../Shared/ParkedToggle';
+import { toast } from 'sonner';
 
 export default function BookTableItem({
   book,
@@ -16,12 +17,21 @@ export default function BookTableItem({
 
   async function removeBook() {
     setLoading(true);
-    await axios.delete(`/api/BookAPI/Book?id=${id}`);
-    handleRefetch();
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    await axios
+      .delete(`/api/BookAPI/Book?id=${id}`)
+      .catch((err) => {
+        toast.error('Something went wrong', {
+          description: `${
+            err?.response?.data?.error ||
+            (err as any).message ||
+            'Unknown Error'
+          }`,
+        });
+      })
+      .finally(() => {
+        handleRefetch();
+        setLoading(false);
+      });
   }
 
   const date = new Date(createdAt);
