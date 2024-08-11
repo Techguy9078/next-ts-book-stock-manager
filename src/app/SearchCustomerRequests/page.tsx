@@ -18,11 +18,11 @@ import CustomerRequests from '@/components/Requests/CustomerRequests';
 
 export default function SearchCustomerRequests() {
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [loading, setLoading] = useState(false);
 
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState<string>('');
   const [requests, setRequests] = useState<Array<CustomerBookRequest> | null>(
-    null,
+    [],
   );
   const [noResults, setNoResults] = useState(false);
 
@@ -48,17 +48,12 @@ export default function SearchCustomerRequests() {
           setNoResults(false);
         }
       } catch {
-        setRequests(null);
+        setRequests([]);
         setNoResults(true);
       }
     };
 
-    if (search !== '') {
-      findCustomer();
-    } else {
-      setRequests([]);
-      setNoResults(false);
-    }
+    findCustomer();
 
     return () => {
       controller.abort();
