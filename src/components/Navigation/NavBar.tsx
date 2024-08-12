@@ -57,7 +57,7 @@ const links = [
   {
     name: "Activate",
     href: "Activate",
-    color: { light: "#f44336", dark: "#f44336" },
+    color: { light: "#4caf50", dark: "#4caf50" },
   },
   {
     name: "Auto Remove",

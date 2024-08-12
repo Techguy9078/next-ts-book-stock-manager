@@ -35,7 +35,7 @@ export default function Search() {
       {isMobile ? (
         <Box
           p={4}
-          bgColor={useColorModeValue("gray.200", "gray.700")}
+          bgColor={"gray.200"}
           rounded={"md"}
           maxHeight={"100vh"}
         >
@@ -55,7 +55,7 @@ export default function Search() {
       ) : (
         <Box
           p={4}
-          bgColor={useColorModeValue("gray.200", "gray.700")}
+          bgColor={"gray.200"}
           rounded={"md"}
           maxHeight={"90vh"}
         >
