@@ -47,7 +47,11 @@ export default function CustomerRequests({
         },
       }}
     >
-      <Table size="md">
+      <Table
+        size="md"
+        variant="striped"
+        colorScheme={useColorModeValue('gray.100', 'gray.300')}
+      >
         <Thead
           borderWidth={2}
           borderColor={useColorModeValue('gray.300', 'gray.600')}
@@ -99,6 +103,8 @@ export default function CustomerRequests({
                     color={'white'}
                     _hover={{
                       bgColor: 'red.600',
+                      // Chakra bug
+                      // eslint-disable-next-line react-hooks/rules-of-hooks
                       color: useColorModeValue('gray.300', 'gray.300'),
                     }}
                     w={'100%'}

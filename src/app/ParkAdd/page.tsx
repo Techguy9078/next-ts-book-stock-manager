@@ -14,6 +14,8 @@ import BookCount from '@/components/BookCount/BookCount';
 import BarcodeForm from '@/components/Forms/BarcodeForm';
 import EditableResultCard from '@/components/ResultCard/EditableResultCard';
 import { BookCountContext } from '../BookCountContext';
+import { CustomerBookRequest } from '@prisma/client';
+import CustomerRequestsModal from '@/components/Requests/CustomerRequestsModal';
 
 const barcodeValidator = z.object({
   barcode: z.string().min(1),
@@ -23,7 +25,33 @@ type barcodeForm = z.infer<typeof barcodeValidator>;
 
 export default function ParkAdd() {
   const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
+  const [customerRequests, setCustomerRequests] = useState<
+    CustomerBookRequest[]
+  >([]);
+
   const { getBookCount } = useContext(BookCountContext);
+
+  const searchRequests = async (bookData: IScannedBookLayout) => {
+    const { isbn, barcode, author, title } = bookData;
+
+    try {
+      const response = await axios.get(
+        '/api/CustomerBookRequestAPI/CustomerRequestLookup',
+        {
+          params: { isbn, barcode, author, title },
+        },
+      );
+
+      const rankedResults = response.data;
+      if (rankedResults.length) {
+        setCustomerRequests(rankedResults);
+      }
+    } catch (error) {
+      toast.error('Error searching for customer requests', {
+        description: `${error}`,
+      });
+    }
+  };
 
   const { mutate: barcodeSearch, isLoading } = useMutation({
     mutationFn: async ({ barcode }: barcodeForm) => {
@@ -50,15 +78,16 @@ export default function ParkAdd() {
         return data as IScannedBookLayout;
       }
     },
-    onSuccess: async (data) => {
+    onSuccess: async (data: IScannedBookLayout) => {
       const book = await axios.post('/api/BookAPI/Book', data);
       await axios.put('/api/SalesAPI/SalesStats', {
         updateField: 'addBook',
       });
 
+      await searchRequests(book.data);
+
       getBookCount(null);
       setBookDetails(book.data);
-
       return toast.success('Added Book', {
         description: 'Book added successfully!',
       });
@@ -102,15 +131,13 @@ export default function ParkAdd() {
         />
 
         {bookDetails && <EditableResultCard {...bookDetails} />}
+        {customerRequests?.length ? (
+          <CustomerRequestsModal
+            customerRequests={customerRequests}
+            setCustomerRequests={setCustomerRequests}
+          />
+        ) : null}
       </VStack>
-
-      {/* Use For Images */}
-      {/* {bookDetails?.isbn && (
-				<Image
-					src={`https://covers.openlibrary.org/b/isbn/${bookDetails.isbn}-M.jpg?default=false`}
-					alt=""
-				/>
-			)} */}
     </Box>
   );
 }

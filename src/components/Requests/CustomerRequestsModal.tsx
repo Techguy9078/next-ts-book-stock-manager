@@ -3,10 +3,17 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
   ModalBody,
   ModalFooter,
   Button,
+  Box,
+  Card,
+  CardBody,
+  CardHeader,
+  Heading,
+  Stack,
+  StackDivider,
+  Text,
 } from '@chakra-ui/react';
 import { CustomerBookRequest } from '@prisma/client';
 import React, { useEffect, useState } from 'react';
@@ -37,17 +44,74 @@ const CustomerRequestsModal = ({
 
   console.log(customerRequests);
   return (
-    <Modal isOpen={isOpen} onClose={handleCloseRequests}>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleCloseRequests}
+      closeOnOverlayClick={false}
+      closeOnEsc={false}
+      size={'xl'}
+    >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Modal Title</ModalHeader>
-        <ModalCloseButton />
+        <ModalHeader>Customer Requests Found</ModalHeader>
         <ModalBody>
-          <p>Modal Body</p>
+          {customerRequests?.map((request, index) => (
+            <Card key={index} border={'1px solid rgba(255,255,255,0.3)'} my={2}>
+              <CardBody>
+                <Heading size="md">
+                  {request.requestName} may be looking for this book
+                </Heading>
+                <Stack divider={<StackDivider />} spacing="2">
+                  <StackDivider />
+                  <Box>
+                    <Heading pt={1} size="xs" textTransform="uppercase">
+                      Summary
+                    </Heading>
+                    <Text pt="2" fontSize="md">
+                      Requested on{' '}
+                      {new Date(request.createdAt).toLocaleDateString()}
+                    </Text>
+                    <Text pt="2" fontSize="md">
+                      Request matched by {request.matchedOn}
+                    </Text>
+                  </Box>
+                  <Box>
+                    <Heading size="xs" textTransform="uppercase">
+                      Original Request Details
+                    </Heading>
+                    <Text pt="1" fontSize="sm">
+                      {request.requestISBN && 'ISBN: ' + request.requestISBN}
+                    </Text>
+                    <Text pt="1" fontSize="sm">
+                      {request.requestTitle && 'Title: ' + request.requestTitle}
+                    </Text>
+                    <Text pt="1" fontSize="sm">
+                      {request.requestAuthor &&
+                        'Author: ' + request.requestAuthor}
+                    </Text>
+                    <Text pt="1" fontSize="sm">
+                      {request.requestComment &&
+                        'Comment: ' + request.requestComment}
+                    </Text>
+                  </Box>
+                  <Box>
+                    <Heading size="xs" textTransform="uppercase">
+                      Contact Number
+                    </Heading>
+                    <Text pt="1" fontSize="sm">
+                      {request.requestNumber}
+                    </Text>
+                  </Box>
+                </Stack>
+              </CardBody>
+            </Card>
+          ))}
         </ModalBody>
-
         <ModalFooter>
-          <Button colorScheme="red" mr={3} onClick={handleCloseRequests}>
+          <Button
+            style={{ backgroundColor: '#ff0000d9' }}
+            onClick={handleCloseRequests}
+          >
             Close
           </Button>
         </ModalFooter>

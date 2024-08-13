@@ -68,7 +68,7 @@ const AdminDropdown = () => {
       >
         Boss Mode
       </MenuButton>
-      <MenuList>
+      <MenuList zIndex={3}>
         {adminLinks.map((link) => (
           <MenuItem as={Link} href={link.href} key={link.name}>
             {link.name}
