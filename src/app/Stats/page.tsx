@@ -1,20 +1,19 @@
 "use client";
 import { Box, Text, VStack, useColorModeValue } from "@chakra-ui/react";
-import { Suspense, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import CustomDivider from "@/components/Divider/customDivider";
 import axios from "axios";
 import { SalesStats } from "@prisma/client";
-import StatItem from "@/components/StatItem/StatItem";
 import BookCount from "@/components/BookCount/BookCount";
-import { BookCountContext } from "../BookCountContext";
+import StatsAreaBar from "@/components/Stats/StatsAreaBar";
 
 export default function Stats() {
 	const [salesStatsData, setSalesStatsData] = useState<Array<SalesStats>>();
-	const { currentBookCount } = useContext(BookCountContext);
 
 	async function getSalesData() {
 		const responseSalesStatsData = await axios.post("/api/SalesAPI/SalesStats");
+
 		setSalesStatsData(responseSalesStatsData.data);
 	}
 
@@ -33,14 +32,7 @@ export default function Stats() {
 				<CustomDivider />
 				<BookCount />
 				<CustomDivider />
-				<VStack overflowY={"scroll"} align={"flex-start"} h={"70vh"}>
-					{salesStatsData?.length &&
-						salesStatsData.map((data) => (
-							<Suspense key={data.date}>
-								<StatItem data={data} bookCount={currentBookCount} />
-							</Suspense>
-						))}
-				</VStack>
+					<StatsAreaBar data={salesStatsData}/>
 			</VStack>
 		</Box>
 	);

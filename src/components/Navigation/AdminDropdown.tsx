@@ -19,11 +19,6 @@ const AdminDropdown = () => {
       color: { light: "#edda34", dark: "#d5c42e" },
     },
     {
-      name: "Reports",
-      href: "Reports",
-      color: { light: "#836a8a", dark: "#65466D" },
-    },
-    {
       name: "Oldest",
       href: "Oldest",
       color: { light: "yellow.800", dark: "yellow.700" },
