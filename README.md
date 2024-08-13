@@ -1,19 +1,20 @@
-Created with Next.js, Prisma and PostgreSQL.
+Created with Next.js, Chakra, Prisma and PostgreSQL.
 
 Credit: DLParkin [bookStore-stock-manager](https://github.com/DLParkin/bookStore-stock-manager)
 
 ## Features
 
 - Books:
-
-  - Add
-    - Auto Add
-    - Manual Add
-  - Remove
+  - Activate (Books Active in-store)
+  - Auto Remove 
   - Search
 
+  - Park Add
+  - Park Manual Add
+  - Oldest Books
+
 - Sales
-  - Book Stock Stats
+  - Book Stock Movement Stats
   - Book Removal Report
 
 TODO:

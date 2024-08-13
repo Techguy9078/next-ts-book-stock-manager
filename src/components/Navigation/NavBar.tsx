@@ -87,7 +87,7 @@ const links = [
 
 	// All Hidden Paths for background colours.
 	{
-		href: "AutoAdd",
+		href: "ParkAdd",
 		hidden: true,
 		color: { light: "#4caf50", dark: "#4caf50" },
 	},
