@@ -53,7 +53,10 @@ const CustomerRequestsModal = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Customer Requests Found</ModalHeader>
+        <ModalHeader>Customer Request Found</ModalHeader>
+        <Text fontSize="md" style={{ color: 'red' }} alignSelf={'center'}>
+          The book has still been added even thought a request has been found!
+        </Text>
         <ModalBody>
           {customerRequests?.map((request, index) => (
             <Card key={index} border={'1px solid rgba(255,255,255,0.3)'} my={2}>
