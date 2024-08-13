@@ -9,8 +9,8 @@ const AdminDropdown = () => {
 
   const adminLinks = [
     {
-      name: 'Admin Add',
-      href: 'AutoAdd',
+      name: 'Park Add',
+      href: 'ParkAdd',
       color: { light: '#8bd346', dark: '#4caf50' },
     },
     {

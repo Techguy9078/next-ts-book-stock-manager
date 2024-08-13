@@ -21,7 +21,7 @@ const barcodeValidator = z.object({
 
 type barcodeForm = z.infer<typeof barcodeValidator>;
 
-export default function AutoAdd() {
+export default function ParkAdd() {
   const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
   const { getBookCount } = useContext(BookCountContext);
 
@@ -91,7 +91,7 @@ export default function AutoAdd() {
       rounded={'md'}
     >
       <VStack spacing={4} align={'left'}>
-        <Text fontSize="2xl">Auto Add Books</Text>
+        <Text fontSize="2xl">Park Add Books</Text>
         <CustomDivider />
         <BookCount />
         <CustomDivider />
