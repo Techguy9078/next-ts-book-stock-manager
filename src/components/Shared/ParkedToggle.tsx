@@ -17,7 +17,7 @@ function ParkedToggle({ book, fontSize, fontWeight }: ParkedToggleProps) {
     setParked(!parked);
     setLoading(true);
       
-    const parkedDetail = await axios
+    await axios
         .patch("/api/BookAPI/ParkBook", {
           book: book,
           updateData: !parked,
@@ -28,7 +28,6 @@ function ParkedToggle({ book, fontSize, fontWeight }: ParkedToggleProps) {
         .finally(() => {
           setLoading(false);
         });
-    console.log(parkedDetail)
   };
 
   if (!book) return <></>;
