@@ -89,7 +89,7 @@ const links = [
 	{
 		href: "ParkAdd",
 		hidden: true,
-		color: { light: "#4caf50", dark: "#4caf50" },
+		color: { light: "#3d8b40", dark: "#3d8b40" },
 	},
 	{
 		href: "ManualAdd",
@@ -204,16 +204,18 @@ export default function NavBar({ children }: { children: ReactNode }) {
 				{isOpen ? (
 					<Box pb={4} display={{ md: "none" }}>
 						<Stack as={"nav"} spacing={1}>
-							{links.map(({ name, href, color }, i) => (
-								<MobileNavLink
-									key={i}
-									href={href}
-									color={color}
-									currentLink={pathname}
-								>
-									{name}
-								</MobileNavLink>
-							))}
+							{links
+								.filter((e) => !e?.hidden)
+								.map(({ name, href, color }, i) => (
+									<MobileNavLink
+										key={i}
+										href={href}
+										color={color}
+										currentLink={pathname}
+									>
+										{name}
+									</MobileNavLink>
+								))}
 						</Stack>
 						{colorMode === "dark" ? <AdminDropdown /> : null}
 					</Box>
