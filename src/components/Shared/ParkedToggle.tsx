@@ -15,15 +15,12 @@ function ParkedToggle({ book, fontSize, fontWeight }: ParkedToggleProps) {
   const handleToggle = async () => {
     if (!book) return;
     setParked(!parked);
-  };
-
-  useEffect(() => {
-    const handleParkBook = async () => {
-      setLoading(true);
-      await axios
+    setLoading(true);
+      
+    const parkedDetail = await axios
         .patch("/api/BookAPI/ParkBook", {
           book: book,
-          updateData: parked,
+          updateData: !parked,
         })
         .catch((error) => {
           console.error(error);
@@ -31,12 +28,8 @@ function ParkedToggle({ book, fontSize, fontWeight }: ParkedToggleProps) {
         .finally(() => {
           setLoading(false);
         });
-    };
-
-    if (!book) return;
-
-    handleParkBook();
-  }, [parked]);
+    console.log(parkedDetail)
+  };
 
   if (!book) return <></>;
 
