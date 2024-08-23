@@ -14,9 +14,9 @@ const AdminDropdown = () => {
       color: { light: '#8bd346', dark: '#4caf50' },
     },
     {
-      name: 'Admin Manual Add',
-      href: 'ManualAdd',
-      color: { light: '#edda34', dark: '#d5c42e' },
+      name: "Park Manual Add",
+      href: "ManualAdd",
+      color: { light: "#edda34", dark: "#d5c42e" },
     },
     {
       name: 'Add Customer Request',

@@ -106,7 +106,7 @@ export default function SearchForm({
     if (search && search.length > 2 && status == 'success') {
       setBooksArray(data?.data);
     }
-  }, [data]);
+  }, [data, search, setBooksArray, status]);
 
   useEffect(() => {
     if (isRefetching) {
@@ -122,7 +122,7 @@ export default function SearchForm({
       }
       setLoader(false);
     }
-  }, [search, isRefetching]);
+  }, [search, isRefetching, setBooksArray, setLoader]);
 
   return (
     <FormControl isInvalid={errors.search ? true : false}>
