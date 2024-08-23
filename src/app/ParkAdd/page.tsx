@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { AnySoaRecord } from "dns";
 
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 
 import CustomDivider from "@/components/Divider/customDivider";
 import BookCount from "@/components/BookCount/BookCount";
@@ -21,7 +21,7 @@ const barcodeValidator = z.object({
 
 type barcodeForm = z.infer<typeof barcodeValidator>;
 
-export default function Park() {
+export default function ParkAdd() {
   const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
   const { getBookCount } = useContext(BookCountContext);
 
@@ -51,14 +51,13 @@ export default function Park() {
       }
     },
     onSuccess: async (data) => {
-      await axios.post("/api/BookAPI/Book", data);
-
+      const book = await axios.post("/api/BookAPI/Book", data);
       await axios.put("/api/SalesAPI/SalesStats", {
         updateField: "addBook",
       });
 
       getBookCount(null);
-      setBookDetails(data);
+      setBookDetails(book.data);
 
       return toast.success("Added Book", {
         description: "Book added successfully!",
@@ -68,7 +67,6 @@ export default function Park() {
       if (err instanceof AxiosError) {
         if (err.response?.status === 500) {
           setBookDetails(undefined);
-          console.log("Could not Find Book Details...");
 
           return toast.error("Adding Book Failed", {
             description:
@@ -93,7 +91,7 @@ export default function Park() {
       rounded={"md"}
     >
       <VStack spacing={4} align={"left"}>
-        <Text fontSize="2xl">Auto Add Books</Text>
+        <Text fontSize="2xl">Park Add Books</Text>
         <CustomDivider />
         <BookCount />
         <CustomDivider />
@@ -113,13 +111,6 @@ export default function Park() {
 					alt=""
 				/>
 			)} */}
-
-      <Toaster
-        className={"h-1"}
-        richColors
-        position="top-right"
-        expand={true}
-      />
     </Box>
   );
 }

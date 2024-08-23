@@ -81,7 +81,9 @@ export default function CustomEditableSelect({
 						borderColor={"gray.400"}
 						color={"gray.400"}
 						placeholder={"Select The Genre..."}
-						onChange={(e) => setMorphGenre(e.currentTarget.value)}
+						onChange={(e) => {
+							setMorphGenre(e.currentTarget.value);
+						}}
 						defaultValue={morphGenre}
 					>
 						{genreList.map((genre) => (

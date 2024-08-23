@@ -16,6 +16,8 @@ import { Link } from "@chakra-ui/next-js";
 import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import AdminDropdown from "./AdminDropdown";
+import { useIsMobile } from "@/utils/isMobile";
 
 // ##################################################
 // Colours
@@ -51,16 +53,11 @@ interface colorType {
 	dark: string;
 }
 
-const Links = [
+const links = [
 	{
-		name: "Auto Add",
-		href: "AutoAdd",
-		color: { light: "#8bd346", dark: "#4caf50" },
-	},
-	{
-		name: "Manual Add",
-		href: "ManualAdd",
-		color: { light: "#edda34", dark: "#d5c42e" },
+		name: "Activate",
+		href: "Activate",
+		color: { light: "#4caf50", dark: "#4caf50" },
 	},
 	{
 		name: "Auto Remove",
@@ -72,6 +69,11 @@ const Links = [
 		href: "Search",
 		color: { light: "#00a9be", dark: "#008394" },
 	},
+	{
+		name: "Reports",
+		href: "Reports",
+		color: { light: "#836a8a", dark: "#65466D" },
+	},
 	// {
 	// 	name: "Add Requests",
 	// 	href: "AddRequest",
@@ -82,23 +84,30 @@ const Links = [
 	// 	href: "SearchRequests",
 	// 	color: { light: "#736EA9", dark: "#554E9D" },
 	// },
+
+	// All Hidden Paths for background colours.
 	{
-		name: "Reports",
-		href: "Reports",
-		color: { light: "#836a8a", dark: "#65466D" },
+		href: "ParkAdd",
+		hidden: true,
+		color: { light: "#3d8b40", dark: "#3d8b40" },
 	},
 	{
-		name: "Oldest",
+		href: "ManualAdd",
+		hidden: true,
+		color: { light: "#edda34", dark: "#d5c42e" },
+	},
+	{
+		hidden: true,
 		href: "Oldest",
 		color: { light: "yellow.800", dark: "yellow.700" },
 	},
 	{
-		name: "Stats",
 		href: "Stats",
+		hidden: true,
 		color: { light: "#ae9991", dark: "#86665a" },
 	},
 	{
-		name: "Admin",
+		hidden: true,
 		href: "Admin",
 		color: { light: "purple.600", dark: "purple.500" },
 	},
@@ -106,7 +115,7 @@ const Links = [
 
 export default function NavBar({ children }: { children: ReactNode }) {
 	const pathname = usePathname().slice(1);
-	const linkObject = Links.find((link) => link.href === pathname);
+	const linkObject = links.find((link) => link.href === pathname);
 
 	const { colorMode, toggleColorMode } = useColorMode();
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -116,6 +125,8 @@ export default function NavBar({ children }: { children: ReactNode }) {
 			onClose();
 		}
 	}, [pathname]);
+
+	const isMobile = useIsMobile();
 
 	return (
 		<Box
@@ -168,16 +179,19 @@ export default function NavBar({ children }: { children: ReactNode }) {
 							display={{ base: "none", md: "flex" }}
 							textColor={useColorModeValue("gray.900", "gray.200")}
 						>
-							{Links.map(({ name, href, color }, i) => (
-								<DesktopNavLink
-									key={i}
-									href={href}
-									color={color}
-									currentLink={pathname}
-								>
-									{name}
-								</DesktopNavLink>
-							))}
+							{links
+								.filter((e) => !e?.hidden)
+								.map(({ name, href, color }, i) => (
+									<DesktopNavLink
+										key={i}
+										href={href}
+										color={color}
+										currentLink={pathname}
+									>
+										{name}
+									</DesktopNavLink>
+								))}
+							{colorMode === "dark" && !isMobile ? <AdminDropdown /> : null}
 						</HStack>
 					</HStack>
 					<Flex alignItems={"center"}>
@@ -190,17 +204,20 @@ export default function NavBar({ children }: { children: ReactNode }) {
 				{isOpen ? (
 					<Box pb={4} display={{ md: "none" }}>
 						<Stack as={"nav"} spacing={1}>
-							{Links.map(({ name, href, color }, i) => (
-								<MobileNavLink
-									key={i}
-									href={href}
-									color={color}
-									currentLink={pathname}
-								>
-									{name}
-								</MobileNavLink>
-							))}
+							{links
+								.filter((e) => !e?.hidden)
+								.map(({ name, href, color }, i) => (
+									<MobileNavLink
+										key={i}
+										href={href}
+										color={color}
+										currentLink={pathname}
+									>
+										{name}
+									</MobileNavLink>
+								))}
 						</Stack>
+						{colorMode === "dark" ? <AdminDropdown /> : null}
 					</Box>
 				) : null}
 			</Box>

@@ -19,8 +19,8 @@ async function csvOutput(path: string) {
   try {
     const { stdout } = await execa(`${process.env.PGADMIN_PATH}`, [
       `--dbname=${path}`,
-	  `--tuples-only`,
-      `--command=SELECT * FROM public."ScannedBook"`,
+      `--tuples-only`,
+      `--command=SELECT (id, barcode, isbn, title, author, \"createdAt\") FROM public."ScannedBook"`,
       "--csv",
       `--output=${process.env.BACKUP_PATH}${new Date()
         .toLocaleDateString()
