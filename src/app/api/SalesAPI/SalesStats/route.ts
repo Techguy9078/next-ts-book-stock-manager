@@ -82,19 +82,19 @@ interface IPutReq {
 
 export async function PUT(request: Request) {
   const { updateField }: IPutReq = await request.json();
-  const localDate = new Date().toDateString();
+  const date = new Date()
 
   if (updateField == 'addBook') {
     try {
       const updateStatCount = await prisma.salesStats.upsert({
         where: {
-          date: localDate,
+          date: date,
         },
         update: {
           addedBooks: { increment: 1 },
         },
         create: {
-          date: localDate,
+          date: date,
           addedBooks: 1,
           removedBooks: 0,
         },
@@ -112,13 +112,13 @@ export async function PUT(request: Request) {
     try {
       const updateStatCount = await prisma.salesStats.upsert({
         where: {
-          date: localDate,
+          date: date,
         },
         update: {
           removedBooks: { increment: 1 },
         },
         create: {
-          date: localDate,
+          date: date,
           addedBooks: 0,
           removedBooks: 1,
         },
