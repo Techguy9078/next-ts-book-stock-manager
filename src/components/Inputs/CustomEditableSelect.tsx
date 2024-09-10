@@ -1,40 +1,40 @@
-import { genreList } from "@/config/genreList";
-import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
+import { genreList } from '@/config/genreList';
+import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
 import {
-	ButtonGroup,
-	Editable,
-	EditablePreview,
-	Flex,
-	HStack,
-	IconButton,
-	Select,
-	useEditableControls,
-} from "@chakra-ui/react";
-import { useState } from "react";
+  ButtonGroup,
+  Editable,
+  EditablePreview,
+  Flex,
+  HStack,
+  IconButton,
+  Select,
+  useEditableControls,
+} from '@chakra-ui/react';
+import { useState } from 'react';
 
 export default function CustomEditableSelect({
-	item,
-	fontSize,
-	fontWeight,
-	onSubmit,
-	genre,
+  item,
+  fontSize,
+  fontWeight,
+  onSubmit,
+  genre,
 }: {
-	item: string;
-	fontSize: "sm" | "md" | "lg" | "xl" | "2xl";
-	fontWeight: 600 | 700;
-	onSubmit: (nextValue: string) => void;
-	genre: string;
+  item: string;
+  fontSize: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  fontWeight: 600 | 700;
+  onSubmit: (nextValue: string) => void;
+  genre: string;
 }) {
-	const [edit, setEdit] = useState(false);
-	const [morphGenre, setMorphGenre] = useState(genre);
+  const [edit, setEdit] = useState(false);
+  const [morphGenre, setMorphGenre] = useState(genre);
 
-	function EditableControls() {
-		const {
-			isEditing,
-			getSubmitButtonProps,
-			getCancelButtonProps,
-			getEditButtonProps,
-		} = useEditableControls();
+  function EditableControls() {
+    const {
+      isEditing,
+      getSubmitButtonProps,
+      getCancelButtonProps,
+      getEditButtonProps,
+    } = useEditableControls();
 
 		return isEditing ? (
 			<ButtonGroup size="sm">
@@ -94,8 +94,8 @@ export default function CustomEditableSelect({
 					</Select>
 				)}
 
-				<EditableControls />
-			</HStack>
-		</Editable>
-	);
+        <EditableControls />
+      </HStack>
+    </Editable>
+  );
 }

@@ -1,12 +1,12 @@
 // app/providers.tsx
-"use client";
-import { useState } from "react";
+'use client';
+import { useState } from 'react';
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { CacheProvider } from "@chakra-ui/next-js";
-import { ChakraProvider } from "@chakra-ui/react";
-import BookCountProvider from "./BookCountContext";
-import { Toaster } from "sonner";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { CacheProvider } from '@chakra-ui/next-js';
+import { ChakraProvider } from '@chakra-ui/react';
+import BookCountProvider from './BookCountContext';
+import { Toaster } from 'sonner';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -16,9 +16,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <ChakraProvider>
         <QueryClientProvider client={queryClient}>
           <BookCountProvider>
-            {children}{" "}
+            {children}
             <Toaster
-              className={"h-1"}
+              className={'h-1'}
               richColors
               position="top-right"
               expand={true}

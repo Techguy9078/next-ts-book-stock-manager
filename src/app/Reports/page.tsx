@@ -1,75 +1,75 @@
-"use client";
-import { Box, Text, VStack, useColorModeValue } from "@chakra-ui/react";
+'use client';
+import { Box, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 
-import CustomDivider from "@/components/Divider/customDivider";
-import DatePicker from "@/components/DatePicker/DatePicker";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Sales } from "@prisma/client";
-import ReportGenerateButton from "@/components/Buttons/ReportGenerateButton";
+import CustomDivider from '@/components/Divider/customDivider';
+import DatePicker from '@/components/DatePicker/DatePicker';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Sales } from '@prisma/client';
+import ReportGenerateButton from '@/components/Buttons/ReportGenerateButton';
 
 export default function Reports() {
-	const [selectedDates, setSelectedDates] = useState<Array<Date>>([]);
-	const [reportData, setReportData] = useState<any>();
+  const [selectedDates, setSelectedDates] = useState<Array<Date>>([]);
+  const [reportData, setReportData] = useState<any>();
 
-	useEffect(() => {
-		const controller = new AbortController();
-		const signal = controller.signal;
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
 
-		async function FindSales() {
-			if (!selectedDates) return;
-			try {
-				let salesResults = await axios.get(
-					`/api/SalesAPI/Sales?startDate=${selectedDates[0].toString()}&endDate=${selectedDates[1].toString()}`,
-					{
-						signal: signal,
-					}
-				);
+    async function FindSales() {
+      if (!selectedDates) return;
+      try {
+        let salesResults = await axios.get(
+          `/api/SalesAPI/Sales?startDate=${selectedDates[0].toString()}&endDate=${selectedDates[1].toString()}`,
+          {
+            signal: signal,
+          },
+        );
 
-				return setReportData(salesResults.data);
-			} catch {
-				return;
-			}
-		}
-		FindSales();
+        return setReportData(salesResults.data);
+      } catch {
+        return;
+      }
+    }
+    FindSales();
 
-		return () => {
-			controller.abort();
-		};
-	}, [selectedDates]);
+    return () => {
+      controller.abort();
+    };
+  }, [selectedDates]);
 
-	function setDateRange(date: []) {
-		setReportData(undefined);
-		setSelectedDates(date);
-	}
+  function setDateRange(date: []) {
+    setReportData(undefined);
+    setSelectedDates(date);
+  }
 
-	return (
-		<Box
-			p={4}
-			bgColor={useColorModeValue("gray.200", "gray.700")}
-			rounded={"md"}
-		>
-			<VStack spacing={4} align={"left"} pb={4}>
-				<Text fontSize="2xl">Reports</Text>
-				<CustomDivider />
-				<DatePicker setDateRange={setDateRange} selectedDates={selectedDates} />
-				<CustomDivider />
-				{!reportData && (
-					<Text>
-						Seems Like you haven&apos;t selected any dates yet :)... Select some
-						to begin
-					</Text>
-				)}
-				{reportData == "no results" && selectedDates && (
-					<Text>Unfortunately there is no data for these days...</Text>
-				)}
-				{reportData != "no results" && reportData != null && (
-					<ReportGenerateButton
-						reportData={reportData}
-						selectedDates={selectedDates}
-					/>
-				)}
-			</VStack>
-		</Box>
-	);
+  return (
+    <Box
+      p={4}
+      bgColor={useColorModeValue('gray.200', 'gray.700')}
+      rounded={'md'}
+    >
+      <VStack spacing={4} align={'left'} pb={4}>
+        <Text fontSize="2xl">Reports</Text>
+        <CustomDivider />
+        <DatePicker setDateRange={setDateRange} selectedDates={selectedDates} />
+        <CustomDivider />
+        {!reportData && (
+          <Text>
+            Seems Like you haven&apos;t selected any dates yet :)... Select some
+            to begin
+          </Text>
+        )}
+        {reportData == 'no results' && selectedDates && (
+          <Text>Unfortunately there is no data for these days...</Text>
+        )}
+        {reportData != 'no results' && reportData != null && (
+          <ReportGenerateButton
+            reportData={reportData}
+            selectedDates={selectedDates}
+          />
+        )}
+      </VStack>
+    </Box>
+  );
 }

@@ -11,16 +11,16 @@ import {
   InputRightElement,
   Text,
   useColorModeValue,
-} from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { ZodErrorMap, z } from "zod";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-import { useIsMobile } from "@/utils/isMobile";
+} from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
+import { ZodErrorMap, z } from 'zod';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import { useIsMobile } from '@/utils/isMobile';
 
 const customErrorMap: ZodErrorMap = (error, ctx) => {
-  if (error.code == "too_small") {
+  if (error.code == 'too_small') {
     return { message: `You need to enter at least 2 characters...` };
   }
 
@@ -60,11 +60,11 @@ export default function SearchForm({
     setFocus,
     resetField,
   } = useForm<SearchForm>({
-    defaultValues: { search: "" },
+    defaultValues: { search: '' },
   });
 
   const { data, status, refetch, isRefetching } = useQuery({
-    queryKey: ["search"],
+    queryKey: ['search'],
     queryFn: ({ signal }) => {
       return axios.get(`/api/BookAPI/Book?search=${debouncedSearchValue}`, {
         signal,
@@ -87,13 +87,13 @@ export default function SearchForm({
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (search != undefined && search != "" && search.length > 2) {
+      if (search != undefined && search != '' && search.length > 2) {
         setDebouncedSearchValue(search);
       }
 
       if (
         debouncedSearchValue != undefined &&
-        debouncedSearchValue != "" &&
+        debouncedSearchValue != '' &&
         debouncedSearchValue.length > 2
       ) {
         refetch();
@@ -103,7 +103,7 @@ export default function SearchForm({
   }, [search, debouncedSearchValue, refetch]);
 
   useEffect(() => {
-    if (search && search.length > 2 && status == "success") {
+    if (search && search.length > 2 && status == 'success') {
       setBooksArray(data?.data);
     }
   }, [data, search, setBooksArray, status]);
@@ -131,28 +131,28 @@ export default function SearchForm({
         <Input
           autoFocus
           autoComplete="off"
-          borderColor={"gray.400"}
+          borderColor={'gray.400'}
           id="search"
           placeholder="Start Searching books..."
-          {...register("search", {
-            required: "You need to enter a search term...",
+          {...register('search', {
+            required: 'You need to enter a search term...',
           })}
         />
         <InputRightElement>
           <Button
-            className={"bg-red-500"}
-            color={"white"}
+            className={'bg-red-500'}
+            color={'white'}
             _hover={{
-              bgColor: "red.700",
-              color: useColorModeValue("gray.300", "gray.300"),
+              bgColor: 'red.700',
+              color: useColorModeValue('gray.300', 'gray.300'),
             }}
             size="md"
             paddingInline={10}
             marginLeft={-10}
             onClick={() => {
-              resetField("search"),
+              resetField('search'),
                 setBooksArray(undefined),
-                setFocus("search");
+                setFocus('search');
             }}
           >
             Clear
@@ -160,7 +160,7 @@ export default function SearchForm({
         </InputRightElement>
       </InputGroup>
       {!isMobile ? (
-        <FormHelperText color={"gray.400"}>
+        <FormHelperText color={'gray.400'}>
           Only will search once 3 characters have been entered
         </FormHelperText>
       ) : null}

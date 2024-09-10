@@ -47,20 +47,20 @@ model Sales {
 }
 
 model SalesStats {
-  date         DateTime @id
-  addedBooks   Int
-  removedBooks Int
+  date          DateTime @id
+  addedBooks    Int
+  activateBooks Int
+  removedBooks  Int
 }
 
 // Customer Request Models
 model CustomerBookRequest {
-  id                  Int      @id @default(autoincrement())
-  customerName        String
-  customerPhoneNumber String
-  bookTitle           String?
-  bookAuthor          String?
-  bookGenre           String?
-  bookISBN            String?
-  comments            String?
-  createdAt           DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  requestName    String
+  requestNumber  String
+  requestTitle   String?
+  requestAuthor  String?
+  requestISBN    String?
+  requestComment String?
+  createdAt      DateTime @default(now())
 }

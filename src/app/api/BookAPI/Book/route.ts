@@ -1,13 +1,13 @@
-"use server";
-import { prisma } from "@/db";
-import { NextResponse } from "next/server";
+'use server';
+import { prisma } from '@/db';
+import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   const req = await request.json();
   let { barcode, isbn, title, author, genre } = req;
 
   // Ensure barcode is a string
-  if (typeof barcode === "number") {
+  if (typeof barcode === 'number') {
     barcode = barcode.toString();
   }
 
@@ -35,22 +35,22 @@ export async function POST(request: Request) {
     return NextResponse.json(combinedBookData);
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed Adding Local Book..." },
-      { status: 500 }
+      { error: 'Failed Adding Local Book...' },
+      { status: 500 },
     );
   }
 }
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const searchTerm = searchParams.get("search");
+  const searchTerm = searchParams.get('search');
 
-  let oldest = searchParams.get("oldest")?.toString();
+  let oldest = searchParams.get('oldest')?.toString();
 
   if (oldest) {
     const bookResults = await prisma.scannedBook.findMany({
       take: Number(oldest),
-      orderBy: { createdAt: "asc" },
+      orderBy: { createdAt: 'asc' },
     });
 
     return NextResponse.json(bookResults);
@@ -58,8 +58,8 @@ export async function GET(request: Request) {
 
   if (searchTerm === null) {
     return NextResponse.json(
-      { error: "No Search Term Entered..." },
-      { status: 500 }
+      { error: 'No Search Term Entered...' },
+      { status: 500 },
     );
   }
 
@@ -70,13 +70,13 @@ export async function GET(request: Request) {
           {
             title: {
               contains: searchTerm,
-              mode: "insensitive",
+              mode: 'insensitive',
             },
           },
           {
             author: {
               contains: searchTerm,
-              mode: "insensitive",
+              mode: 'insensitive',
             },
           },
           {
@@ -91,14 +91,14 @@ export async function GET(request: Request) {
           },
         ],
       },
-      orderBy: { title: "asc" },
+      orderBy: { title: 'asc' },
     });
 
     return NextResponse.json(bookResults);
   } catch (error: any) {
     return NextResponse.json(
-      { error: "Failed Finding Local Book..." },
-      { status: 500 }
+      { error: 'Failed Finding Local Book...' },
+      { status: 500 },
     );
   }
 }
@@ -109,12 +109,12 @@ export async function PATCH(request: Request) {
 
   if (!barcode) {
     return NextResponse.json(
-      { error: "Unfortunately no barcode was provided..." },
-      { status: 400 }
+      { error: 'Unfortunately no barcode was provided...' },
+      { status: 400 },
     );
   }
 
-  if (field == "title") {
+  if (field == 'title') {
     try {
       const bookResults = await prisma.storedBooks.update({
         where: {
@@ -128,12 +128,12 @@ export async function PATCH(request: Request) {
       return NextResponse.json(bookResults);
     } catch (error: any) {
       return NextResponse.json(
-        { error: "Failed Finding Local Book..." },
-        { status: 500 }
+        { error: 'Failed Finding Local Book...' },
+        { status: 500 },
       );
     }
   }
-  if (field == "author") {
+  if (field == 'author') {
     try {
       const bookResults = await prisma.storedBooks.update({
         where: {
@@ -147,12 +147,12 @@ export async function PATCH(request: Request) {
       return NextResponse.json(bookResults);
     } catch (error: any) {
       return NextResponse.json(
-        { error: "Failed Finding Local Book..." },
-        { status: 500 }
+        { error: 'Failed Finding Local Book...' },
+        { status: 500 },
       );
     }
   }
-  if (field == "genre") {
+  if (field == 'genre') {
     try {
       const bookResults = await prisma.storedBooks.update({
         where: {
@@ -166,12 +166,12 @@ export async function PATCH(request: Request) {
       return NextResponse.json(bookResults);
     } catch (error: any) {
       return NextResponse.json(
-        { error: "Failed Finding Local Book..." },
-        { status: 500 }
+        { error: 'Failed Finding Local Book...' },
+        { status: 500 },
       );
     }
   }
-  if (field == "isbn") {
+  if (field == 'isbn') {
     try {
       const bookResults = await prisma.storedBooks.update({
         where: {
@@ -185,23 +185,23 @@ export async function PATCH(request: Request) {
       return NextResponse.json(bookResults);
     } catch (error: any) {
       return NextResponse.json(
-        { error: "Failed Finding Local Book..." },
-        { status: 500 }
+        { error: 'Failed Finding Local Book...' },
+        { status: 500 },
       );
     }
   }
 
   return NextResponse.json(
     { error: "I'm a little teapot, cannot handle that field." },
-    { status: 418 }
+    { status: 418 },
   );
 }
 
 export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  const barcode = searchParams.get("barcode");
-  const id = searchParams.get("id");
+  const barcode = searchParams.get('barcode');
+  const id = searchParams.get('id');
 
   if (barcode) {
     try {
@@ -211,7 +211,7 @@ export async function DELETE(request: Request) {
           park: false, // Stops The Parked Books From Being Deleted
         },
         orderBy: {
-          createdAt: "asc",
+          createdAt: 'asc',
         },
       });
 
@@ -224,8 +224,8 @@ export async function DELETE(request: Request) {
       return NextResponse.json(deleteBook);
     } catch (error: any) {
       return NextResponse.json(
-        { error: "Failed Removing Book By Barcode..." },
-        { status: 500 }
+        { error: 'Failed Removing Book By Barcode...' },
+        { status: 500 },
       );
     }
   }
@@ -240,14 +240,14 @@ export async function DELETE(request: Request) {
       return NextResponse.json(deleteBook);
     } catch (error: any) {
       return NextResponse.json(
-        { error: "Failed Removing Book By ID..." },
-        { status: 500 }
+        { error: 'Failed Removing Book By ID...' },
+        { status: 500 },
       );
     }
   }
 
   return NextResponse.json(
     { error: "I'm a little teapot, cannot handle that method." },
-    { status: 418 }
+    { status: 418 },
   );
 }

@@ -1,36 +1,45 @@
-"use server";
-import { prisma } from "@/db";
-import { NextResponse } from "next/server";
+'use server';
+import { prisma } from '@/db';
+import { NextResponse } from 'next/server';
 
 // Add Customer Request
 export async function POST(request: Request) {
   const req = await request.json();
-  let {
-    customerName,
-    customerPhoneNumber,
-    bookTitle,
-    bookAuthor,
-    bookGenre,
-    bookISBN,
+
+  const {
+    name: requestName,
+    phone: requestNumber,
+    title: requestTitle,
+    author: requestAuthor,
+    isbn: requestISBN,
+    comments: requestComment,
   } = req;
+
+  // Check required fields
+  if (!requestName || !requestNumber) {
+    return NextResponse.json(
+      { error: 'Customer name and number are the minimum required details...' },
+      { status: 400 },
+    );
+  }
 
   try {
     const customerBookRequest = await prisma.customerBookRequest.create({
       data: {
-        customerName: customerName,
-        customerPhoneNumber: customerPhoneNumber,
-        bookTitle: bookTitle,
-        bookAuthor: bookAuthor,
-        bookGenre: bookGenre,
-        bookISBN: bookISBN,
+        requestName,
+        requestNumber,
+        requestTitle,
+        requestAuthor,
+        requestISBN,
+        requestComment,
       },
     });
 
     return NextResponse.json(customerBookRequest);
   } catch (error: any) {
     return NextResponse.json(
-      { error: "Failed Adding Book Request..." },
-      { status: 500 }
+      { error: 'Failed Adding Book Request...' },
+      { status: 500 },
     );
   }
 }
@@ -38,54 +47,61 @@ export async function POST(request: Request) {
 // Search Customer Requests
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const searchTerm = searchParams.get("search");
-
-  if (searchTerm === null) {
-    return NextResponse.json(
-      { error: "No Search Entered..." },
-      { status: 500 }
-    );
-  }
+  const searchTerm = searchParams.get('search');
 
   try {
-    const customerResults = await prisma.customerBookRequest.findMany({
-      where: {
-        OR: [
-          {
-            customerName: {
-              contains: searchTerm,
+    let customerResults;
+
+    if (searchTerm) {
+      customerResults = await prisma.customerBookRequest.findMany({
+        where: {
+          OR: [
+            {
+              requestName: {
+                contains: searchTerm,
+              },
             },
-          },
-          {
-            customerPhoneNumber: {
-              contains: searchTerm,
+            {
+              requestNumber: {
+                contains: searchTerm,
+              },
             },
-          },
-          {
-            bookTitle: {
-              contains: searchTerm,
+            {
+              requestTitle: {
+                contains: searchTerm,
+              },
             },
-          },
-          {
-            bookAuthor: {
-              contains: searchTerm,
+            {
+              requestAuthor: {
+                contains: searchTerm,
+              },
             },
-          },
-          {
-            bookISBN: {
-              contains: searchTerm,
+            {
+              requestISBN: {
+                contains: searchTerm,
+              },
             },
-          },
-        ],
-      },
-      orderBy: { createdAt: "desc" },
-    });
+            {
+              requestComment: {
+                contains: searchTerm,
+              },
+            },
+          ],
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+    } else {
+      // If no search term is provided, fetch all results
+      customerResults = await prisma.customerBookRequest.findMany({
+        orderBy: { createdAt: 'desc' },
+      });
+    }
 
     return NextResponse.json(customerResults);
   } catch (error: any) {
     return NextResponse.json(
-      { error: "Failed Finding Customer Request by Search..." },
-      { status: 500 }
+      { error: 'Failed Finding Customer Request by Search...' },
+      { status: 500 },
     );
   }
 }
@@ -93,7 +109,7 @@ export async function GET(request: Request) {
 export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  const id = searchParams.get("id");
+  const id = searchParams.get('id');
 
   if (id) {
     try {
@@ -106,14 +122,14 @@ export async function DELETE(request: Request) {
       return NextResponse.json(deletedCustomer);
     } catch (error: any) {
       return NextResponse.json(
-        { error: "Failed Removing Customer Request by ID..." },
-        { status: 500 }
+        { error: 'Failed Removing Customer Request by ID...' },
+        { status: 500 },
       );
     }
   }
 
   return NextResponse.json(
     { error: "I'm a little teapot, cannot handle that method." },
-    { status: 418 }
+    { status: 418 },
   );
 }

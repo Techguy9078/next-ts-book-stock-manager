@@ -1,15 +1,15 @@
-"use client";
-import { Box, Text, VStack, useColorModeValue } from "@chakra-ui/react";
-import { useState } from "react";
+'use client';
+import { Box, Text, VStack, useColorModeValue } from '@chakra-ui/react';
+import { useState } from 'react';
 
-import CustomDivider from "@/components/Divider/customDivider";
-import BookCount from "@/components/BookCount/BookCount";
-import BookTable from "@/components/Tables/SearchBookTable";
-import SearchForm from "@/components/Forms/SearchForm";
-import { BookPagesLoader } from "@/components/Loading/BookPagesLoading";
-import SearchReportGenerateButton from "@/components/Buttons/SearchReportGenerateButton";
-import { useIsMobile } from "@/utils/isMobile";
-import MobileBookTable from "@/components/Tables/MobileBookTable";
+import CustomDivider from '@/components/Divider/customDivider';
+import BookCount from '@/components/BookCount/BookCount';
+import BookTable from '@/components/Tables/SearchBookTable';
+import SearchForm from '@/components/Forms/SearchForm';
+import { BookPagesLoader } from '@/components/Loading/BookPagesLoading';
+import SearchReportGenerateButton from '@/components/Buttons/SearchReportGenerateButton';
+import { useIsMobile } from '@/utils/isMobile';
+import MobileBookTable from '@/components/Tables/MobileBookTable';
 
 export default function Search() {
 	const [refetchValue, setRefetchValue] = useState<boolean>(false);

@@ -1,5 +1,5 @@
-import { prisma } from "@/db";
-import { NextResponse } from "next/server";
+import { prisma } from '@/db';
+import { NextResponse } from 'next/server';
 
 export async function PATCH(request: Request) {
   const req = await request.json();
@@ -10,8 +10,8 @@ export async function PATCH(request: Request) {
 
   if (!id) {
     return NextResponse.json(
-      { error: "Unfortunately no book was provided..." },
-      { status: 400 }
+      { error: 'Unfortunately no book was provided...' },
+      { status: 400 },
     );
   }
 
@@ -27,8 +27,8 @@ export async function PATCH(request: Request) {
     return NextResponse.json(bookResults);
   } catch (error: any) {
     return NextResponse.json(
-      { error: "Failed Finding Local Book..." },
-      { status: 500 }
+      { error: 'Failed Finding Local Book...' },
+      { status: 500 },
     );
   }
 }
