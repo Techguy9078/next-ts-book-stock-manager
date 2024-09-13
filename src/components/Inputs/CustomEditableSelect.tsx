@@ -10,7 +10,7 @@ import {
   Select,
   useEditableControls,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function CustomEditableSelect({
   item,
@@ -35,6 +35,13 @@ export default function CustomEditableSelect({
       getCancelButtonProps,
       getEditButtonProps,
     } = useEditableControls();
+
+	useEffect(() => {
+		if(isEditing != edit) {
+			setEdit(isEditing)
+		}
+	}, [isEditing, edit, setEdit])
+	
 
 		return isEditing ? (
 			<ButtonGroup size="sm">
@@ -69,7 +76,7 @@ export default function CustomEditableSelect({
 			isPreviewFocusable={true}
 			selectAllOnFocus={false}
 			onSubmit={() => {
-				onSubmit(morphGenre), setEdit(false);
+				onSubmit(morphGenre)
 			}}
 			onEdit={() => setEdit(true)}
 		>
