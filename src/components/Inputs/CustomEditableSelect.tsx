@@ -31,7 +31,6 @@ export default function CustomEditableSelect({
       getSubmitButtonProps,
       getCancelButtonProps,
       getEditButtonProps,
-      getInputProps,
       getPreviewProps,
     } = useEditable();
 
@@ -52,7 +51,6 @@ export default function CustomEditableSelect({
                 onSubmit(e.currentTarget.value),
                   setMorphGenre(e.currentTarget.value);
               }}
-              {...getInputProps}
             >
               {genreList.map((genre) => (
                 <option key={genre} value={genre}>
