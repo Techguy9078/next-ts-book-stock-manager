@@ -51,6 +51,7 @@ export default function ManualAdd() {
 
       await axios.put('/api/SalesAPI/SalesStats', {
         updateField: 'addBook',
+        book: data
       });
 
       return toast({

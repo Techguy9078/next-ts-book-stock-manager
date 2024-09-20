@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import ParkedToggle from '../Shared/ParkedToggle';
 import { toast } from 'sonner';
+import CustomEditableInput from '../Inputs/CustomEditableInput';
 
 export default function BookTableItem({
   book,
@@ -13,7 +14,19 @@ export default function BookTableItem({
 }) {
   const [loading, setLoading] = useState(false);
 
-  const { id, isbn, title, author, genre, createdAt } = book;
+  const { id, barcode, isbn, title, author, genre, createdAt } = book;
+
+  function updateBookValue(barcode: string, field: string, updateData: string) {
+    updateValues();
+
+    async function updateValues() {
+      await axios.patch('/api/BookAPI/Book', {
+        barcode: barcode,
+        field: field,
+        updateData: updateData,
+      });
+    }
+  }
 
   async function removeBook() {
     setLoading(true);
@@ -44,9 +57,31 @@ export default function BookTableItem({
       borderColor={useColorModeValue('gray.300', 'gray.800')}
     >
       <Tr>
-        <Td>{isbn}</Td>
-        <Td>{title}</Td>
-        <Td>{author}</Td>
+        <Td>{barcode}</Td>
+        <Td>
+          <CustomEditableInput
+            fontSize="lg"
+            fontWeight={400}
+            item={isbn}
+            onSubmit={(data) => updateBookValue(barcode, 'isbn', data)}
+          />
+        </Td>
+        <Td>
+          <CustomEditableInput
+            fontSize="lg"
+            fontWeight={400}
+            item={title}
+            onSubmit={(data) => updateBookValue(barcode, 'title', data)}
+          />
+        </Td>
+        <Td>
+          <CustomEditableInput
+            fontSize="lg"
+            fontWeight={400}
+            item={author}
+            onSubmit={(data) => updateBookValue(barcode, 'author', data)}
+          />
+        </Td>
         <Td>{genre}</Td>
         <Td>{formattedDate}</Td>
         <Td>

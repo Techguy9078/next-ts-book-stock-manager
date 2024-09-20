@@ -14,7 +14,7 @@ export default function MobileBookTableItem({
 }) {
   const [loading, setLoading] = useState(false);
 
-  const { id, isbn, title, author, genre, createdAt } = book;
+  const { id, barcode, isbn, title, author, genre, createdAt } = book;
 
   async function removeBook() {
     setLoading(true);
@@ -42,7 +42,7 @@ export default function MobileBookTableItem({
     <Card p={2} my={1} textAlign={'left'}>
       <Flex flexDir={'column'}>
         <Text fontSize={'sm'} fontWeight={'bold'}>
-          {isbn}
+          {barcode} | {isbn}
         </Text>
         <Text fontSize={'sm'}>{title}</Text>
         <Text fontSize={'sm'}>{author}</Text>

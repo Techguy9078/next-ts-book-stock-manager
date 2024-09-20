@@ -134,7 +134,7 @@ export async function PUT(request: Request) {
       return NextResponse.json(updateStatCount);
     } catch (error: any) {
       return NextResponse.json(
-        { error: 'Failed Updating Add Sale Stats...' },
+        { error: 'Failed Updating Activate Sale Stats...' },
         { status: 500 },
       );
     }

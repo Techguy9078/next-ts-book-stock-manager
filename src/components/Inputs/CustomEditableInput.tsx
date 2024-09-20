@@ -18,7 +18,7 @@ export default function CustomEditableInput({
 }: {
   item: string;
   fontSize: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-  fontWeight: 600 | 700;
+  fontWeight: 400 | 500 | 600 | 700;
   onSubmit: (nextValue: string) => void;
 }) {
   function EditableControls() {
