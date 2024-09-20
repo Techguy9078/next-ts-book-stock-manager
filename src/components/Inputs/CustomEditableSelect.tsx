@@ -19,7 +19,7 @@ export default function CustomEditableSelect({
   genre,
 }: {
   fontSize: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-  fontWeight: 600 | 700;
+  fontWeight: 400 | 500| 600 | 700;
   onSubmit: (nextValue: string) => void;
   genre: string;
 }) {

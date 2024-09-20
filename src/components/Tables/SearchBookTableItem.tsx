@@ -1,10 +1,17 @@
-import { Button, Tbody, Td, Tr, useColorModeValue } from '@chakra-ui/react';
+import {
+  Button,
+  Tbody,
+  Td,
+  Tr,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import axios from 'axios';
 import { useContext, useState } from 'react';
 import ParkedToggle from '../Shared/ParkedToggle';
 import { toast } from 'sonner';
 import CustomEditableInput from '../Inputs/CustomEditableInput';
 import { BookCountContext } from '@/app/BookCountContext';
+import CustomEditableSelect from '../Inputs/CustomEditableSelect';
 
 export default function BookTableItem({
   book,
@@ -22,11 +29,14 @@ export default function BookTableItem({
     updateValues();
 
     async function updateValues() {
+      setLoading(true);
       await axios.patch('/api/BookAPI/Book', {
         barcode: barcode,
         field: field,
         updateData: updateData,
       });
+      handleRefetch();
+      setLoading(false);
     }
   }
 
@@ -85,7 +95,14 @@ export default function BookTableItem({
             onSubmit={(data) => updateBookValue(barcode, 'author', data)}
           />
         </Td>
-        <Td>{genre}</Td>
+        <Td>
+          <CustomEditableSelect
+            fontSize="lg"
+            fontWeight={400}
+            genre={genre}
+            onSubmit={(data) => updateBookValue(barcode, 'genre', data)}
+          />
+        </Td>
         <Td>{formattedDate}</Td>
         <Td>
           <ParkedToggle book={book} fontSize={'md'} />
@@ -102,7 +119,7 @@ export default function BookTableItem({
             }}
             w={'100%'}
             size="lg"
-            px={10}
+            px={20}
             onClick={removeBook}
           >
             Remove
