@@ -1,10 +1,4 @@
-import {
-  Button,
-  Tbody,
-  Td,
-  Tr,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Button, Tbody, Td, Tr, useColorModeValue } from '@chakra-ui/react';
 import axios from 'axios';
 import { useContext, useState } from 'react';
 import ParkedToggle from '../Shared/ParkedToggle';
