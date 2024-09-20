@@ -1,9 +1,10 @@
 import { Button, Tbody, Td, Tr, useColorModeValue } from '@chakra-ui/react';
 import axios from 'axios';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import ParkedToggle from '../Shared/ParkedToggle';
 import { toast } from 'sonner';
 import CustomEditableInput from '../Inputs/CustomEditableInput';
+import { BookCountContext } from '@/app/BookCountContext';
 
 export default function BookTableItem({
   book,
@@ -12,6 +13,7 @@ export default function BookTableItem({
   book: IScannedBookLayout;
   handleRefetch: Function;
 }) {
+  const { currentBookCount, getBookCount } = useContext(BookCountContext);
   const [loading, setLoading] = useState(false);
 
   const { id, barcode, isbn, title, author, genre, createdAt } = book;
@@ -44,6 +46,7 @@ export default function BookTableItem({
       .finally(() => {
         handleRefetch();
         setLoading(false);
+        getBookCount(currentBookCount);
       });
   }
 
