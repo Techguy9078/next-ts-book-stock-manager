@@ -75,7 +75,7 @@ const CustomerRequestsModal = ({
                       {new Date(request.createdAt).toLocaleDateString()}
                     </Text>
                     <Text pt="2" fontSize="md">
-                      Request matched by {request.matchedOn}
+                      {/* Request matched by {request.matchedOn} */}
                     </Text>
                   </Box>
                   <Box>

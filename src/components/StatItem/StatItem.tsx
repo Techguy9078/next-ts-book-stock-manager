@@ -18,6 +18,7 @@ export default function StatItem({
   data: SalesStats;
   bookCount: string;
 }) {
+  const { date } = data;
   function bookPercentage(inputBook: number) {
     const currentBookCounttoNum = Number(bookCount);
     return (
@@ -34,7 +35,7 @@ export default function StatItem({
       borderColor={useColorModeValue('gray.300', 'gray.500')}
     >
       <Heading pl={2} size={'md'}>
-        {data.date}
+        {date.toLocaleString()}
       </Heading>
       <StatGroup pt={1}>
         <Stat
