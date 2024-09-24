@@ -1,5 +1,6 @@
 'use server';
 import { prisma } from '@/db';
+import { Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
@@ -64,6 +65,25 @@ export async function GET(request: Request) {
   }
 
   try {
+    // const bookResults = await prisma.$queryRaw`
+
+    // WITH query AS (SELECT to_tsquery(string_agg(lexeme || ':*', ' & ' ORDER BY positions)) AS q FROM unnest(to_tsvector(${searchTerm})))
+
+    // SELECT
+
+    // barcode, isbn, title, author, genre, ts_rank(search, query.q) AS rank
+
+    // FROM
+
+    // "ScannedBook", query
+
+    // ${searchTerm ? Prisma.sql`WHERE search @@ query.q` : Prisma.empty}
+
+    // ORDER BY
+
+    // rank
+    // `;
+
     const bookResults = await prisma.scannedBook.findMany({
       where: {
         OR: [

@@ -34,6 +34,10 @@ model ScannedBook {
   park      Boolean     @default(true) // Change once current data overrided.
   book      StoredBooks @relation(fields: [barcode, isbn, title, author, genre], references: [barcode, isbn, title, author, genre])
   createdAt DateTime    @default(now())
+
+  search Unsupported("tsvector")? @default(dbgenerated("''::tsvector"))
+
+  @@index([search])
 }
 
 // Sales Data Models
