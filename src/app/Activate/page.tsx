@@ -33,6 +33,10 @@ export default function Activate() {
           throw Error();
         }
         setBookDetails(updatedBook.data);
+        await axios.put('/api/SalesAPI/SalesStats', {
+          updateField: 'activateBook',
+          book: updatedBook.data,
+        });
         toast.success('Book Activated Successfully');
       } catch (err: any) {
         toast.error('Something went wrong', {

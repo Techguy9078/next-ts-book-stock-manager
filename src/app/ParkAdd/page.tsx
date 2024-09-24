@@ -82,6 +82,7 @@ export default function ParkAdd() {
       const book = await axios.post('/api/BookAPI/Book', data);
       await axios.put('/api/SalesAPI/SalesStats', {
         updateField: 'addBook',
+        book: book.data,
       });
 
       await searchRequests(book.data);

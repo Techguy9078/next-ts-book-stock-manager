@@ -78,10 +78,11 @@ export async function POST() {
 
 interface IPutReq {
   updateField: 'addBook' | "activateBook" | 'removeBook';
+  book: IScannedBookLayout
 }
 
 export async function PUT(request: Request) {
-  const { updateField }: IPutReq = await request.json();
+  const { updateField, book }: IPutReq = await request.json();
   const date = new Date()
   date.setMinutes(0)
   date.setSeconds(0)
@@ -133,7 +134,7 @@ export async function PUT(request: Request) {
       return NextResponse.json(updateStatCount);
     } catch (error: any) {
       return NextResponse.json(
-        { error: 'Failed Updating Add Sale Stats...' },
+        { error: 'Failed Updating Activate Sale Stats...' },
         { status: 500 },
       );
     }

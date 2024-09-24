@@ -1,9 +1,10 @@
 import { Button, Card, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 import axios from 'axios';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import CustomDivider from '../Divider/customDivider';
 import ParkedToggle from '../Shared/ParkedToggle';
 import { toast } from 'sonner';
+import { BookCountContext } from '@/app/BookCountContext';
 
 export default function MobileBookTableItem({
   book,
@@ -12,9 +13,10 @@ export default function MobileBookTableItem({
   book: IScannedBookLayout;
   handleRefetch: Function;
 }) {
+  const { currentBookCount, getBookCount } = useContext(BookCountContext);
   const [loading, setLoading] = useState(false);
 
-  const { id, isbn, title, author, genre, createdAt } = book;
+  const { id, barcode, isbn, title, author, genre, createdAt } = book;
 
   async function removeBook() {
     setLoading(true);
@@ -32,6 +34,7 @@ export default function MobileBookTableItem({
       .finally(() => {
         handleRefetch();
         setLoading(false);
+        getBookCount(currentBookCount);
       });
   }
 
@@ -42,8 +45,9 @@ export default function MobileBookTableItem({
     <Card p={2} my={1} textAlign={'left'}>
       <Flex flexDir={'column'}>
         <Text fontSize={'sm'} fontWeight={'bold'}>
-          {isbn}
+          Barcode: {barcode}
         </Text>
+        <Text fontSize={'sm'}>ISBN: {isbn}</Text>
         <Text fontSize={'sm'}>{title}</Text>
         <Text fontSize={'sm'}>{author}</Text>
         <CustomDivider />

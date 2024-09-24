@@ -41,6 +41,7 @@ export default function AutoRemove() {
 
       await axios.put('/api/SalesAPI/SalesStats', {
         updateField: 'removeBook',
+        book: data
       });
 
       getBookCount(null);

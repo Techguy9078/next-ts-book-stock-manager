@@ -8,8 +8,8 @@ import {
 } from '@chakra-ui/react';
 import CustomEditableInput from '../Inputs/CustomEditableInput';
 import axios from 'axios';
-import CustomEditableSelect from '../Inputs/CustomEditableSelect';
 import ParkedToggle from '../Shared/ParkedToggle';
+import ResultItem from './ResultItem';
 
 function updateBookValue(barcode: string, field: string, updateData: string) {
   updateValues();
@@ -83,45 +83,5 @@ export default function EditableResultCard({
         </Stack>
       </Stack>
     </Box>
-  );
-}
-
-function ResultItem({
-  barcode,
-  item,
-  cardBodyName,
-  field,
-  genre,
-}: {
-  barcode: string;
-  item: string;
-  cardBodyName: string;
-  field: 'title' | 'author' | 'genre' | 'isbn';
-  genre: string;
-}) {
-  if (field == 'genre') {
-    return (
-      <HStack>
-        <Text fontWeight={700}>{cardBodyName}:</Text>
-        <CustomEditableSelect
-          fontSize="lg"
-          fontWeight={600}
-          item={item || `Edit ${field}...`}
-          onSubmit={(data) => updateBookValue(barcode, field, data)}
-          genre={genre}
-        />
-      </HStack>
-    );
-  }
-  return (
-    <HStack>
-      <Text fontWeight={700}>{cardBodyName}:</Text>
-      <CustomEditableInput
-        fontSize="lg"
-        fontWeight={600}
-        item={item || `Edit ${field}...`}
-        onSubmit={(data) => updateBookValue(barcode, field, data)}
-      />
-    </HStack>
   );
 }

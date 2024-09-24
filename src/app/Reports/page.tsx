@@ -5,7 +5,6 @@ import CustomDivider from '@/components/Divider/customDivider';
 import DatePicker from '@/components/DatePicker/DatePicker';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Sales } from '@prisma/client';
 import ReportGenerateButton from '@/components/Buttons/ReportGenerateButton';
 
 export default function Reports() {
