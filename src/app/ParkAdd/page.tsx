@@ -80,10 +80,10 @@ export default function ParkAdd() {
     },
     onSuccess: async (data: IScannedBookLayout) => {
       const book = await axios.post('/api/BookAPI/Book', data);
-      await axios.put('/api/SalesAPI/SalesStats', {
-        updateField: 'addBook',
-        book: book.data,
-      });
+      // TODO broken
+      // await axios.put('/api/SalesAPI/SalesStats', {
+      //   updateField: 'addBook',
+      // });
 
       await searchRequests(book.data);
 

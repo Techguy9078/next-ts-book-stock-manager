@@ -3,100 +3,98 @@ import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
 import {
   ButtonGroup,
   Editable,
+  EditablePreview,
   Flex,
   HStack,
   IconButton,
   Select,
-  Text,
-  useEditable,
+  useEditableControls,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 
 export default function CustomEditableSelect({
+  item,
   fontSize,
   fontWeight,
   onSubmit,
   genre,
 }: {
+  item: string;
   fontSize: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-  fontWeight: 400 | 500| 600 | 700;
+  fontWeight: 600 | 700;
   onSubmit: (nextValue: string) => void;
   genre: string;
 }) {
+  const [edit, setEdit] = useState(false);
   const [morphGenre, setMorphGenre] = useState(genre);
 
-  function EditableSelect() {
+  function EditableControls() {
     const {
       isEditing,
       getSubmitButtonProps,
       getCancelButtonProps,
       getEditButtonProps,
-      getPreviewProps,
-    } = useEditable();
+    } = useEditableControls();
 
-    return (
-      <>
-        {isEditing ? (
-          <>
-            <Select
-              borderColor="gray.400"
-              color="gray.400"
-              placeholder="Select The Genre..."
-              onChange={(e) => {
-                onSubmit(e.currentTarget.value),
-                  setMorphGenre(e.currentTarget.value);
-              }}
-              value={morphGenre}
-              onBlur={(e) => {
-                onSubmit(e.currentTarget.value),
-                  setMorphGenre(e.currentTarget.value);
-              }}
-            >
-              {genreList.map((genre) => (
-                <option key={genre} value={genre}>
-                  {genre}
-                </option>
-              ))}
-            </Select>
-            <ButtonGroup size="sm">
-              <IconButton
-                aria-label="yes"
-                icon={<CheckIcon />}
-                {...getSubmitButtonProps()}
-              />
-              <IconButton
-                aria-label="no"
-                icon={<CloseIcon />}
-                {...getCancelButtonProps()}
-              />
-            </ButtonGroup>
-          </>
-        ) : (
-          <Flex>
-            <Text {...getPreviewProps()}>{morphGenre}</Text>
-            <IconButton
-              aria-label="edit"
-              size="sm"
-              icon={<EditIcon />}
-              {...getEditButtonProps()}
-            />
-          </Flex>
-        )}
-      </>
-    );
-  }
+		return isEditing ? (
+			<ButtonGroup size="sm">
+				<IconButton
+					aria-label="yes"
+					icon={<CheckIcon />}
+					{...getSubmitButtonProps()}
+				/>
+				<IconButton
+					aria-label="no"
+					icon={<CloseIcon />}
+					{...getCancelButtonProps()}
+				/>
+			</ButtonGroup>
+		) : (
+			<Flex>
+				<IconButton
+					aria-label="edit"
+					size="sm"
+					icon={<EditIcon />}
+					{...getEditButtonProps()}
+				/>
+			</Flex>
+		);
+	}
+	return (
+		<Editable
+			defaultValue={morphGenre}
+			value={morphGenre}
+			fontSize={fontSize}
+			fontWeight={fontWeight}
+			isPreviewFocusable={true}
+			selectAllOnFocus={false}
+			onSubmit={() => {
+				onSubmit(morphGenre), setEdit(false);
+			}}
+			onEdit={() => setEdit(true)}
+		>
+			<HStack>
+				<EditablePreview px={2} />
+				{edit && (
+					<Select
+						key={123}
+						borderColor={"gray.400"}
+						color={"gray.400"}
+						placeholder={"Select The Genre..."}
+						onChange={(e) => {
+							setMorphGenre(e.currentTarget.value);
+						}}
+						defaultValue={morphGenre}
+					>
+						{genreList.map((genre) => (
+							<option key={genre} value={genre}>
+								{genre}
+							</option>
+						))}
+					</Select>
+				)}
 
-  return (
-    <Editable
-      value={morphGenre}
-      fontSize={fontSize}
-      fontWeight={fontWeight}
-      isPreviewFocusable={true}
-      selectAllOnFocus={false}
-      onSubmit={() => onSubmit(morphGenre)}
-    >
-      <HStack>
-        <EditableSelect />
+        <EditableControls />
       </HStack>
     </Editable>
   );

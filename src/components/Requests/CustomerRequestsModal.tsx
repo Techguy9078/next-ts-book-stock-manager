@@ -9,31 +9,36 @@ import {
   Box,
   Card,
   CardBody,
-  CardHeader,
   Heading,
   Stack,
   StackDivider,
   Text,
 } from '@chakra-ui/react';
 import { CustomerBookRequest } from '@prisma/client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface CustomerRequestsModalProps {
   customerRequests: CustomerBookRequest[];
   setCustomerRequests: React.Dispatch<
     React.SetStateAction<CustomerBookRequest[]>
   >;
+  isStocktake?: boolean;
 }
 
 const CustomerRequestsModal = ({
   customerRequests,
   setCustomerRequests,
+  isStocktake,
 }: CustomerRequestsModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const modalBodyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (customerRequests?.length) {
       setIsOpen(true);
+      if (modalBodyRef.current) {
+        modalBodyRef.current.scrollTop = 0;
+      }
     }
   }, [customerRequests?.length, setCustomerRequests]);
 
@@ -42,7 +47,6 @@ const CustomerRequestsModal = ({
     setCustomerRequests([]);
   };
 
-  console.log(customerRequests);
   return (
     <Modal
       isOpen={isOpen}
@@ -50,14 +54,33 @@ const CustomerRequestsModal = ({
       closeOnOverlayClick={false}
       closeOnEsc={false}
       size={'xl'}
+      scrollBehavior="outside"
     >
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent height={'auto'} maxHeight={'80vh'}>
         <ModalHeader>Customer Request Found</ModalHeader>
-        <Text fontSize="md" style={{ color: 'red' }} alignSelf={'center'}>
-          The book has still been added even thought a request has been found!
-        </Text>
-        <ModalBody>
+        {!isStocktake ? (
+          <Text
+            fontSize="md"
+            style={{ color: 'red' }}
+            alignSelf={'center'}
+            margin={1}
+            textAlign={'center'}
+          >
+            The book has still been added even though a request has been found!
+          </Text>
+        ) : (
+          <Text
+            fontSize="md"
+            style={{ color: 'red' }}
+            alignSelf={'center'}
+            margin={1}
+            textAlign={'center'}
+          >
+            Book not added!
+          </Text>
+        )}
+        <ModalBody ref={modalBodyRef} w={'auto'} overflow={'auto'}>
           {customerRequests?.map((request, index) => (
             <Card key={index} border={'1px solid rgba(255,255,255,0.3)'} my={2}>
               <CardBody>
@@ -75,7 +98,8 @@ const CustomerRequestsModal = ({
                       {new Date(request.createdAt).toLocaleDateString()}
                     </Text>
                     <Text pt="2" fontSize="md">
-                      {/* Request matched by {request.matchedOn} */}
+                      {/* @ts-ignore */}
+                      Request matched on {request.matchedOn}
                     </Text>
                   </Box>
                   <Box>

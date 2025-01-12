@@ -49,10 +49,10 @@ export default function ManualAdd() {
       setBookDetails(data);
       reset();
 
-      await axios.put('/api/SalesAPI/SalesStats', {
-        updateField: 'addBook',
-        book: data
-      });
+      // TODO broken
+      // await axios.put('/api/SalesAPI/SalesStats', {
+      //   updateField: 'addBook',
+      // });
 
       return toast({
         id: 'success',
@@ -65,16 +65,17 @@ export default function ManualAdd() {
     },
     onError: (err: AnySoaRecord) => {
       if (err instanceof AxiosError) {
+        console.log(err);
         if (err.response?.status === 500) {
           setBookDetails(undefined);
 
           return toast({
-            id: 'warning',
+            id: 'error',
             position: 'top-right',
-            status: 'warning',
+            status: 'error',
             duration: 3000,
-            title: 'Adding Book Failed',
-            description: 'Error Adding Book Manually!',
+            title: 'Error Found',
+            description: `Error: ${err.response?.data?.error || 'when adding book, server side...'}`,
           });
         }
       }

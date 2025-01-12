@@ -1,10 +1,5 @@
 'use client';
-import {
-  Box,
-  Text,
-  VStack,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Box, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
 
 import CustomDivider from '@/components/Divider/customDivider';
@@ -18,23 +13,18 @@ import MobileBookTable from '@/components/Tables/MobileBookTable';
 
 export default function Search() {
   const [refetchValue, setRefetchValue] = useState<boolean>(false);
-  const [books, setBooks] = useState<Array<IScannedBookLayout>>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [books, setBooks] = useState<IScannedBookLayout[]>();
 
   const isMobile = useIsMobile();
   const color = useColorModeValue('gray.200', 'gray.700');
 
-  function setBooksArray(booksArray: Array<IScannedBookLayout> | undefined) {
+  const setBooksArray = (booksArray: IScannedBookLayout[] | undefined) => {
     setBooks(booksArray);
-  }
+  };
 
-  function setLoader(loader: boolean) {
-    setIsLoading(loader);
-  }
-
-  function handleRefetch() {
+  const handleRefetch = () => {
     setRefetchValue(!refetchValue);
-  }
+  };
 
   return (
     <>
@@ -42,13 +32,8 @@ export default function Search() {
         <Box p={4} bgColor={color} rounded={'md'} maxHeight={'100vh'}>
           <VStack spacing={2} align={'left'} pb={4}>
             <BookCount />
-            <SearchForm
-              setLoader={setLoader}
-              setBooksArray={setBooksArray}
-              refetchValue={refetchValue}
-            />
+            <SearchForm setBooksArray={setBooksArray} />
           </VStack>
-          {isLoading && <BookPagesLoader />}
           {books && (
             <MobileBookTable bookArray={books} handleRefetch={handleRefetch} />
           )}
@@ -62,16 +47,11 @@ export default function Search() {
             {books && <SearchReportGenerateButton searchData={books} />}
             <CustomDivider />
 
-            <SearchForm
-              setLoader={setLoader}
-              setBooksArray={setBooksArray}
-              refetchValue={refetchValue}
-            />
+            <SearchForm setBooksArray={setBooksArray} />
           </VStack>
-          {isLoading && <BookPagesLoader />}
-          {books && (
+          {books?.length ? (
             <BookTable bookArray={books} handleRefetch={handleRefetch} />
-          )}
+          ) : null}
         </Box>
       )}
     </>

@@ -8,8 +8,9 @@ import {
 } from '@chakra-ui/react';
 import CustomEditableInput from '../Inputs/CustomEditableInput';
 import axios from 'axios';
+import CustomEditableSelect from '../Inputs/CustomEditableSelect';
 import ParkedToggle from '../Shared/ParkedToggle';
-import ResultItem from './ResultItem';
+import DeleteBookConfirmation from '../Shared/DeleteBookConfirmation';
 
 function updateBookValue(barcode: string, field: string, updateData: string) {
   updateValues();
@@ -29,13 +30,20 @@ export default function EditableResultCard({
   isbn,
   author,
   genre,
+  isStocktake,
+  maxWidth,
+  setBookDeleted,
   ...rest
-}: IScannedBookLayout) {
-  const book = { title, barcode, isbn, author, genre, ...rest };
+}: IScannedBookLayout & {
+  isStocktake?: boolean;
+  maxWidth?: string;
+  setBookDeleted?: (book: IScannedBookLayout) => void;
+}) {
+  const book = { title, barcode, isbn, author, genre, setBookDeleted, ...rest };
   return (
     <Box
       p={5}
-      maxW={'500px'}
+      maxW={maxWidth || '500px'}
       bg={useColorModeValue('gray.100', 'gray.600')}
       boxShadow={'xl'}
       rounded={'lg'}
@@ -79,9 +87,63 @@ export default function EditableResultCard({
               {barcode}
             </Text>
           </HStack>
-          <ParkedToggle book={book} fontSize="lg" fontWeight={600} />
+          <Stack
+            direction={{ base: 'column', md: 'row' }}
+            spacing={4}
+            align="center"
+            justifyContent="space-between"
+          >
+            <ParkedToggle book={book} fontSize="lg" fontWeight={600} />
+            {isStocktake ? (
+              <DeleteBookConfirmation
+                book={book}
+                onDelete={setBookDeleted}
+                deleteById
+              />
+            ) : null}
+          </Stack>
         </Stack>
       </Stack>
     </Box>
+  );
+}
+
+function ResultItem({
+  barcode,
+  item,
+  cardBodyName,
+  field,
+  genre,
+}: {
+  barcode: string;
+  item: string;
+  cardBodyName: string;
+  field: 'title' | 'author' | 'genre' | 'isbn';
+  genre: string;
+}) {
+  if (field == 'genre') {
+    return (
+      <HStack>
+        <Text fontWeight={700}>{cardBodyName}:</Text>
+        <CustomEditableSelect
+          fontSize="lg"
+          fontWeight={600}
+          item={item || `Edit ${field}...`}
+          onSubmit={(data) => updateBookValue(barcode, field, data)}
+          genre={genre}
+        />
+      </HStack>
+    );
+  }
+  return (
+    <HStack>
+      <Text fontWeight={700}>{cardBodyName}:</Text>
+      <CustomEditableInput
+        fontSize="lg"
+        fontWeight={600}
+        item={item || `Edit ${field}...`}
+        onSubmit={(data) => updateBookValue(barcode, field, data)}
+      />
+    </HStack>
   );
 }

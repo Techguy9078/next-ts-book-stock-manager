@@ -2,6 +2,12 @@ import { Button, useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
 
 const Buttons = {
+  Stocktake: {
+    buttonLoadingText: 'Checking Book...',
+    buttonBgColor: 'bg-blue-400',
+    buttonHoverColor: 'blue.600',
+    buttonText: 'Stocktake',
+  },
   Add: {
     buttonLoadingText: 'Adding Book...',
     buttonBgColor: 'bg-green-400',
@@ -27,7 +33,7 @@ export default function GenericButton({
   buttonType,
 }: {
   isLoading: boolean;
-  buttonType: 'Add' | 'Remove' | 'Activate';
+  buttonType: 'Add' | 'Remove' | 'Activate' | 'Stocktake';
 }) {
   const { buttonLoadingText, buttonBgColor, buttonHoverColor, buttonText } =
     Buttons[buttonType];
