@@ -9,7 +9,7 @@ import {
   InputRightElement,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-import { useState, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
@@ -19,9 +19,7 @@ interface SearchFormProps {
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray }) => {
-  const [debouncedSearch, setDebouncedSearch] = useState<string | undefined>(
-    '',
-  );
+  const [debouncedSearch, setDebouncedSearch] = useState<string>('');
 
   const {
     register,
@@ -33,9 +31,13 @@ const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray }) => {
     defaultValues: { search: '' },
   });
 
-  const debouncedUpdate = debounce((value: string) => {
-    setDebouncedSearch(value);
-  }, 400);
+  const debouncedUpdate = useMemo(
+    () =>
+      debounce((value: string) => {
+        setDebouncedSearch(value);
+      }, 400),
+    [],
+  );
 
   useEffect(() => {
     const subscription = watch(({ search }) => {
@@ -45,21 +47,28 @@ const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray }) => {
     return () => subscription.unsubscribe();
   }, [debouncedUpdate, watch]);
 
-  const { data } = useQuery(
+  useEffect(() => {
+    if (!debouncedSearch) {
+      setBooksArray(undefined);
+    }
+  }, [debouncedSearch, setBooksArray]);
+
+  const { data, isFetching, isError } = useQuery(
     ['search', debouncedSearch],
     () =>
       axios
         .get(`/api/BookAPI/Book?search=${debouncedSearch}`)
         .then((res) => res.data),
     {
-      enabled: !!debouncedSearch && debouncedSearch.length >= 3,
+      enabled: !!debouncedSearch && debouncedSearch.length >= 1,
       refetchOnWindowFocus: false,
     },
   );
 
   useEffect(() => {
     if (data) setBooksArray(data);
-  }, [data, setBooksArray]);
+    if (isError) setBooksArray(undefined);
+  }, [data, isError, setBooksArray]);
 
   return (
     <FormControl isInvalid={!!errors.search}>
@@ -67,18 +76,19 @@ const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray }) => {
       <InputGroup>
         <Input
           autoFocus
-          autoComplete="off"
+          autoComplete="on"
           id="search"
           placeholder="Start Searching books..."
           {...register('search', { required: true })}
         />
         <InputRightElement>
           <Button
-            size="sm" // Use a smaller size to fit better
-            variant="ghost" // Ghost variant to avoid a bulky look
+            size="sm"
+            variant="ghost"
             onClick={() => {
               resetField('search');
               setBooksArray(undefined);
+              setDebouncedSearch('');
               setFocus('search');
             }}
           >
@@ -87,7 +97,9 @@ const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray }) => {
         </InputRightElement>
       </InputGroup>
       <FormHelperText>
-        Only will search once 3 characters have been entered
+        {isFetching
+          ? 'Searching...'
+          : 'Only will search once 3 characters have been entered'}
       </FormHelperText>
       <FormErrorMessage>
         {errors.search && errors.search.message}

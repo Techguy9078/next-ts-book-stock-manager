@@ -1,14 +1,12 @@
 'use client';
 import { Box, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
-
+import { useIsMobile } from '@/utils/isMobile';
 import CustomDivider from '@/components/Divider/customDivider';
 import BookCount from '@/components/BookCount/BookCount';
 import BookTable from '@/components/Tables/SearchBookTable';
 import SearchForm from '@/components/Forms/SearchForm';
-import { BookPagesLoader } from '@/components/Loading/BookPagesLoading';
 import SearchReportGenerateButton from '@/components/Buttons/SearchReportGenerateButton';
-import { useIsMobile } from '@/utils/isMobile';
 import MobileBookTable from '@/components/Tables/MobileBookTable';
 
 export default function Search() {
@@ -34,9 +32,11 @@ export default function Search() {
             <BookCount />
             <SearchForm setBooksArray={setBooksArray} />
           </VStack>
-          {books && (
+          {books?.length === 0 ? (
+            <Text fontSize="2xl">☹️ No books found, that is upsetting!</Text>
+          ) : books ? (
             <MobileBookTable bookArray={books} handleRefetch={handleRefetch} />
-          )}
+          ) : null}
         </Box>
       ) : (
         <Box p={4} bgColor={color} rounded={'md'} maxHeight={'90vh'}>
@@ -46,10 +46,11 @@ export default function Search() {
             <BookCount />
             {books && <SearchReportGenerateButton searchData={books} />}
             <CustomDivider />
-
             <SearchForm setBooksArray={setBooksArray} />
           </VStack>
-          {books?.length ? (
+          {books?.length === 0 ? (
+            <Text fontSize="2xl">☹️ No books found, that is upsetting!</Text>
+          ) : books?.length ? (
             <BookTable bookArray={books} handleRefetch={handleRefetch} />
           ) : null}
         </Box>
