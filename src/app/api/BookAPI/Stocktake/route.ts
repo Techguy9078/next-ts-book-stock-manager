@@ -48,42 +48,28 @@ export async function GET(request: Request) {
   }
 
   if (generalSearch) {
-    // Handle general multi-word search
     const searchWords = generalSearch.split(/\s+/).filter(Boolean);
+    const searchQuery = searchWords.join(' ');
 
+    const SIMILARITY_MATCH_THRESHOLD = 0.5; // Minimum similarity score for a match
+
+    // If it is not working you may need to run the following SQL command:
+    // CREATE EXTENSION IF NOT EXISTS pg_trgm;
     try {
-      const bookResults = await prisma.scannedBook.findMany({
-        where: {
-          OR: searchWords.flatMap((word) => [
-            {
-              title: {
-                contains: word,
-                mode: 'insensitive',
-              },
-            },
-            {
-              author: {
-                contains: word,
-                mode: 'insensitive',
-              },
-            },
-            {
-              barcode: {
-                contains: word,
-              },
-            },
-            {
-              isbn: {
-                contains: word,
-              },
-            },
-          ]),
-        },
-        orderBy: { title: 'asc' },
-      });
+      const bookResults = await prisma.$queryRaw`
+        SELECT * FROM (
+          SELECT *, 
+            word_similarity(title, ${searchQuery}) AS title_similarity
+          FROM "ScannedBook"
+        ) AS subquery
+        WHERE 
+          title_similarity > ${SIMILARITY_MATCH_THRESHOLD}
+        ORDER BY title_similarity DESC
+      `;
 
       return NextResponse.json(bookResults);
     } catch (error: any) {
+      console.error('Search error:', error);
       return NextResponse.json(
         { error: 'Failed to find books with the given search term.' },
         { status: 500 },

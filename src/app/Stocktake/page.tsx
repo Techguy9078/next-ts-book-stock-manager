@@ -6,94 +6,176 @@ import {
   useColorModeValue,
   Button,
   Grid,
+  Flex,
+  Switch,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import EditableResultCard from '@/components/ResultCard/EditableResultCard';
 import BarcodeForm from '@/components/Forms/BarcodeForm';
 import StocktakeModal from '@/components/Modals/StocktakeModal';
+import { CustomerBookRequest } from '@prisma/client';
+import CustomerRequestsModal from '@/components/Requests/CustomerRequestsModal';
 
 type StocktakeStages = 'scan' | 'not-found' | 'manual' | 'found';
 
 export default function Stocktake() {
-  const [barcode, setBarcode] = useState<string | undefined>(undefined);
   const [books, setBooks] = useState<IScannedBookLayout[]>([]);
+  const [similarBooks, setSimilarBooks] = useState<IScannedBookLayout[]>([]);
   const [stage, setStage] = useState<StocktakeStages>('scan');
   const [isManualModalOpen, setManualModalOpen] = useState(false);
+  const [customerRequests, setCustomerRequests] = useState<
+    CustomerBookRequest[]
+  >([]);
+  const [isParked, setIsParked] = useState(false);
+
+  const searchRequests = async (bookData: IScannedBookLayout) => {
+    const { isbn, barcode, author, title } = bookData;
+
+    try {
+      const response = await axios.get(
+        '/api/CustomerBookRequestAPI/CustomerRequestLookup',
+        {
+          params: { isbn, barcode, author, title },
+        },
+      );
+
+      const rankedResults = response.data;
+      if (rankedResults.length) {
+        setCustomerRequests(rankedResults);
+      }
+    } catch (error) {
+      toast.error('Error searching for customer requests', {
+        description: `${error}`,
+      });
+    }
+  };
+
+  const fetchBookFromAPI = async (
+    barcode: string,
+  ): Promise<IScannedBookLayout[] | null> => {
+    try {
+      const { data } = await axios.get<IScannedBookLayout[]>(
+        `/api/BookAPI/Stocktake?barcode=${barcode}`,
+      );
+      return data.length > 0 ? data : null;
+    } catch (error) {
+      console.error('Error fetching book from API:', error);
+      return null;
+    }
+  };
+
   const fetchBookDetails = async (
     barcode: string,
   ): Promise<IScannedBookLayout | null> => {
-    console.log('fetchBookDetails', barcode);
-    setBarcode(barcode);
     try {
-      // Fetch book from external API
       const { data } = await axios.get<IScannedBookLayout>(
         `/api/BookAPI/APIBookSearch?barcode=${barcode}`,
       );
-      if (data) return data;
+      return data;
     } catch {
       try {
-        // Fallback to custom API
         const { data } = await axios.get<IScannedBookLayout>(
           `/api/BookAPI/CustomAPIBookSearch?barcode=${barcode}`,
         );
         return data;
-      } catch (error) {
+      } catch {
         return null;
       }
     }
-    return null;
   };
 
-  const addBookToDatabase = async (book: IScannedBookLayout) => {
+  const findSimilarBooks = async (
+    book: IScannedBookLayout,
+  ): Promise<IScannedBookLayout[] | null> => {
+    const searchString = book.title; // Only search by title but can be expanded to include author as using a string similarity algorithm
     try {
-      const { data } = await axios.post('/api/BookAPI/Book', book);
-      setBooks((prev) => [...prev, data]);
-      toast.success('Book added successfully.');
-    } catch {
-      toast.error('Failed to add book to the database.');
+      const { data } = await axios.get<IScannedBookLayout[]>(
+        `/api/BookAPI/Stocktake?search=${searchString}`,
+      );
+      return data.length > 0 ? data : null;
+    } catch (error) {
+      console.error('Error finding similar books:', error);
+      return null;
     }
   };
 
+  const addBookToDatabase = async (
+    book: IScannedBookLayout,
+  ): Promise<IScannedBookLayout | null> => {
+    try {
+      const { data } = await axios.post('/api/BookAPI/Book', book);
+      setBooks([...books, data]);
+      toast.success('Book added successfully.');
+      setStage('found');
+      return data;
+    } catch (error) {
+      console.error('Failed to add book:', error);
+      toast.error('Failed to add book to the database, Try manual add.');
+      setStage('not-found');
+      setManualModalOpen(true);
+      setBooks([]);
+      return null;
+    }
+  };
+
+  const handleSimilarBook = async (book: IScannedBookLayout) => {
+    if (!book) return;
+
+    const similarBooks = await findSimilarBooks(book);
+    if (similarBooks) {
+      const filteredBooks = similarBooks.filter(
+        (similarBook) => similarBook.isbn !== book.isbn,
+      );
+      setSimilarBooks(filteredBooks);
+    }
+  };
+
+  // Quick and dirty to stop accidental string entry
+  function isNumeric(str: string): boolean {
+    return /^\d+$/.test(str);
+  }
+
   const { mutate: barcodeSearch, isLoading } = useMutation({
     mutationFn: async (barcode: string) => {
-      setBooks([]);
-      // Search for exact match in database
-      const response = await axios.get<IScannedBookLayout[]>(
-        `/api/BookAPI/Stocktake?barcode=${barcode}`,
-      );
-      if (response.data.length > 0) {
-        setBooks(response.data);
-        setStage('found');
+      const barcodeTrimmed = barcode?.trim();
+      if (!isNumeric(barcodeTrimmed)) {
+        toast.error('Invalid barcode');
         return;
       }
 
-      // If book not found, fetch details from external APIs
-      const bookDetails = await fetchBookDetails(barcode);
+      // Reset the state
+      setBooks([]);
+      setSimilarBooks([]);
+      setStage('scan');
 
-      // If details found, do a check of the book in the database based on other details
-      if (bookDetails) {
-        const searchString = `${bookDetails.title} ${bookDetails.author} ${bookDetails.isbn} ${bookDetails.barcode}`;
-        const { data } = await axios.get<IScannedBookLayout[]>(
-          `/api/BookAPI/Stocktake?search=${searchString}`,
-        );
-        if (data.length > 0) {
-          setBooks(data);
-          setStage('found');
-          return;
+      // 1 Search in the database
+      const storedBooks = await fetchBookFromAPI(barcode);
+      if (storedBooks) {
+        await addBookToDatabase(storedBooks[0]);
+        await handleSimilarBook(storedBooks[0]);
+        setBooks(storedBooks);
+        searchRequests(storedBooks[0]);
+        return;
+      }
+
+      // 2 Fetch from external API
+      const externalBook = await fetchBookDetails(barcode);
+      if (externalBook) {
+        const savedBook = await addBookToDatabase(externalBook);
+        // check for similar books after saving
+        if (savedBook) {
+          handleSimilarBook(savedBook);
+          setBooks([savedBook]);
+          searchRequests(savedBook);
         }
+        return;
       }
 
-      if (bookDetails) {
-        await addBookToDatabase(bookDetails);
-        setBooks([bookDetails]);
-        setStage('found');
-      } else {
-        // If details not found, request manual entry
-        setStage('not-found');
-      }
+      setStage('not-found');
+      setManualModalOpen(true);
     },
     onError: () => {
       toast.error('An error occurred during barcode search.');
@@ -104,17 +186,16 @@ export default function Stocktake() {
     try {
       const { data } = await axios.post('/api/BookAPI/Book', manualBookData);
       toast.success('Book added manually.');
-      setManualModalOpen(false);
-      setStage('found');
       setBooks([data]);
-      setBarcode(undefined);
+      handleSimilarBook(data);
+      setStage('found');
+      setManualModalOpen(false);
+      searchRequests(data);
     } catch {
       toast.error('Failed to add book manually.');
     }
   };
 
-  console.log(barcode);
-  console.log(books);
   return (
     <Box
       p={4}
@@ -125,15 +206,23 @@ export default function Stocktake() {
     >
       <VStack spacing={4} align="left">
         <Text fontSize="2xl">Stocktake</Text>
-
-        {/* Barcode Scanner */}
+        <Flex align="center">
+          <Text fontSize="md" fontWeight={500}>
+            Status: {isParked ? 'Parked' : 'Active'}
+          </Text>
+          <Switch
+            ml={2}
+            disabled={isLoading}
+            isChecked={isParked}
+            onChange={() => setIsParked((prev) => !prev)}
+          />
+        </Flex>
         <BarcodeForm
           isLoading={isLoading}
           barcodeSearch={(data: any) => barcodeSearch(data.barcode)}
           formType="Stocktake"
         />
 
-        {/* Display Found Books */}
         {stage === 'found' && books.length > 0 && (
           <>
             <Text fontSize="md">
@@ -164,10 +253,41 @@ export default function Stocktake() {
                   />
                 ))}
             </Grid>
+            {books?.length && similarBooks?.length ? (
+              <>
+                <Text fontSize="md">
+                  Similar {similarBooks.length}{' '}
+                  {similarBooks.length > 1 ? 'books' : 'book'} found
+                </Text>
+                <Grid
+                  templateColumns={{
+                    base: '1fr',
+                    sm: 'repeat(2, 1fr)',
+                    md: 'repeat(2, 1fr)',
+                    lg: 'repeat(3, 1fr)',
+                  }}
+                  gap={4}
+                >
+                  {similarBooks.map((book) => (
+                    <EditableResultCard
+                      key={book.id}
+                      {...book}
+                      maxWidth="100%"
+                      isStocktake
+                      setBookDeleted={(deletedBook: IScannedBookLayout) => {
+                        const updateBooks = books.filter(
+                          (book) => book.id !== deletedBook.id,
+                        );
+                        setSimilarBooks(updateBooks);
+                      }}
+                    />
+                  ))}
+                </Grid>
+              </>
+            ) : null}
           </>
         )}
 
-        {/* Not Found Handling */}
         {stage === 'not-found' && (
           <>
             <Text>Book not found. Please add details manually.</Text>
@@ -185,14 +305,23 @@ export default function Stocktake() {
           </>
         )}
 
-        {/* Manual Entry Modal */}
         <StocktakeModal
           isOpen={isManualModalOpen}
-          onClose={() => setManualModalOpen(false)}
+          onClose={() => {
+            setManualModalOpen(false);
+            setStage('scan');
+          }}
           onSubmit={(book) => {
             handleManualAdd(book);
           }}
         />
+
+        {customerRequests?.length ? (
+          <CustomerRequestsModal
+            customerRequests={customerRequests}
+            setCustomerRequests={setCustomerRequests}
+          />
+        ) : null}
       </VStack>
     </Box>
   );

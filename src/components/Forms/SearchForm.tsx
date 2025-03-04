@@ -1,3 +1,7 @@
+import { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import { debounce } from 'lodash';
 import {
   Button,
   FormControl,
@@ -9,17 +13,18 @@ import {
   InputRightElement,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-import { useState, useMemo, useEffect } from 'react';
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
-import { debounce } from 'lodash';
 
 interface SearchFormProps {
   setBooksArray: (booksArray: any[] | undefined) => void;
 }
 
+const MINIMUM_SEARCH_LENGTH = 2;
+const DEBOUNCE_TIME = 400;
+const DEFAULT_STALE_TIME = 5000;
+
 const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray }) => {
   const [debouncedSearch, setDebouncedSearch] = useState<string>('');
+  const [controller, setController] = useState<AbortController | null>(null);
 
   const {
     register,
@@ -34,9 +39,14 @@ const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray }) => {
   const debouncedUpdate = useMemo(
     () =>
       debounce((value: string) => {
+        if (value.length < MINIMUM_SEARCH_LENGTH) {
+          setDebouncedSearch('');
+          setBooksArray(undefined);
+          return;
+        }
         setDebouncedSearch(value);
-      }, 400),
-    [],
+      }, DEBOUNCE_TIME),
+    [setBooksArray],
   );
 
   useEffect(() => {
@@ -50,18 +60,47 @@ const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray }) => {
   useEffect(() => {
     if (!debouncedSearch) {
       setBooksArray(undefined);
+      if (controller) {
+        controller.abort();
+        setController(null);
+      }
     }
-  }, [debouncedSearch, setBooksArray]);
+  }, [debouncedSearch, setBooksArray, controller]);
 
   const { data, isFetching, isError } = useQuery(
     ['search', debouncedSearch],
-    () =>
-      axios
-        .get(`/api/BookAPI/Book?search=${debouncedSearch}`)
-        .then((res) => res.data),
+    async () => {
+      if (!debouncedSearch) return;
+
+      if (controller) {
+        controller.abort();
+      }
+
+      const newController = new AbortController();
+      setController(newController);
+
+      try {
+        const res = await axios.get(
+          `/api/BookAPI/Book?search=${debouncedSearch}`,
+          {
+            signal: newController.signal,
+          },
+        );
+        return res.data;
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log('Request canceled:', error.message);
+        } else {
+          throw error;
+        }
+      }
+    },
     {
-      enabled: !!debouncedSearch && debouncedSearch.length >= 1,
+      enabled:
+        !!debouncedSearch && debouncedSearch.length >= MINIMUM_SEARCH_LENGTH,
       refetchOnWindowFocus: false,
+      staleTime: DEFAULT_STALE_TIME,
+      retry: false,
     },
   );
 
@@ -90,6 +129,11 @@ const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray }) => {
               setBooksArray(undefined);
               setDebouncedSearch('');
               setFocus('search');
+
+              if (controller) {
+                controller.abort();
+                setController(null);
+              }
             }}
           >
             Clear

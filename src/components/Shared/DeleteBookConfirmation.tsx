@@ -54,7 +54,7 @@ function DeleteBookConfirmation({
       });
     } finally {
       setLoading(false);
-      onClose(); // Close the modal after deletion
+      onClose();
     }
   };
 

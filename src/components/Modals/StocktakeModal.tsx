@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-
+import { v4 as uuidv4 } from 'uuid';
 interface ManualBookEntryModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -28,6 +28,7 @@ const StocktakeModal = ({
   onSubmit,
 }: ManualBookEntryModalProps) => {
   const [formData, setFormData] = useState<IScannedBookLayout>({
+    id: uuidv4(),
     isbn: '',
     barcode: '',
     author: '',
@@ -57,7 +58,7 @@ const StocktakeModal = ({
     onSubmit(formData);
   };
 
-  // TODO auto add barcode...
+  // TODO auto add barcode and park switch??
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />

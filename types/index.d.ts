@@ -1,5 +1,5 @@
 declare interface IScannedBookLayout {
-  id?: Int;
+  id: int | string;
   barcode: string;
   isbn: string;
   title: string;

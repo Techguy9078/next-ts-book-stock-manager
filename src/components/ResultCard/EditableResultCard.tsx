@@ -13,8 +13,6 @@ import ParkedToggle from '../Shared/ParkedToggle';
 import DeleteBookConfirmation from '../Shared/DeleteBookConfirmation';
 
 function updateBookValue(barcode: string, field: string, updateData: string) {
-  updateValues();
-
   async function updateValues() {
     await axios.patch('/api/BookAPI/Book', {
       barcode: barcode,
@@ -22,6 +20,8 @@ function updateBookValue(barcode: string, field: string, updateData: string) {
       updateData: updateData,
     });
   }
+
+  updateValues();
 }
 
 export default function EditableResultCard({
