@@ -4,36 +4,36 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   const req = await request.json();
-  let { barcode, isbn, title, author, genre } = req;
+  let { barcode, isbn, title, author, genre, park } = req;
 
-  // Ensure barcode is a string
+  console.log(genre);
   if (typeof barcode === 'number') {
     barcode = barcode.toString();
   }
 
   try {
-    // Create a new book entry
     const combinedBookData = await prisma.scannedBook.create({
       data: {
+        park: Boolean(park),
         book: {
           connectOrCreate: {
-            where: {
-              barcode: barcode,
-            },
+            where: { barcode },
             create: {
-              barcode: barcode,
-              isbn: isbn,
-              title: title,
-              author: author,
-              genre: genre,
+              barcode,
+              isbn,
+              title,
+              author,
+              genre,
             },
           },
         },
       },
+      include: { book: true },
     });
 
     return NextResponse.json(combinedBookData);
   } catch (error) {
+    console.error('Error saving book:', error);
     return NextResponse.json(
       { error: 'Failed Adding Local Book...' },
       { status: 500 },

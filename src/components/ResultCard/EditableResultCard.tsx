@@ -30,6 +30,7 @@ export default function EditableResultCard({
   isbn,
   author,
   genre,
+  createdAt,
   isStocktake,
   maxWidth,
   setBookDeleted,
@@ -39,7 +40,16 @@ export default function EditableResultCard({
   maxWidth?: string;
   setBookDeleted?: (book: IScannedBookLayout) => void;
 }) {
-  const book = { title, barcode, isbn, author, genre, setBookDeleted, ...rest };
+  const book = {
+    title,
+    barcode,
+    isbn,
+    author,
+    genre,
+    createdAt,
+    setBookDeleted,
+    ...rest,
+  };
   return (
     <Box
       p={5}
@@ -57,7 +67,13 @@ export default function EditableResultCard({
           item={title || 'Enter a title...'}
           onSubmit={(data) => updateBookValue(barcode, 'title', data)}
         />
-
+        <ResultItem
+          barcode={barcode}
+          cardBodyName={'Created'}
+          field={'createdAt'}
+          item={createdAt.split('T')[0].split('-').reverse().join('-')}
+          genre={''}
+        />
         <Divider borderColor={useColorModeValue('black', 'white')} />
         <Stack>
           <ResultItem
@@ -118,7 +134,7 @@ function ResultItem({
   barcode: string;
   item: string;
   cardBodyName: string;
-  field: 'title' | 'author' | 'genre' | 'isbn';
+  field: 'title' | 'author' | 'genre' | 'isbn' | 'createdAt';
   genre: string;
 }) {
   if (field == 'genre') {
@@ -142,7 +158,10 @@ function ResultItem({
         fontSize="lg"
         fontWeight={600}
         item={item || `Edit ${field}...`}
-        onSubmit={(data) => updateBookValue(barcode, field, data)}
+        onSubmit={(data) =>
+          field !== 'createdAt' && updateBookValue(barcode, field, data)
+        }
+        isDisabled={field === 'createdAt'}
       />
     </HStack>
   );

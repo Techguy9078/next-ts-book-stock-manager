@@ -8,6 +8,7 @@ import {
   Grid,
   Flex,
   Switch,
+  Select,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import axios from 'axios';
@@ -18,6 +19,7 @@ import BarcodeForm from '@/components/Forms/BarcodeForm';
 import StocktakeModal from '@/components/Modals/StocktakeModal';
 import { CustomerBookRequest } from '@prisma/client';
 import CustomerRequestsModal from '@/components/Requests/CustomerRequestsModal';
+import { genreList } from '@/config/genreList';
 
 type StocktakeStages = 'scan' | 'not-found' | 'manual' | 'found';
 
@@ -29,7 +31,8 @@ export default function Stocktake() {
   const [customerRequests, setCustomerRequests] = useState<
     CustomerBookRequest[]
   >([]);
-  const [isParked, setIsParked] = useState(false);
+  const [isParked, setIsParked] = useState(true);
+  // const [selectedGenre, setSelectedGenre] = useState<string>('');
 
   const searchRequests = async (bookData: IScannedBookLayout) => {
     const { isbn, barcode, author, title } = bookData;
@@ -106,13 +109,21 @@ export default function Stocktake() {
     book: IScannedBookLayout,
   ): Promise<IScannedBookLayout | null> => {
     try {
-      const { data } = await axios.post('/api/BookAPI/Book', book);
-      setBooks([...books, data]);
+      const { data } = await axios.post('/api/BookAPI/Book', {
+        ...book,
+        park: isParked,
+        // genre: selectedGenre || 'n/a',
+      });
+
+      const updatedBooks = await fetchBookFromAPI(book.barcode);
+      if (updatedBooks) {
+        setBooks(updatedBooks);
+      }
+
       toast.success('Book added successfully.');
       setStage('found');
       return data;
     } catch (error) {
-      console.error('Failed to add book:', error);
       toast.error('Failed to add book to the database, Try manual add.');
       setStage('not-found');
       setManualModalOpen(true);
@@ -156,24 +167,20 @@ export default function Stocktake() {
       if (storedBooks) {
         await addBookToDatabase(storedBooks[0]);
         await handleSimilarBook(storedBooks[0]);
-        setBooks(storedBooks);
-        searchRequests(storedBooks[0]);
+        await searchRequests(storedBooks[0]);
         return;
       }
 
       // 2 Fetch from external API
       const externalBook = await fetchBookDetails(barcode);
       if (externalBook) {
-        const savedBook = await addBookToDatabase(externalBook);
-        // check for similar books after saving
-        if (savedBook) {
-          handleSimilarBook(savedBook);
-          setBooks([savedBook]);
-          searchRequests(savedBook);
-        }
+        await addBookToDatabase(externalBook);
+        await handleSimilarBook(externalBook);
+        await searchRequests(externalBook);
         return;
       }
 
+      // 3 Not found manual add
       setStage('not-found');
       setManualModalOpen(true);
     },
@@ -206,16 +213,38 @@ export default function Stocktake() {
     >
       <VStack spacing={4} align="left">
         <Text fontSize="2xl">Stocktake</Text>
-        <Flex align="center">
-          <Text fontSize="md" fontWeight={500}>
-            Status: {isParked ? 'Parked' : 'Active'}
-          </Text>
-          <Switch
-            ml={2}
-            disabled={isLoading}
-            isChecked={isParked}
-            onChange={() => setIsParked((prev) => !prev)}
-          />
+        <Flex dir="row" align="center">
+          <Flex align="center">
+            <Text fontSize="md" fontWeight={500}>
+              Status: {isParked ? 'Parked' : 'Active'}
+            </Text>
+            <Switch
+              ml={2}
+              disabled={isLoading}
+              isChecked={isParked}
+              onChange={() => setIsParked((prev) => !prev)}
+            />
+          </Flex>
+          {/* <Flex align="center" ml={4}>
+            <Text fontSize="md" fontWeight={500} mr={2}>
+              Genre:
+            </Text>
+            <Select
+              borderColor={'gray.400'}
+              color={'gray.400'}
+              placeholder={'Select The Genre...'}
+              onChange={(e) => {
+                setSelectedGenre(e.currentTarget.value);
+              }}
+              value={selectedGenre}
+            >
+              {genreList.map((genre) => (
+                <option key={genre} value={genre}>
+                  {genre}
+                </option>
+              ))}
+            </Select>
+          </Flex> */}
         </Flex>
         <BarcodeForm
           isLoading={isLoading}

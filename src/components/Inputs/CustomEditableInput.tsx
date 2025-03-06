@@ -15,11 +15,13 @@ export default function CustomEditableInput({
   fontSize,
   fontWeight,
   onSubmit,
+  isDisabled,
 }: {
   item: string;
   fontSize: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   fontWeight: 600 | 700;
   onSubmit: (nextValue: string) => void;
+  isDisabled?: boolean;
 }) {
   function EditableControls() {
     const {
@@ -66,7 +68,7 @@ export default function CustomEditableInput({
       <HStack>
         <EditablePreview px={2} />
         <EditableInput px={2} />
-        <EditableControls />
+        {!isDisabled ? <EditableControls /> : null}
       </HStack>
     </Editable>
   );
