@@ -16,15 +16,12 @@ export default async function PGDUMP(): Promise<string> {
     throw new Error('No DATABASE_URL environment variable.');
   }
 
-  // Ensure the backup directory exists
   await fs.mkdir(backupDir, { recursive: true });
 
-  // Define output CSV file name with a timestamp
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const filePath = path.join(backupDir, `database_backup_${timestamp}.csv`);
 
   try {
-    // Use COPY SQL command to export data to CSV via psql
     await execa(psqlPath, [
       '-d',
       databaseUrl,
