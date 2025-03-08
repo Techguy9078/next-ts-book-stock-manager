@@ -56,7 +56,7 @@ export async function GET(request: Request) {
     return NextResponse.json(bookResults);
   }
 
-  if (searchTerm === null) {
+  if (!searchTerm) {
     return NextResponse.json(
       { error: 'No Search Term Entered...' },
       { status: 500 },
@@ -67,28 +67,10 @@ export async function GET(request: Request) {
     const bookResults = await prisma.scannedBook.findMany({
       where: {
         OR: [
-          {
-            title: {
-              contains: searchTerm,
-              mode: 'insensitive',
-            },
-          },
-          {
-            author: {
-              contains: searchTerm,
-              mode: 'insensitive',
-            },
-          },
-          {
-            barcode: {
-              contains: searchTerm,
-            },
-          },
-          {
-            isbn: {
-              contains: searchTerm,
-            },
-          },
+          { title: { contains: searchTerm, mode: 'insensitive' } },
+          { author: { contains: searchTerm, mode: 'insensitive' } },
+          { barcode: { contains: searchTerm } },
+          { isbn: { contains: searchTerm } },
         ],
       },
       orderBy: { title: 'asc' },
@@ -96,6 +78,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(bookResults);
   } catch (error: any) {
+    console.error('Error fetching books:', error);
     return NextResponse.json(
       { error: 'Failed Finding Local Book...' },
       { status: 500 },

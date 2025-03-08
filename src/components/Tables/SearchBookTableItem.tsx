@@ -1,4 +1,4 @@
-import { Button, Tbody, Td, Tr, useColorModeValue } from '@chakra-ui/react';
+import { Button, Td, Tr, useColorModeValue } from '@chakra-ui/react';
 import axios from 'axios';
 import { useState } from 'react';
 import ParkedToggle from '../Shared/ParkedToggle';
@@ -18,7 +18,7 @@ export default function BookTableItem({
   async function removeBook() {
     setLoading(true);
     await axios
-      .delete(`/api/BookAPI/Book?id=${id}`)
+      .delete(`/api/BookAPI/Book?id=${id.toString()}`)
       .catch((err) => {
         toast.error('Something went wrong', {
           description: `${
@@ -49,7 +49,7 @@ export default function BookTableItem({
       <Td>
         <Button
           isLoading={loading}
-          loadingText={'Removing Book...'}
+          loadingText={''}
           className={'bg-red-400'}
           color={'white'}
           _hover={{

@@ -16,13 +16,14 @@ import { useForm } from 'react-hook-form';
 
 interface SearchFormProps {
   setBooksArray: (booksArray: any[] | undefined) => void;
+  refetch?: boolean;
 }
 
 const MINIMUM_SEARCH_LENGTH = 2;
 const DEBOUNCE_TIME = 400;
 const DEFAULT_STALE_TIME = 5000;
 
-const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray }) => {
+const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray, refetch }) => {
   const [debouncedSearch, setDebouncedSearch] = useState<string>('');
   const [controller, setController] = useState<AbortController | null>(null);
 
@@ -67,7 +68,12 @@ const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray }) => {
     }
   }, [debouncedSearch, setBooksArray, controller]);
 
-  const { data, isFetching, isError } = useQuery(
+  const {
+    data,
+    isFetching,
+    isError,
+    refetch: queryRefetch,
+  } = useQuery(
     ['search', debouncedSearch],
     async () => {
       if (!debouncedSearch) return;
@@ -108,6 +114,12 @@ const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray }) => {
     if (data) setBooksArray(data);
     if (isError) setBooksArray(undefined);
   }, [data, isError, setBooksArray]);
+
+  useEffect(() => {
+    if (refetch) {
+      queryRefetch();
+    }
+  }, [refetch, queryRefetch]);
 
   return (
     <FormControl isInvalid={!!errors.search}>

@@ -10,7 +10,7 @@ import SearchReportGenerateButton from '@/components/Buttons/SearchReportGenerat
 import MobileBookTable from '@/components/Tables/MobileBookTable';
 
 export default function Search() {
-  const [refetchValue, setRefetchValue] = useState<boolean>(false);
+  const [refetch, setRefetch] = useState<boolean>(false);
   const [books, setBooks] = useState<IScannedBookLayout[]>();
 
   const isMobile = useIsMobile();
@@ -21,7 +21,10 @@ export default function Search() {
   };
 
   const handleRefetch = () => {
-    setRefetchValue(!refetchValue);
+    setRefetch(true);
+    requestAnimationFrame(() => {
+      setRefetch(false);
+    });
   };
 
   return (
@@ -46,7 +49,7 @@ export default function Search() {
             <BookCount />
             {books && <SearchReportGenerateButton searchData={books} />}
             <CustomDivider />
-            <SearchForm setBooksArray={setBooksArray} />
+            <SearchForm setBooksArray={setBooksArray} refetch={refetch} />
           </VStack>
           {books?.length === 0 ? (
             <Text fontSize="2xl">☹️ No books found, that is upsetting!</Text>
