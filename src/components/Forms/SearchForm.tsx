@@ -70,7 +70,6 @@ const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray, refetch }) => {
 
   const {
     data,
-    isFetching,
     isError,
     refetch: queryRefetch,
   } = useQuery(
@@ -136,6 +135,11 @@ const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray, refetch }) => {
           <Button
             size="sm"
             variant="ghost"
+            style={{
+              marginRight: '0.5rem',
+              padding: '0.1rem',
+              minWidth: '3rem',
+            }}
             onClick={() => {
               resetField('search');
               setBooksArray(undefined);
@@ -153,9 +157,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray, refetch }) => {
         </InputRightElement>
       </InputGroup>
       <FormHelperText>
-        {isFetching
-          ? 'Searching...'
-          : 'Only will search once 3 characters have been entered'}
+        Enter a minimum of {MINIMUM_SEARCH_LENGTH} characters to search.
       </FormHelperText>
       <FormErrorMessage>
         {errors.search && errors.search.message}

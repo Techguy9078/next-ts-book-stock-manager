@@ -25,6 +25,7 @@ export default function Activate() {
 
   const { mutate: barcodeSearch, isLoading } = useMutation({
     mutationFn: async ({ barcode }: barcodeForm) => {
+      setBookDetails(undefined);
       try {
         const updatedBook = await axios.post('/api/BookAPI/ActivateBook', {
           barcode,
@@ -33,7 +34,6 @@ export default function Activate() {
           throw Error();
         }
         setBookDetails(updatedBook.data);
-        toast.success('Book Activated Successfully');
       } catch (err: any) {
         toast.error('Something went wrong', {
           description: `${err?.response?.data?.error || (err as any).message}`,
@@ -59,7 +59,7 @@ export default function Activate() {
           borderRadius={6}
           fontWeight={'bold'}
         >
-          You are activating this book to add to the physical store shelf :) 📚
+          You are activating this book to add to the shelf
         </Text>
         <CustomDivider />
         <BookCount />

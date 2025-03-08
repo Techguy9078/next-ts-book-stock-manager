@@ -29,35 +29,35 @@ export default function Search() {
 
   return (
     <>
-      {isMobile ? (
-        <Box p={4} bgColor={color} rounded={'md'} maxHeight={'100vh'}>
-          <VStack spacing={2} align={'left'} pb={4}>
-            <BookCount />
-            <SearchForm setBooksArray={setBooksArray} />
-          </VStack>
-          {books?.length === 0 ? (
-            <Text fontSize="2xl">☹️ No books found, that is upsetting!</Text>
-          ) : books ? (
+      <Box
+        p={4}
+        bgColor={color}
+        rounded="md"
+        maxHeight={isMobile ? '100vh' : '90vh'}
+      >
+        <VStack spacing={[2, 4]} align="left" pb={4}>
+          <Text fontSize="2xl">{isMobile ? null : 'Search for Books'}</Text>
+          {!isMobile && <CustomDivider />}
+          <BookCount />
+          {!isMobile && books && (
+            <SearchReportGenerateButton searchData={books} />
+          )}
+          {!isMobile && <CustomDivider />}
+          <SearchForm setBooksArray={setBooksArray} refetch={refetch} />
+        </VStack>
+
+        {books?.length === 0 ? (
+          <Text fontSize="1xl">
+            No results to display, try searching for something else...
+          </Text>
+        ) : books ? (
+          isMobile ? (
             <MobileBookTable bookArray={books} handleRefetch={handleRefetch} />
-          ) : null}
-        </Box>
-      ) : (
-        <Box p={4} bgColor={color} rounded={'md'} maxHeight={'90vh'}>
-          <VStack spacing={4} align={'left'} pb={4}>
-            <Text fontSize="2xl">Search for Books</Text>
-            <CustomDivider />
-            <BookCount />
-            {books && <SearchReportGenerateButton searchData={books} />}
-            <CustomDivider />
-            <SearchForm setBooksArray={setBooksArray} refetch={refetch} />
-          </VStack>
-          {books?.length === 0 ? (
-            <Text fontSize="2xl">☹️ No books found, that is upsetting!</Text>
-          ) : books?.length ? (
+          ) : (
             <BookTable bookArray={books} handleRefetch={handleRefetch} />
-          ) : null}
-        </Box>
-      )}
+          )
+        ) : null}
+      </Box>
     </>
   );
 }
