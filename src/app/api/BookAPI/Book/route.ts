@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const searchTerm = searchParams.get('search');
+  let searchTerm = searchParams.get('search');
 
   let oldest = searchParams.get('oldest')?.toString();
 
@@ -55,20 +55,24 @@ export async function GET(request: Request) {
     return NextResponse.json(bookResults);
   }
 
-  let currentFindingBookTitle = searchParams.get('currentFindingBookTitle')?.toString();
-  let currentFindingBookAuthor = searchParams.get('currentFindingBookAuthor')?.toString();
+  let currentFindingBookTitle = searchParams
+    .get('currentFindingBookTitle')
+    ?.toString();
+  let currentFindingBookAuthor = searchParams
+    .get('currentFindingBookAuthor')
+    ?.toString();
 
   if (currentFindingBookTitle && currentFindingBookAuthor) {
-    let currentBookTitle = currentFindingBookTitle.toString()
-    let currentBookAuthor = currentFindingBookAuthor.toString()
+    let currentBookTitle = currentFindingBookTitle.toString();
+    let currentBookAuthor = currentFindingBookAuthor.toString();
 
     const bookFindingCountResult = await prisma.scannedBook.aggregate({
       _count: true,
       where: {
         title: { contains: currentBookTitle, mode: 'insensitive' },
-        author: { contains: currentBookAuthor, mode: 'insensitive' } ,
+        author: { contains: currentBookAuthor, mode: 'insensitive' },
       },
-    })
+    });
 
     return NextResponse.json(bookFindingCountResult._count);
   }
@@ -80,15 +84,15 @@ export async function GET(request: Request) {
     );
   }
 
+  searchTerm = searchTerm.split(' ').join(' | ');
+  console.log(searchTerm);
   try {
     const bookResults = await prisma.scannedBook.findMany({
       where: {
-        OR: [
-          { title: { contains: searchTerm, mode: 'insensitive' } },
-          { author: { contains: searchTerm, mode: 'insensitive' } },
-          { barcode: { contains: searchTerm } },
-          { isbn: { contains: searchTerm } },
-        ],
+        title: { search: searchTerm, mode: 'insensitive' },
+        author: { search: searchTerm, mode: 'insensitive' },
+        barcode: { search: searchTerm },
+        isbn: { search: searchTerm },
       },
       orderBy: { title: 'asc' },
     });
