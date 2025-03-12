@@ -47,6 +47,7 @@ export default function BookTable({
           zIndex={2}
         >
           <Tr>
+            <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>Barcode</Th>
             <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>ISBN</Th>
             <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>Title</Th>
             <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>Author</Th>
