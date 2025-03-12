@@ -14,12 +14,6 @@ export default function Stats() {
   async function getSalesData() {
     const responseSalesStatsData = await axios.post('/api/SalesAPI/SalesStats');
 
-    responseSalesStatsData.data.forEach(
-      (element: any, index: any) =>
-        (responseSalesStatsData.data[index].date = new Date(
-          element.date,
-        ).toLocaleString()),
-    );
     setSalesStatsData(responseSalesStatsData.data);
   }
 
@@ -38,7 +32,7 @@ export default function Stats() {
         <CustomDivider />
         <BookCount />
         <CustomDivider />
-        {salesStatsData && <StatsAreaBar data={salesStatsData} />}
+        <StatsAreaBar data={salesStatsData} />
       </VStack>
     </Box>
   );

@@ -55,11 +55,12 @@ export async function GET(request: Request) {
       },
     });
 
+    console.log('Local', bookResults);
     if (!bookResults) {
-      throw Error();
+      return NextResponse.json([], { status: 404 });
     }
 
-    console.log('Local', bookResults);
+    //console.log('Local', bookResults);
 
     return NextResponse.json(bookResults);
   } catch {
@@ -91,19 +92,3 @@ export async function GET(request: Request) {
     }
   }
 }
-
-// try {
-// 	throw Error;
-// 	const chatbot = new Chatbot(sessionId);
-// 	let response = await chatbot.ask(
-// 		`I'm a librarian, give the book with the isbn being ${barcode}, and return book in this JSON model { barcode: string isbn: string title: string author: string year: string publisher: string}`
-// 	);
-
-// 	let jsonBook = JSON.parse(response.split("```")[1].slice(4));
-// 	return { status: 200, data: jsonBook };
-// } catch (error) {
-// 	return NextResponse.json(
-// 		{ error: "Internal Server Error" },
-// 		{ status: 500 }
-// 	);
-// }

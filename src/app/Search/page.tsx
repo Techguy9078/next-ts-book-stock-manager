@@ -1,79 +1,63 @@
 'use client';
-import {
-  Box,
-  Text,
-  VStack,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Box, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
-
+import { useIsMobile } from '@/utils/isMobile';
 import CustomDivider from '@/components/Divider/customDivider';
 import BookCount from '@/components/BookCount/BookCount';
 import BookTable from '@/components/Tables/SearchBookTable';
 import SearchForm from '@/components/Forms/SearchForm';
-import { BookPagesLoader } from '@/components/Loading/BookPagesLoading';
 import SearchReportGenerateButton from '@/components/Buttons/SearchReportGenerateButton';
-import { useIsMobile } from '@/utils/isMobile';
 import MobileBookTable from '@/components/Tables/MobileBookTable';
 
 export default function Search() {
-  const [refetchValue, setRefetchValue] = useState<boolean>(false);
-  const [books, setBooks] = useState<Array<IScannedBookLayout>>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [refetch, setRefetch] = useState<boolean>(false);
+  const [books, setBooks] = useState<IScannedBookLayout[]>();
 
   const isMobile = useIsMobile();
   const color = useColorModeValue('gray.200', 'gray.700');
 
-  function setBooksArray(booksArray: Array<IScannedBookLayout> | undefined) {
+  const setBooksArray = (booksArray: IScannedBookLayout[] | undefined) => {
     setBooks(booksArray);
-  }
+  };
 
-  function setLoader(loader: boolean) {
-    setIsLoading(loader);
-  }
-
-  function handleRefetch() {
-    setRefetchValue(!refetchValue);
-  }
+  const handleRefetch = () => {
+    setRefetch(true);
+    requestAnimationFrame(() => {
+      setRefetch(false);
+    });
+  };
 
   return (
     <>
-      {isMobile ? (
-        <Box p={4} bgColor={color} rounded={'md'} maxHeight={'100vh'}>
-          <VStack spacing={2} align={'left'} pb={4}>
-            <BookCount />
-            <SearchForm
-              setLoader={setLoader}
-              setBooksArray={setBooksArray}
-              refetchValue={refetchValue}
-            />
-          </VStack>
-          {isLoading && <BookPagesLoader />}
-          {books && (
-            <MobileBookTable bookArray={books} handleRefetch={handleRefetch} />
+      <Box
+        p={4}
+        bgColor={color}
+        rounded="md"
+        maxHeight={isMobile ? '100vh' : '90vh'}
+      >
+        <VStack spacing={[2, 4]} align="left" pb={4}>
+          <Text fontSize="2xl">{isMobile ? null : 'Search for Books'}</Text>
+          {!isMobile && <CustomDivider />}
+          <BookCount />
+          {!isMobile && books && (
+            <SearchReportGenerateButton searchData={books} />
           )}
-        </Box>
-      ) : (
-        <Box p={4} bgColor={color} rounded={'md'} maxHeight={'90vh'}>
-          <VStack spacing={4} align={'left'} pb={4}>
-            <Text fontSize="2xl">Search for Books</Text>
-            <CustomDivider />
-            <BookCount />
-            {books && <SearchReportGenerateButton searchData={books} />}
-            <CustomDivider />
+          {!isMobile && <CustomDivider />}
+          <SearchForm setBooksArray={setBooksArray} refetch={refetch} />
+        </VStack>
 
-            <SearchForm
-              setLoader={setLoader}
-              setBooksArray={setBooksArray}
-              refetchValue={refetchValue}
-            />
-          </VStack>
-          {isLoading && <BookPagesLoader />}
-          {books && (
+        {books?.length === 0 ? (
+          <Text fontSize="1xl">
+            No results to display, try searching for something else...
+          </Text>
+        ) : books ? (
+          isMobile ? (
+            <MobileBookTable bookArray={books} handleRefetch={handleRefetch} />
+          ) : (
             <BookTable bookArray={books} handleRefetch={handleRefetch} />
-          )}
-        </Box>
-      )}
+          )
+        ) : null}
+      </Box>
     </>
   );
 }

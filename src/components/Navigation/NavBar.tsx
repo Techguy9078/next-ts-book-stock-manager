@@ -69,11 +69,11 @@ const links = [
     href: 'Search',
     color: { light: '#00a9be', dark: '#008394' },
   },
-  {
-    name: 'Reports',
-    href: 'Reports',
-    color: { light: '#836a8a', dark: '#65466D' },
-  },
+  // {
+  // 	name: "Reports",
+  // 	href: "Reports",
+  // 	color: { light: "#836a8a", dark: "#65466D" },
+  // },
   // {
   // 	name: "Add Requests",
   // 	href: "AddRequest",
@@ -89,12 +89,12 @@ const links = [
   {
     href: 'ParkAdd',
     hidden: true,
-    color: { light: '#29c0e4', dark: '#29c0e4' },
+    color: { light: '#3d8b40', dark: '#3d8b40' },
   },
   {
     href: 'ManualAdd',
     hidden: true,
-    color: { light: '#43a4ba', dark: '#43a4ba' },
+    color: { light: '#edda34', dark: '#d5c42e' },
   },
   {
     hidden: true,
@@ -134,8 +134,8 @@ export default function NavBar({ children }: { children: ReactNode }) {
       height={'100%'}
       position="fixed"
       bgColor={useColorModeValue(
-        linkObject?.color.light ? linkObject?.color.light : 'white',
-        linkObject?.color.dark ? linkObject?.color.dark : 'gray.400',
+        linkObject?.color.dark,
+        linkObject?.color.dark,
       )}
     >
       <Box bg={useColorModeValue('gray.200', 'gray.900')} px={8}>

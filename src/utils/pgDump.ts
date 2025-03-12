@@ -1,34 +1,38 @@
 'use server';
 import { execa } from 'execa';
+import path from 'path';
+import fs from 'fs/promises';
 
 /**
- * Dumps all postgresql database to .csv file in ./backups/
- * @returns Success or returns Error
+ * Dumps PostgreSQL table as a CSV file using pgAdmin instead of psql.
  */
+export default async function PGDUMP(): Promise<string> {
+  const databaseUrl = process.env.DATABASE_URL;
+  const psqlPath = `"C:\\Program Files\\PostgreSQL\\17\\bin\\psql.exe"`;
+  const backupDir =
+    process.env.BACKUP_PATH || 'C:\\Users\\david\\Desktop\\backups';
 
-export default async function PGDUMP(): Promise<Error | string> {
-  const path = process.env.DATABASE_URL;
+  if (!databaseUrl) {
+    throw new Error('No DATABASE_URL environment variable.');
+  }
 
-  if (!path) return Error('No DATABASE_URL environment variable.');
+  await fs.mkdir(backupDir, { recursive: true });
 
-  const stdout = await csvOutput(path);
-  return 'Exported';
-}
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const filePath = path.join(backupDir, `database_backup_${timestamp}.csv`);
 
-async function csvOutput(path: string) {
   try {
-    const { stdout } = await execa(`${process.env.PGADMIN_PATH}`, [
-      `--dbname=${path}`,
-      `--tuples-only`,
-      `--command=SELECT (id, barcode, isbn, title, author, "createdAt") FROM public."ScannedBook"`,
-      '--csv',
-      `--output=${process.env.BACKUP_PATH}${new Date()
-        .toLocaleDateString()
-        .replaceAll('/', '_')}_backup.csv`,
+    await execa(psqlPath, [
+      '-d',
+      databaseUrl,
+      '-c',
+      `COPY (SELECT id, barcode, isbn, title, author, "createdAt" FROM public."ScannedBook") TO '${filePath}' CSV HEADER;`,
     ]);
 
-    return stdout;
+    console.log(`Database exported successfully to ${filePath}`);
+    return `Exported successfully: ${filePath}`;
   } catch (error: any) {
-    return error;
+    console.error('Error exporting database:', error.message);
+    throw new Error('Failed to export database');
   }
 }

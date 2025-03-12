@@ -49,19 +49,6 @@ export async function GET(request: Request) {
     return newEndDate.toISOString();
   }
 
-  // On how to do the date selection...
-  //
-  // LTE: Less Than or Equal to
-  // Symbol of Less Than or Equal to <=
-  //
-  // GT: Greater Than
-  // Symbol of Greater Than >
-  //
-  // GTE: Greater Than or Equal to
-  // Symbol of Greater Than or Equal to >=
-  //
-  // https://github.com/prisma/prisma/discussions/11443#discussioncomment-4095465
-
   try {
     const salesResults = await prisma.sales.findMany({
       where: {
@@ -71,6 +58,8 @@ export async function GET(request: Request) {
         },
       },
     });
+
+    console.log(salesResults);
 
     const groupedSalesResults: { [key: string]: Sales[] } = salesResults.reduce(
       (acc: any, result) => {

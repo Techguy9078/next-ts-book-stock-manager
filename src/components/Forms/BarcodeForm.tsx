@@ -36,7 +36,7 @@ export default function BarcodeForm({
 }: {
   barcodeSearch: Function;
   isLoading: boolean;
-  formType: 'Add' | 'Remove' | 'Activate';
+  formType: 'Add' | 'Remove' | 'Activate' | 'Stocktake';
 }) {
   const {
     register,
@@ -58,6 +58,9 @@ export default function BarcodeForm({
 
   let formLabel = '';
   switch (formType) {
+    case 'Stocktake':
+      formLabel = 'Stocktake scanning';
+      break;
     case 'Add':
       formLabel = 'Add Book to Database:';
       break;

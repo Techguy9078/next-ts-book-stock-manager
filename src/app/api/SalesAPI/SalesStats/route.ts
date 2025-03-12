@@ -77,18 +77,14 @@ export async function POST() {
 }
 
 interface IPutReq {
-  updateField: 'addBook' | "activateBook" | 'removeBook';
-  book: IScannedBookLayout
+  updateField: 'addBook' | 'removeBook';
 }
 
 export async function PUT(request: Request) {
-  const { updateField, book }: IPutReq = await request.json();
-  const date = new Date()
-  date.setMinutes(0)
-  date.setSeconds(0)
-  date.setMilliseconds(0)
+  const { updateField }: IPutReq = await request.json();
+  const date = new Date().toLocaleDateString();
 
-  if (updateField == 'addBook') {
+  if (updateField === 'addBook') {
     try {
       const updateStatCount = await prisma.salesStats.upsert({
         where: {
@@ -100,7 +96,6 @@ export async function PUT(request: Request) {
         create: {
           date: date,
           addedBooks: 1,
-          activateBooks: 0,
           removedBooks: 0,
         },
       });
@@ -109,32 +104,6 @@ export async function PUT(request: Request) {
     } catch (error: any) {
       return NextResponse.json(
         { error: 'Failed Updating Add Sale Stats...' },
-        { status: 500 },
-      );
-    }
-  }
-  
-  if (updateField == 'activateBook') {
-    try {
-      const updateStatCount = await prisma.salesStats.upsert({
-        where: {
-          date: date,
-        },
-        update: {
-          activateBooks: { increment: 1 },
-        },
-        create: {
-          date: date,
-          addedBooks: 0,
-          activateBooks: 1,
-          removedBooks: 0,
-        },
-      });
-
-      return NextResponse.json(updateStatCount);
-    } catch (error: any) {
-      return NextResponse.json(
-        { error: 'Failed Updating Activate Sale Stats...' },
         { status: 500 },
       );
     }
@@ -151,7 +120,6 @@ export async function PUT(request: Request) {
         create: {
           date: date,
           addedBooks: 0,
-          activateBooks: 0,
           removedBooks: 1,
         },
       });

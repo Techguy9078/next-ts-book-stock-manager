@@ -18,38 +18,35 @@ export default function BookTable({
 }) {
   return (
     <Box
-      overflowY={'scroll'}
-      maxHeight={'50vh'}
-      fontSize={{ sm: 'sm', md: 'md' }}
-      sx={{
-        '::-webkit-scrollbar': {
-          width: '4px',
-        },
-        '::-webkit-scrollbar-track': {
-          bgColor: useColorModeValue('gray.300', 'gray.600'),
-          borderRadius: '100px',
-        },
-        '::-webkit-scrollbar-thumb': {
-          bgColor: useColorModeValue('gray.400', 'gray.800'),
-          borderRadius: '100px',
-        },
-      }}
+      maxHeight="50vh"
+      overflowY="auto"
+      borderWidth="1px"
+      borderColor={useColorModeValue('gray.200', 'gray.700')}
+      borderRadius="md"
     >
-      <Table size="md">
+      <Table
+        variant="striped"
+        size="md"
+        fontSize={{ sm: 'sm', md: 'md' }}
+        sx={{
+          '::-webkit-scrollbar': {
+            width: '4px',
+          },
+          '::-webkit-scrollbar-track': {
+            bgColor: useColorModeValue('gray.300', 'gray.600'),
+            borderRadius: '100px',
+          },
+          '::-webkit-scrollbar-thumb': {
+            bgColor: useColorModeValue('gray.400', 'gray.800'),
+            borderRadius: '100px',
+          },
+        }}
+      >
         <Thead
-          borderWidth={2}
           borderColor={useColorModeValue('gray.300', 'gray.600')}
-          position={'sticky'}
-          top={-0.5}
           zIndex={2}
-          sx={{
-            '@media screen and (max-width: 600px)': {
-              display: 'none',
-            },
-          }}
         >
           <Tr>
-            <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>Barcode</Th>
             <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>ISBN</Th>
             <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>Title</Th>
             <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>Author</Th>
@@ -61,25 +58,28 @@ export default function BookTable({
             <Th bgColor={useColorModeValue('gray.300', 'gray.800')}>Delete</Th>
           </Tr>
         </Thead>
-        {!bookArray.length && (
-          <Tbody>
+        <Tbody
+          borderStyle="solid"
+          borderWidth={1}
+          borderColor={useColorModeValue('gray.100', 'gray.800')}
+        >
+          {!bookArray?.length && (
             <Tr>
-              <Th>
+              <Th colSpan={7} textAlign="center">
                 Unfortunately couldn&apos;t find any books by that search, maybe
                 try typing more or a different search...
               </Th>
             </Tr>
-          </Tbody>
-        )}
-
-        {bookArray.length > 0 &&
-          bookArray.map((book) => (
-            <BookTableItem
-              key={book.id}
-              book={book}
-              handleRefetch={handleRefetch}
-            />
-          ))}
+          )}
+          {bookArray.length > 0 &&
+            bookArray.map((book) => (
+              <BookTableItem
+                key={book.id}
+                book={book}
+                handleRefetch={handleRefetch}
+              />
+            ))}
+        </Tbody>
       </Table>
     </Box>
   );

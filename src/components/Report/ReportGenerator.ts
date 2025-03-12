@@ -119,22 +119,22 @@ export function createCustomerRequestsReport({
 
   reportData.forEach((customer) => {
     const {
-      requestName,
-      requestNumber,
+      customerName,
+      customerPhoneNumber,
       createdAt,
-      requestTitle,
-      requestAuthor,
-      requestISBN,
-      requestComment,
+      bookTitle,
+      bookAuthor,
+      bookISBN,
+      bookGenre,
     } = customer;
 
     const customerData = [
-      requestName,
-      requestNumber,
-      requestTitle,
-      requestAuthor,
-      requestISBN,
-      requestComment,
+      customerName,
+      customerPhoneNumber,
+      bookTitle,
+      bookAuthor,
+      bookISBN,
+      bookGenre,
       new Date(createdAt).toLocaleDateString(),
     ];
     TableBody.push(customerData);

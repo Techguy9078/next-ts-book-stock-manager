@@ -5,8 +5,9 @@ Credit: DLParkin [bookStore-stock-manager](https://github.com/DLParkin/bookStore
 ## Features
 
 - Books:
+
   - Activate (Books Active in-store)
-  - Auto Remove 
+  - Auto Remove
   - Search
 
   - Park Add
@@ -61,3 +62,7 @@ Also if not working with database this is another fix.
 ```bash
 npx prisma migrate dev --name <editname, just like commits.>
 ```
+
+## Helpful tools
+
+Top view the schemas - `npx prisma studio`

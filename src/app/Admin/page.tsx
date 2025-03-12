@@ -3,27 +3,31 @@ import { Box, Button, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
 
 export default function Admin() {
-  const [exported, setExported] = useState<boolean>(false);
+  const [exportedMessage, setExportedMessage] = useState<string | null>(null);
+
+  const handleExport = async () => {
+    setExportedMessage(null);
+    try {
+      const response = await fetch('/api/export', { method: 'POST' });
+      const result = await response.json();
+      setExportedMessage(result.message);
+    } catch (error) {
+      setExportedMessage('Failed to export database.');
+    }
+  };
+
   return (
-    <Box
-      p={4}
-      bgColor={useColorModeValue('gray.200', 'gray.700')}
-      rounded={'md'}
-    >
-      <VStack spacing={4} align={'left'} pb={4}>
+    <Box p={4} bgColor={useColorModeValue('gray.200', 'gray.700')} rounded="md">
+      <VStack spacing={4} align="left" pb={4}>
         <Text fontSize="2xl">Admin Functions</Text>
-        {exported && <Text>Exported Database!</Text>}
+        {exportedMessage && <Text>{exportedMessage}</Text>}
         <Button
-          variant={'solid'}
-          color={'black'}
-          onClick={() => {
-            setExported(false);
-            import('@/utils/pgDump').then((module: any) =>
-              module.default().then(() => {
-                setExported(true);
-              }),
-            );
+          size="lg"
+          style={{
+            backgroundColor: 'lightseagreen',
+            color: 'white',
           }}
+          onClick={handleExport}
         >
           Export Database
         </Button>

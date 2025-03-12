@@ -26,13 +26,13 @@ model StoredBooks {
 
 model ScannedBook {
   id        Int         @id @default(autoincrement())
-  barcode   String
-  isbn      String
-  title     String
-  author    String
-  genre     String      @default("n/a")
+  barcode   String?
+  isbn      String?
+  title     String?
+  author    String?
+  genre     String?     @default("n/a")
   park      Boolean     @default(true) // Change once current data overrided.
-  book      StoredBooks @relation(fields: [barcode, isbn, title, author, genre], references: [barcode, isbn, title, author, genre])
+  book      StoredBooks? @relation(fields: [barcode, isbn, title, author, genre], references: [barcode, isbn, title, author, genre], onDelete: SetNull)
   createdAt DateTime    @default(now())
 }
 

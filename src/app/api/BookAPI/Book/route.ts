@@ -4,36 +4,36 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   const req = await request.json();
-  let { barcode, isbn, title, author, genre } = req;
+  let { barcode, isbn, title, author, genre, park } = req;
 
-  // Ensure barcode is a string
+  console.log(genre);
   if (typeof barcode === 'number') {
     barcode = barcode.toString();
   }
 
   try {
-    // Create a new book entry
     const combinedBookData = await prisma.scannedBook.create({
       data: {
+        park: Boolean(park),
         book: {
           connectOrCreate: {
-            where: {
-              barcode: barcode,
-            },
+            where: { barcode },
             create: {
-              barcode: barcode,
-              isbn: isbn,
-              title: title,
-              author: author,
-              genre: genre,
+              barcode,
+              isbn,
+              title,
+              author,
+              genre,
             },
           },
         },
       },
+      include: { book: true },
     });
 
     return NextResponse.json(combinedBookData);
   } catch (error) {
+    console.error('Error saving book:', error);
     return NextResponse.json(
       { error: 'Failed Adding Local Book...' },
       { status: 500 },
@@ -56,7 +56,7 @@ export async function GET(request: Request) {
     return NextResponse.json(bookResults);
   }
 
-  if (searchTerm === null) {
+  if (!searchTerm) {
     return NextResponse.json(
       { error: 'No Search Term Entered...' },
       { status: 500 },
@@ -67,28 +67,10 @@ export async function GET(request: Request) {
     const bookResults = await prisma.scannedBook.findMany({
       where: {
         OR: [
-          {
-            title: {
-              contains: searchTerm,
-              mode: 'insensitive',
-            },
-          },
-          {
-            author: {
-              contains: searchTerm,
-              mode: 'insensitive',
-            },
-          },
-          {
-            barcode: {
-              contains: searchTerm,
-            },
-          },
-          {
-            isbn: {
-              contains: searchTerm,
-            },
-          },
+          { title: { contains: searchTerm, mode: 'insensitive' } },
+          { author: { contains: searchTerm, mode: 'insensitive' } },
+          { barcode: { contains: searchTerm } },
+          { isbn: { contains: searchTerm } },
         ],
       },
       orderBy: { title: 'asc' },
@@ -96,6 +78,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(bookResults);
   } catch (error: any) {
+    console.error('Error fetching books:', error);
     return NextResponse.json(
       { error: 'Failed Finding Local Book...' },
       { status: 500 },

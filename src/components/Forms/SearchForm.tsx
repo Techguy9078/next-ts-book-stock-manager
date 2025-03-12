@@ -1,57 +1,31 @@
+import { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import { debounce } from 'lodash';
 import {
   Button,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
-  HStack,
   Input,
   InputGroup,
-  InputRightAddon,
   InputRightElement,
-  Text,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-import { ZodErrorMap, z } from 'zod';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
-import { useIsMobile } from '@/utils/isMobile';
 
-const customErrorMap: ZodErrorMap = (error, ctx) => {
-  if (error.code == 'too_small') {
-    return { message: `You need to enter at least 2 characters...` };
-  }
+interface SearchFormProps {
+  setBooksArray: (booksArray: any[] | undefined) => void;
+  refetch?: boolean;
+}
 
-  return { message: ctx.defaultError };
-};
+const MINIMUM_SEARCH_LENGTH = 2;
+const DEBOUNCE_TIME = 400;
+const DEFAULT_STALE_TIME = 5000;
 
-const barcodeValidator = z.object({
-  search: z
-    .string({
-      errorMap: customErrorMap,
-    })
-    .min(2),
-});
-
-type SearchForm = z.infer<typeof barcodeValidator>;
-
-export default function SearchForm({
-  setBooksArray,
-  setLoader,
-  refetchValue,
-}: {
-  setLoader: Function;
-  setBooksArray: Function;
-  refetchValue: boolean;
-}) {
-  const [debouncedSearchValue, setDebouncedSearchValue] = useState<
-    string | undefined
-  >();
-  const [search, setSearch] = useState<string | undefined>();
-
-  const isMobile = useIsMobile();
+const SearchForm: React.FC<SearchFormProps> = ({ setBooksArray, refetch }) => {
+  const [debouncedSearch, setDebouncedSearch] = useState<string>('');
+  const [controller, setController] = useState<AbortController | null>(null);
 
   const {
     register,
@@ -59,114 +33,137 @@ export default function SearchForm({
     formState: { errors },
     setFocus,
     resetField,
-  } = useForm<SearchForm>({
+  } = useForm({
     defaultValues: { search: '' },
   });
 
-  const { data, status, refetch, isRefetching } = useQuery({
-    queryKey: ['search'],
-    queryFn: ({ signal }) => {
-      return axios.get(`/api/BookAPI/Book?search=${debouncedSearchValue}`, {
-        signal,
-      });
-    },
-    enabled: false,
-  });
+  const debouncedUpdate = useMemo(
+    () =>
+      debounce((value: string) => {
+        if (value.length < MINIMUM_SEARCH_LENGTH) {
+          setDebouncedSearch('');
+          setBooksArray(undefined);
+          return;
+        }
+        setDebouncedSearch(value);
+      }, DEBOUNCE_TIME),
+    [setBooksArray],
+  );
 
   useEffect(() => {
-    refetch();
-  }, [refetchValue]);
-
-  useEffect(() => {
-    const subscription = watch((value) => {
-      setSearch(value.search);
+    const subscription = watch(({ search }) => {
+      debouncedUpdate(search || '');
     });
 
     return () => subscription.unsubscribe();
-  }, [watch]);
+  }, [debouncedUpdate, watch]);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (search != undefined && search != '' && search.length > 2) {
-        setDebouncedSearchValue(search);
+    if (!debouncedSearch) {
+      setBooksArray(undefined);
+      if (controller) {
+        controller.abort();
+        setController(null);
+      }
+    }
+  }, [debouncedSearch, setBooksArray, controller]);
+
+  const {
+    data,
+    isError,
+    refetch: queryRefetch,
+  } = useQuery(
+    ['search', debouncedSearch],
+    async () => {
+      if (!debouncedSearch) return;
+
+      if (controller) {
+        controller.abort();
       }
 
-      if (
-        debouncedSearchValue != undefined &&
-        debouncedSearchValue != '' &&
-        debouncedSearchValue.length > 2
-      ) {
-        refetch();
+      const newController = new AbortController();
+      setController(newController);
+
+      try {
+        const res = await axios.get(
+          `/api/BookAPI/Book?search=${debouncedSearch}`,
+          {
+            signal: newController.signal,
+          },
+        );
+        return res.data;
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log('Request canceled:', error.message);
+        } else {
+          throw error;
+        }
       }
-    }, 400);
-    return () => clearTimeout(timeoutId);
-  }, [search, debouncedSearchValue, refetch]);
+    },
+    {
+      enabled:
+        !!debouncedSearch && debouncedSearch.length >= MINIMUM_SEARCH_LENGTH,
+      refetchOnWindowFocus: false,
+      staleTime: DEFAULT_STALE_TIME,
+      retry: false,
+    },
+  );
 
   useEffect(() => {
-    if (search && search.length > 2 && status == 'success') {
-      setBooksArray(data?.data);
-    }
-  }, [data, search, setBooksArray, status]);
+    if (data) setBooksArray(data);
+    if (isError) setBooksArray(undefined);
+  }, [data, isError, setBooksArray]);
 
   useEffect(() => {
-    if (isRefetching) {
-      if (search && search.length > 2) {
-        setBooksArray(undefined);
-        setLoader(true);
-      }
+    if (refetch) {
+      queryRefetch();
     }
-
-    if (!isRefetching) {
-      if (search && search.length < 3) {
-        setBooksArray(undefined);
-      }
-      setLoader(false);
-    }
-  }, [search, isRefetching, setBooksArray, setLoader]);
+  }, [refetch, queryRefetch]);
 
   return (
-    <FormControl isInvalid={errors.search ? true : false}>
+    <FormControl isInvalid={!!errors.search}>
       <FormLabel htmlFor="search">Search for a book...</FormLabel>
       <InputGroup>
         <Input
           autoFocus
-          autoComplete="off"
-          borderColor={'gray.400'}
+          autoComplete="on"
           id="search"
           placeholder="Start Searching books..."
-          {...register('search', {
-            required: 'You need to enter a search term...',
-          })}
+          {...register('search', { required: true })}
         />
         <InputRightElement>
           <Button
-            className={'bg-red-500'}
-            color={'white'}
-            _hover={{
-              bgColor: 'red.700',
-              color: useColorModeValue('gray.300', 'gray.300'),
+            size="sm"
+            variant="ghost"
+            style={{
+              marginRight: '0.5rem',
+              padding: '0.1rem',
+              minWidth: '3rem',
             }}
-            size="md"
-            paddingInline={10}
-            marginLeft={-10}
             onClick={() => {
-              resetField('search'),
-                setBooksArray(undefined),
-                setFocus('search');
+              resetField('search');
+              setBooksArray(undefined);
+              setDebouncedSearch('');
+              setFocus('search');
+
+              if (controller) {
+                controller.abort();
+                setController(null);
+              }
             }}
           >
             Clear
           </Button>
         </InputRightElement>
       </InputGroup>
-      {!isMobile ? (
-        <FormHelperText color={'gray.400'}>
-          Only will search once 3 characters have been entered
-        </FormHelperText>
-      ) : null}
+      <FormHelperText>
+        Enter a minimum of {MINIMUM_SEARCH_LENGTH} characters to search.
+      </FormHelperText>
       <FormErrorMessage>
-        {errors.search && errors.search?.message}
+        {errors.search && errors.search.message}
       </FormErrorMessage>
     </FormControl>
   );
-}
+};
+
+export default SearchForm;
