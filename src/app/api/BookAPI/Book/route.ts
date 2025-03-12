@@ -6,7 +6,6 @@ export async function POST(request: Request) {
   const req = await request.json();
   let { barcode, isbn, title, author, genre, park } = req;
 
-  console.log(genre);
   if (typeof barcode === 'number') {
     barcode = barcode.toString();
   }
@@ -54,6 +53,24 @@ export async function GET(request: Request) {
     });
 
     return NextResponse.json(bookResults);
+  }
+
+  let currentFindingBookTitle = searchParams.get('currentFindingBookTitle')?.toString();
+  let currentFindingBookAuthor = searchParams.get('currentFindingBookAuthor')?.toString();
+
+  if (currentFindingBookTitle && currentFindingBookAuthor) {
+    let currentBookTitle = currentFindingBookTitle.toString()
+    let currentBookAuthor = currentFindingBookAuthor.toString()
+
+    const bookFindingCountResult = await prisma.scannedBook.aggregate({
+      _count: true,
+      where: {
+        title: { contains: currentBookTitle, mode: 'insensitive' },
+        author: { contains: currentBookAuthor, mode: 'insensitive' } ,
+      },
+    })
+
+    return NextResponse.json(bookFindingCountResult._count);
   }
 
   if (!searchTerm) {

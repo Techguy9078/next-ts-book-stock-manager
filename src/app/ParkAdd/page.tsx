@@ -17,9 +17,7 @@ import { BookCountContext } from '../BookCountContext';
 import { CustomerBookRequest } from '@prisma/client';
 import CustomerRequestsModal from '@/components/Requests/CustomerRequestsModal';
 
-const barcodeValidator = z.object({
-  barcode: z.string().min(1),
-});
+const barcodeValidator = z.object({ barcode: z.string().min(1) });
 
 type barcodeForm = z.infer<typeof barcodeValidator>;
 
@@ -37,9 +35,7 @@ export default function ParkAdd() {
     try {
       const response = await axios.get(
         '/api/CustomerBookRequestAPI/CustomerRequestLookup',
-        {
-          params: { isbn, barcode, author, title },
-        },
+        { params: { isbn, barcode, author, title } },
       );
 
       const rankedResults = response.data;
@@ -52,6 +48,7 @@ export default function ParkAdd() {
       });
     }
   };
+
 
   const { mutate: barcodeSearch, isLoading } = useMutation({
     mutationFn: async ({ barcode }: barcodeForm) => {
@@ -106,6 +103,8 @@ export default function ParkAdd() {
       }
 
       setBookDetails(undefined);
+
+      console.log(err)
 
       return toast.error('Something Went Wrong Try Again', {
         description:

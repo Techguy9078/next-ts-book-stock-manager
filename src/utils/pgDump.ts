@@ -9,8 +9,13 @@ import fs from 'fs/promises';
 export default async function PGDUMP(): Promise<string> {
   const databaseUrl = process.env.DATABASE_URL;
   const psqlPath = `"C:\\Program Files\\PostgreSQL\\17\\bin\\psql.exe"`;
+
   const backupDir =
-    process.env.BACKUP_PATH || 'C:\\Users\\david\\Desktop\\backups';
+    process.env.BACKUP_PATH;
+
+  if (!backupDir) {
+    throw new Error('No BACKUP_PATH environment variable.');
+  }
 
   if (!databaseUrl) {
     throw new Error('No DATABASE_URL environment variable.');

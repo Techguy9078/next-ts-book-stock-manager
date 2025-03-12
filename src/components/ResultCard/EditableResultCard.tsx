@@ -5,12 +5,15 @@ import {
   Stack,
   Divider,
   HStack,
+  Flex,
 } from '@chakra-ui/react';
 import CustomEditableInput from '../Inputs/CustomEditableInput';
 import axios from 'axios';
 import CustomEditableSelect from '../Inputs/CustomEditableSelect';
 import ParkedToggle from '../Shared/ParkedToggle';
 import DeleteBookConfirmation from '../Shared/DeleteBookConfirmation';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 function updateBookValue(barcode: string, field: string, updateData: string) {
   async function updateValues() {
@@ -40,6 +43,8 @@ export default function EditableResultCard({
   maxWidth?: string;
   setBookDeleted?: (book: IScannedBookLayout) => void;
 }) {
+  const [currentBookCount, setCurrentBookCount] = useState<number>(0);
+
   const book = {
     title,
     barcode,
@@ -50,6 +55,32 @@ export default function EditableResultCard({
     setBookDeleted,
     ...rest,
   };
+
+  const BooksScannedOn = async (bookData: IScannedBookLayout) => {
+    const { author, title } = bookData;
+
+    try {
+      const response = await axios.get(
+        `/api/BookAPI/Book?currentFindingBookTitle=${title}&currentFindingBookAuthor=${author}`,
+      );
+      console.log(response.data);
+
+      const bookCountResults = response.data;
+
+      setCurrentBookCount(Number(bookCountResults) || 0);
+    } catch (error) {
+      toast.error('Error searching for bookCount', {
+        description: `${error}`,
+      });
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      BooksScannedOn(book);
+    };
+  }, [book]);
+
   return (
     <Box
       p={5}
@@ -67,13 +98,15 @@ export default function EditableResultCard({
           item={title || 'Enter a title...'}
           onSubmit={(data) => updateBookValue(barcode, 'title', data)}
         />
-        <ResultItem
-          barcode={barcode}
-          cardBodyName={'Created'}
-          field={'createdAt'}
-          item={createdAt.split('T')[0].split('-').reverse().join('-')}
-          genre={''}
-        />
+        <Flex justifyContent={'space-between'}>
+          <Text fontSize="lg" fontWeight={600}>
+            Scanned On: {createdAt.split('T')[0].split('-').reverse().join('-')}
+          </Text>
+
+          <Text fontSize="lg" fontWeight={600}>
+            Currently Scanned On: {currentBookCount}
+          </Text>
+        </Flex>
         <Divider borderColor={useColorModeValue('black', 'white')} />
         <Stack>
           <ResultItem
