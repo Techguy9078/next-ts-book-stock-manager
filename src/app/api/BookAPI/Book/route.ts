@@ -84,20 +84,37 @@ export async function GET(request: Request) {
     );
   }
 
-  searchTerm = searchTerm.split(' ').join(' | ');
-  console.log(searchTerm);
   try {
-    const bookResults = await prisma.scannedBook.findMany({
+    const bookNormResults = await prisma.scannedBook.findMany({
       where: {
-        title: { search: searchTerm, mode: 'insensitive' },
-        author: { search: searchTerm, mode: 'insensitive' },
-        barcode: { search: searchTerm },
-        isbn: { search: searchTerm },
+        OR: [
+          { title: { contains: searchTerm, mode: 'insensitive' } },
+          { author: { contains: searchTerm, mode: 'insensitive' } },
+          { barcode: { contains: searchTerm } },
+          { isbn: { contains: searchTerm } },
+        ],
       },
       orderBy: { title: 'asc' },
     });
 
-    return NextResponse.json(bookResults);
+    // searchTerm = searchTerm.split(' ').join(' | ');
+
+    // const bookResults = await prisma.scannedBook.findMany({
+    //   where: {
+    //     title: { search: searchTerm, mode: 'insensitive' },
+    //     author: { search: searchTerm, mode: 'insensitive' },
+    //     barcode: { search: searchTerm },
+    //     isbn: { search: searchTerm },
+    //   },
+    //   orderBy: { title: 'asc' },
+    // });
+
+    // let s = new Set(bookNormResults.concat(bookResults));
+
+    // let combinedResults = [...s];
+    // console.log(combinedResults);
+
+    return NextResponse.json(bookNormResults.concat(bookNormResults));
   } catch (error: any) {
     console.error('Error fetching books:', error);
     return NextResponse.json(

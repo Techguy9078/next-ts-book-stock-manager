@@ -47,46 +47,21 @@ export async function POST(request: Request) {
 // Search Customer Requests
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const searchTerm = searchParams.get('search');
+  let searchTerm = searchParams.get('search');
 
   try {
     let customerResults;
 
     if (searchTerm) {
+      searchTerm = searchTerm.split(' ').join(' | ');
       customerResults = await prisma.customerBookRequest.findMany({
         where: {
-          OR: [
-            {
-              requestName: {
-                contains: searchTerm,
-              },
-            },
-            {
-              requestNumber: {
-                contains: searchTerm,
-              },
-            },
-            {
-              requestTitle: {
-                contains: searchTerm,
-              },
-            },
-            {
-              requestAuthor: {
-                contains: searchTerm,
-              },
-            },
-            {
-              requestISBN: {
-                contains: searchTerm,
-              },
-            },
-            {
-              requestComment: {
-                contains: searchTerm,
-              },
-            },
-          ],
+          requestName: { search: searchTerm, mode: 'insensitive' },
+          requestNumber: { search: searchTerm },
+          requestTitle: { search: searchTerm, mode: 'insensitive' },
+          requestAuthor: { search: searchTerm, mode: 'insensitive' },
+          requestISBN: { search: searchTerm },
+          requestComment: { search: searchTerm, mode: 'insensitive' },
         },
         orderBy: { createdAt: 'desc' },
       });
