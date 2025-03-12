@@ -13,8 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { createStandaloneToast } from '@chakra-ui/react';
-const { ToastContainer, toast } = createStandaloneToast();
+import { toast } from 'sonner';
 
 import ResultCard from '@/components/ResultCard/ResultCard';
 import axios, { AxiosError } from 'axios';
@@ -26,12 +25,38 @@ import { useMutation } from '@tanstack/react-query';
 import { BookCountContext } from '../BookCountContext';
 import GenericButton from '@/components/Buttons/GenericButton';
 import { genreList } from '@/config/genreList';
+import { CustomerBookRequest } from '@prisma/client';
+import CustomerRequestsModal from '@/components/Requests/CustomerRequestsModal';
 
 export default function ManualAdd() {
   const [bookDetails, setBookDetails] = useState<IScannedBookLayout>();
   const { getBookCount } = useContext(BookCountContext);
 
   const { register, reset, handleSubmit } = useForm<IScannedBookLayout>();
+
+  const [customerRequests, setCustomerRequests] = useState<
+    CustomerBookRequest[]
+  >([]);
+
+  const searchRequests = async (bookData: IScannedBookLayout) => {
+    const { isbn, barcode, author, title } = bookData;
+
+    try {
+      const response = await axios.get(
+        '/api/CustomerBookRequestAPI/CustomerRequestLookup',
+        { params: { isbn, barcode, author, title } },
+      );
+
+      const rankedResults = response.data;
+      if (rankedResults.length) {
+        setCustomerRequests(rankedResults);
+      }
+    } catch (error) {
+      toast.error('Error searching for customer requests', {
+        description: `${error}`,
+      });
+    }
+  };
 
   const { mutate: formSubmit, isLoading } = useMutation({
     mutationFn: async (formData: IScannedBookLayout) => {
@@ -45,6 +70,8 @@ export default function ManualAdd() {
       return data as IScannedBookLayout;
     },
     onSuccess: async (data) => {
+      await searchRequests(data);
+
       getBookCount(null);
       setBookDetails(data);
       reset();
@@ -54,12 +81,7 @@ export default function ManualAdd() {
       //   updateField: 'addBook',
       // });
 
-      return toast({
-        id: 'success',
-        position: 'top-right',
-        status: 'success',
-        duration: 3000,
-        title: 'Added Book',
+      return toast.success('Added Book', {
         description: 'Book added successfully!',
       });
     },
@@ -69,27 +91,18 @@ export default function ManualAdd() {
         if (err.response?.status === 500) {
           setBookDetails(undefined);
 
-          return toast({
-            id: 'error',
-            position: 'top-right',
-            status: 'error',
-            duration: 3000,
-            title: 'Error Found',
-            description: `Error: ${err.response?.data?.error || 'when adding book, server side...'}`,
+          return toast.error('Adding Book Failed', {
+            description:
+              'Book details have not been found, please enter manually!',
           });
         }
       }
 
       setBookDetails(undefined);
 
-      return toast({
-        id: 'error',
-        position: 'top-right',
-        status: 'error',
-        duration: 3000,
-        title: 'Something Went Wrong Try Again',
+      return toast.error('Something Went Wrong Try Again', {
         description:
-          'Try entering the book again, if this keeps happening contact the TECH GUY',
+          'Try Scanning the book again, if this keeps happening contact the TECH GUY',
       });
     },
   });
@@ -157,14 +170,12 @@ export default function ManualAdd() {
         {bookDetails && <ResultCard {...bookDetails} />}
       </VStack>
 
-      {/* Use For Images */}
-      {/* {bookDetails?.isbn && (
-				<Image
-					src={`https://covers.openlibrary.org/b/isbn/${bookDetails.isbn}-M.jpg?default=false`}
-					alt=""
-				/>
-			)} */}
-      <ToastContainer />
+      {customerRequests?.length ? (
+        <CustomerRequestsModal
+          customerRequests={customerRequests}
+          setCustomerRequests={setCustomerRequests}
+        />
+      ) : null}
     </Box>
   );
 }

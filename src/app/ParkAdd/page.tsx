@@ -49,7 +49,6 @@ export default function ParkAdd() {
     }
   };
 
-
   const { mutate: barcodeSearch, isLoading } = useMutation({
     mutationFn: async ({ barcode }: barcodeForm) => {
       setBookDetails(undefined);
@@ -104,7 +103,7 @@ export default function ParkAdd() {
 
       setBookDetails(undefined);
 
-      console.log(err)
+      console.log(err);
 
       return toast.error('Something Went Wrong Try Again', {
         description:

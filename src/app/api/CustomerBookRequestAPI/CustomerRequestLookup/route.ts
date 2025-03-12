@@ -1,12 +1,16 @@
 import { prisma } from '@/db';
 import { NextResponse } from 'next/server';
 
+function cleanseSearches(item: string | null): string | undefined {
+  return item?.split(' ').join(' | ');
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const isbn = searchParams.get('isbn');
-  const barcode = searchParams.get('barcode');
-  const author = searchParams.get('author');
-  const title = searchParams.get('title');
+  const isbn = cleanseSearches(searchParams.get('isbn'));
+  const barcode = cleanseSearches(searchParams.get('barcode'));
+  const author = cleanseSearches(searchParams.get('author'));
+  const title = cleanseSearches(searchParams.get('title'));
 
   try {
     const [
@@ -17,26 +21,26 @@ export async function GET(request: Request) {
       resultsByComments,
     ] = await Promise.all([
       prisma.customerBookRequest.findMany({
-        where: { requestISBN: { contains: isbn || '' } },
+        where: { requestISBN: { search: isbn || '' } },
       }),
       prisma.customerBookRequest.findMany({
-        where: { requestISBN: { contains: barcode || '' } },
+        where: { requestISBN: { search: barcode || '' } },
       }),
       prisma.customerBookRequest.findMany({
-        where: { requestAuthor: { contains: author || '' } },
+        where: { requestAuthor: { search: author || '' } },
       }),
       prisma.customerBookRequest.findMany({
-        where: { requestTitle: { contains: title || '' } },
+        where: { requestTitle: { search: title || '' } },
       }),
       // Search comments for all fields
       prisma.customerBookRequest.findMany({
-        where: { requestComment: { contains: isbn || '' } },
+        where: { requestComment: { search: isbn || '' } },
       }),
       prisma.customerBookRequest.findMany({
-        where: { requestComment: { contains: author || '' } },
+        where: { requestComment: { search: author || '' } },
       }),
       prisma.customerBookRequest.findMany({
-        where: { requestComment: { contains: title || '' } },
+        where: { requestComment: { search: title || '' } },
       }),
     ]);
 
