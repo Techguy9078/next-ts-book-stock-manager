@@ -69,21 +69,21 @@ const links = [
     href: 'Search',
     color: { light: '#00a9be', dark: '#008394' },
   },
-  // {
-  // 	name: "Reports",
-  // 	href: "Reports",
-  // 	color: { light: "#836a8a", dark: "#65466D" },
-  // },
-  // {
-  // 	name: "Add Requests",
-  // 	href: "AddRequest",
-  // 	color: { light: "#B66878", dark: "#894553" },
-  // },
-  // {
-  // 	name: "Search Requests",
-  // 	href: "SearchRequests",
-  // 	color: { light: "#736EA9", dark: "#554E9D" },
-  // },
+  {
+  	name: "Reports",
+  	href: "Reports",
+  	color: { light: "#836a8a", dark: "#65466D" },
+  },
+  {
+  	name: "Add Requests",
+  	href: "AddCustomerRequest",
+  	color: { light: "#B66878", dark: "#894553" },
+  },
+  {
+  	name: "Search Requests",
+  	href: "SearchCustomerRequests",
+  	color: { light: "#736EA9", dark: "#554E9D" },
+  },
 
   // All Hidden Paths for background colours.
   {

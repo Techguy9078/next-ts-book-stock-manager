@@ -63,7 +63,6 @@ export default function EditableResultCard({
       const response = await axios.get(
         `/api/BookAPI/Book?currentFindingBookTitle=${title}&currentFindingBookAuthor=${author}`,
       );
-      console.log(response.data);
 
       const bookCountResults = response.data;
 
