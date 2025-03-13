@@ -20,20 +20,44 @@ model StoredBooks {
   genre     String        @default("n/a")
   createdAt DateTime      @default(now())
   books     ScannedBook[]
+  AuditLog  AuditLog[]
 
   @@unique([barcode, isbn, title, author, genre])
 }
 
 model ScannedBook {
-  id        Int         @id @default(autoincrement())
+  id        Int          @id @default(autoincrement())
   barcode   String?
   isbn      String?
   title     String?
   author    String?
-  genre     String?     @default("n/a")
-  park      Boolean     @default(true) // Change once current data overrided.
+  genre     String?      @default("n/a")
+  park      Boolean      @default(true) // Change once current data overrided.
   book      StoredBooks? @relation(fields: [barcode, isbn, title, author, genre], references: [barcode, isbn, title, author, genre], onDelete: SetNull)
-  createdAt DateTime    @default(now())
+  createdAt DateTime     @default(now())
+}
+
+model AuditLog {
+  id                 Int          @id @default(autoincrement())
+  action             Actions
+  book               StoredBooks? @relation(fields: [storedBooksBarcode], references: [barcode])
+  status             Statuses     @default(UNKNOWN)
+  eventAt            DateTime     @default(now())
+  storedBooksBarcode String?
+}
+
+enum Statuses {
+  SUCCESS
+  FAIL
+  UNKNOWN
+}
+
+enum Actions {
+  SCAN
+  ADD
+  REMOVE
+  EDIT
+  SEARCH
 }
 
 // Sales Data Models
