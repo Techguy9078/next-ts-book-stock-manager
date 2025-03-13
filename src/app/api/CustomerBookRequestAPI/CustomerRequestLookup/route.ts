@@ -2,7 +2,8 @@ import { prisma } from '@/db';
 import { NextResponse } from 'next/server';
 
 function cleanseSearches(item: string | null): string | undefined {
-  return item?.split(' ').join(' | ');
+  let itemNoWhiteSpace = item?.trimEnd()
+  return itemNoWhiteSpace?.split(' ').join(' | ');
 }
 
 export async function GET(request: Request) {
@@ -59,9 +60,22 @@ export async function GET(request: Request) {
       })),
     ];
 
+    interface allResults {
+      matchedOn: string;
+      createdAt: Date;
+      id: number;
+      requestName: string;
+      requestNumber: string;
+      requestTitle: string | null;
+      requestAuthor: string | null;
+      requestISBN: string | null;
+      requestComment: string | null;
+    }
+
     // Sort by oldest first
     const sortedResults = Object.values(allResults).sort(
       // TODO to late and tired to fix these types right now
+      // TODO I guess can be done on another day - T
       (a, b) => (a as any).createdAt - (b as any).createdAt,
     );
 
