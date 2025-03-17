@@ -1,11 +1,12 @@
 import { Card, CardBody, CardHeader, Heading } from "@chakra-ui/react";
-import { SalesStats } from "@prisma/client";
 import { AreaChart } from "@saas-ui/charts";
 
+
+// TODO: USE ME FOR THE GRAPHS OF GOODNESS
 export default function StatsAreaBar({
 	data,
 }: {
-	data: Array<SalesStats> | undefined;
+	data: Array<any> | undefined;
 }) {
 	return (
 		<Card width={"full"}>

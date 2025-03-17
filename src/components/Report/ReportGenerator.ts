@@ -1,4 +1,4 @@
-import { CustomerBookRequest, Sales } from '@prisma/client';
+import { CustomerBookRequest } from '@prisma/client';
 import { jsPDF } from 'jspdf';
 import autoTable, { RowInput } from 'jspdf-autotable';
 
@@ -58,7 +58,8 @@ export function createSalesReport({
 
   Object.keys(reportData).forEach(function (key, index) {
     TableBody.push([key, 'Books']);
-    reportData[key].forEach((book: Sales) => {
+    // FIXME: Any is because sales is removed
+    reportData[key].forEach((book: any) => {
       const bookData = [
         book.isbn,
         book.title,
@@ -119,22 +120,22 @@ export function createCustomerRequestsReport({
 
   reportData.forEach((customer) => {
     const {
-      customerName,
-      customerPhoneNumber,
+      requestName,
+      requestNumber,
       createdAt,
-      bookTitle,
-      bookAuthor,
-      bookISBN,
-      bookGenre,
+      requestTitle,
+      requestAuthor,
+      requestISBN,
+      requestComment,
     } = customer;
 
     const customerData = [
-      customerName,
-      customerPhoneNumber,
-      bookTitle,
-      bookAuthor,
-      bookISBN,
-      bookGenre,
+      requestName,
+      requestNumber,
+      requestTitle,
+      requestAuthor,
+      requestISBN,
+      requestComment,
       new Date(createdAt).toLocaleDateString(),
     ];
     TableBody.push(customerData);

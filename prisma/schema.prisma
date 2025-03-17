@@ -36,23 +36,6 @@ model ScannedBook {
   createdAt DateTime    @default(now())
 }
 
-// Sales Data Models
-model Sales {
-  id        Int      @id @default(autoincrement())
-  isbn      String
-  title     String
-  author    String
-  genre     String   @default("n/a")
-  createdAt DateTime @default(now())
-}
-
-model SalesStats {
-  date          DateTime @id
-  addedBooks    Int
-  activateBooks Int
-  removedBooks  Int
-}
-
 // Customer Request Models
 model CustomerBookRequest {
   id             Int      @id @default(autoincrement())
