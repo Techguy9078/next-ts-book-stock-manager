@@ -102,6 +102,12 @@ const links = [
     color: { light: 'yellow.800', dark: 'yellow.700' },
   },
   {
+    name: "Audit Log",
+    href: 'AuditLog',
+    color: { light: '#ae9991', dark: '#86665a' },
+  },
+  {
+
     hidden: true,
     href: 'Admin',
     color: { light: 'purple.600', dark: 'purple.500' },
