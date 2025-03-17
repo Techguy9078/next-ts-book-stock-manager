@@ -176,7 +176,6 @@ function ResultItem({
         <CustomEditableSelect
           fontSize="lg"
           fontWeight={600}
-          item={item || `Edit ${field}...`}
           onSubmit={(data) => updateBookValue(barcode, field, data)}
           genre={genre}
         />

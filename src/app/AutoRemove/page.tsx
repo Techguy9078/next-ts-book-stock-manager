@@ -37,12 +37,6 @@ export default function AutoRemove() {
       return data as IScannedBookLayout;
     },
     onSuccess: async (data) => {
-      // TODO change to analytic endpoint for more generic data collection
-      // await axios.post('/api/SalesAPI/Sales', data);
-
-      // await axios.put('/api/SalesAPI/SalesStats', {
-      //   updateField: 'removeBook',
-      // });
 
       getBookCount(null);
       setBookDetails(data);

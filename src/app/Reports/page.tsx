@@ -5,7 +5,6 @@ import CustomDivider from '@/components/Divider/customDivider';
 import DatePicker from '@/components/DatePicker/DatePicker';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Sales } from '@prisma/client';
 import ReportGenerateButton from '@/components/Buttons/ReportGenerateButton';
 
 export default function Reports() {
@@ -19,14 +18,15 @@ export default function Reports() {
     async function FindSales() {
       if (!selectedDates) return;
       try {
-        let salesResults = await axios.get(
-          `/api/SalesAPI/Sales?startDate=${selectedDates[0].toString()}&endDate=${selectedDates[1].toString()}`,
-          {
-            signal: signal,
-          },
-        );
+        // TODO: Broken Mi Dude
+        // let salesResults = await axios.get(
+        //   `/api/SalesAPI/Sales?startDate=${selectedDates[0].toString()}&endDate=${selectedDates[1].toString()}`,
+        //   {
+        //     signal: signal,
+        //   },
+        // );
 
-        return setReportData(salesResults.data);
+        return setReportData(["I Broken :)"]);
       } catch {
         return;
       }
