@@ -76,11 +76,6 @@ export default function ManualAdd() {
       setBookDetails(data);
       reset();
 
-      // TODO broken
-      // await axios.put('/api/SalesAPI/SalesStats', {
-      //   updateField: 'addBook',
-      // });
-
       return toast.success('Added Book', {
         description: 'Book added successfully!',
       });

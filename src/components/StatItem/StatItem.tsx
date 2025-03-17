@@ -9,13 +9,13 @@ import {
   StatNumber,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { SalesStats } from '@prisma/client';
 
+// TODO: USE ME FOR STATS
 export default function StatItem({
   data,
   bookCount,
 }: {
-  data: SalesStats;
+  data: any;
   bookCount: string;
 }) {
   function bookPercentage(inputBook: number) {
