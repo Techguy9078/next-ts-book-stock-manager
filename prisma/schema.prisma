@@ -19,6 +19,7 @@ model StoredBooks {
   author    String
   genre     String        @default("n/a")
   createdAt DateTime      @default(now())
+  updatedAt DateTime      @default(now()) @updatedAt
   books     ScannedBook[]
   Analytics Analytics[]
 
@@ -41,6 +42,7 @@ model Analytics {
   id                 Int          @id @default(autoincrement())
   action             Actions
   book               StoredBooks? @relation(fields: [storedBooksBarcode], references: [barcode])
+  information        String?
   status             Statuses     @default(UNKNOWN)
   eventAt            DateTime     @default(now())
   storedBooksBarcode String?

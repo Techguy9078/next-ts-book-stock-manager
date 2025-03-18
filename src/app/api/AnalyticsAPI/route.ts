@@ -5,18 +5,26 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   const req = await request.json();
-  let { action, storedBooksBarcode, status }: Analytics = req;
+  let { action, storedBooksBarcode, information, status }: Analytics = req;
+
+  if (!storedBooksBarcode) storedBooksBarcode = 'No Book Provided';
+  if (!information) information = 'No Information Provided';
+  console.log(req)
 
   try {
-    const auditData = await prisma.analytics.create({
+    const analyticsData = await prisma.analytics.create({
       data: {
         action,
         status,
+        information,
+        storedBooksBarcode,
       },
       include: { book: storedBooksBarcode ? true : false },
     });
 
-    return NextResponse.json(auditData);
+    console.log(analyticsData);
+
+    return NextResponse.json(analyticsData);
   } catch (error) {
     console.error('Error saving analytic item:', error);
     return NextResponse.json(
@@ -28,11 +36,11 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const auditLogResults = await prisma.analytics.findMany({
+    const analyticsDataLogResults = await prisma.analytics.findMany({
       orderBy: { eventAt: 'asc' },
     });
 
-    return NextResponse.json(auditLogResults);
+    return NextResponse.json(analyticsDataLogResults);
   } catch (error: any) {
     console.error('Error fetching analytic items:', error);
     return NextResponse.json(

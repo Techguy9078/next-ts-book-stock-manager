@@ -16,6 +16,7 @@ import EditableResultCard from '@/components/ResultCard/EditableResultCard';
 import { BookCountContext } from '../BookCountContext';
 import { CustomerBookRequest } from '@prisma/client';
 import CustomerRequestsModal from '@/components/Requests/CustomerRequestsModal';
+import { useAnalytics } from '@/components/_helpers/AnalyticsHelper';
 
 const barcodeValidator = z.object({ barcode: z.string().min(1) });
 
@@ -77,6 +78,14 @@ export default function ParkAdd() {
     onSuccess: async (data: IScannedBookLayout) => {
       const book = await axios.post('/api/BookAPI/Book', data);
 
+      const analyticData = await useAnalytics({
+        action: 'ADD',
+        status: 'SUCCESS',
+        storedBooksBarcode: data.barcode,
+        information: 'Book was Added',
+      });
+
+      console.log(analyticData);
       await searchRequests(book.data);
 
       getBookCount(null);
