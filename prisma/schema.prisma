@@ -20,7 +20,7 @@ model StoredBooks {
   genre     String        @default("n/a")
   createdAt DateTime      @default(now())
   books     ScannedBook[]
-  Analytics  Analytics[]
+  Analytics Analytics[]
 
   @@unique([barcode, isbn, title, author, genre])
 }

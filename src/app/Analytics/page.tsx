@@ -1,19 +1,11 @@
 'use client';
-import {
-  Box,
-  Button,
-  HStack,
-  Icon,
-  Text,
-  VStack,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Box, Button, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useIsMobile } from '@/utils/isMobile';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { InfoIcon, WarningTwoIcon } from '@chakra-ui/icons';
 import { Analytics } from '@prisma/client';
+import AnalyticsTable from '@/components/Tables/AnalyticsTable';
 
 export default function AnalyticsLogPage() {
   const [analyticsLog, setAnalyticsLog] = useState<Analytics[]>();
@@ -40,14 +32,14 @@ export default function AnalyticsLogPage() {
     if (isError) setAnalyticsLog(undefined);
   }, [data, isError, setAnalyticsLog]);
 
-  const addAnalyticsLogEntry = async () => {
-    const analyticEntry: Analytics = await axios.post('/api/AnalyticsAPI', {
-      action: 'SCAN',
-      status: 'SUCCESS',
-    });
+  // const addAnalyticsLogEntry = async () => {
+  //   const analyticEntry: Analytics = await axios.post('/api/AnalyticsAPI', {
+  //     action: 'SCAN',
+  //     status: 'SUCCESS',
+  //   });
 
-    return setAnalytic(analyticEntry);
-  };
+  //   return setAnalytic(analyticEntry);
+  // };
 
   return (
     <>
@@ -58,40 +50,10 @@ export default function AnalyticsLogPage() {
         maxHeight={isMobile ? '100vh' : '90vh'}
       >
         <VStack spacing={[2, 4]} align="left" pb={4}>
-          <Text fontSize="2xl">{isMobile ? null : 'Audit Log'}</Text>
-        </VStack>
-        <VStack spacing={[2, 4]} align="left" pb={4}>
-          <Text fontSize="2xl">{analytic ? analytic.action : 'no Data'}</Text>
-          <Button onClick={addAnalyticsLogEntry}>Add Analytics Entry</Button>
+          <Text fontSize="2xl">{isMobile ? null : 'Analytics Log'}</Text>
         </VStack>
 
-        {analyticsLog?.length === 0 ? (
-          <Text fontSize="1xl">No Analytics Found Here...</Text>
-        ) : analyticsLog ? (
-          <VStack>
-            <HStack>
-              <HStack>
-                <Text>Action</Text>
-                <Text>Status</Text>
-                <Text>Event Time</Text>
-              </HStack>
-            </HStack>
-            <VStack>
-              {analyticsLog.map((analyticsItem) => (
-                <HStack>
-                  {analyticsItem.status == 'SUCCESS' ? (
-                    <InfoIcon />
-                  ) : (
-                    <WarningTwoIcon />
-                  )}
-                  <Text>{analyticsItem.action}</Text>
-                  <Text>{analyticsItem.status}</Text>
-                  <Text>{analyticsItem.eventAt.toLocaleString()}</Text>
-                </HStack>
-              ))}
-            </VStack>
-          </VStack>
-        ) : null}
+        <AnalyticsTable analyticsData={analyticsLog} />
       </Box>
     </>
   );
