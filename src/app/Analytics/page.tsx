@@ -10,21 +10,21 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useIsMobile } from '@/utils/isMobile';
-import { AuditLog } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { InfoIcon, WarningTwoIcon } from '@chakra-ui/icons';
+import { Analytics } from '@prisma/client';
 
-export default function AuditLogPage() {
-  const [auditLog, setAuditLog] = useState<AuditLog[]>();
-  const [audit, setAudit] = useState<AuditLog>();
+export default function AnalyticsLogPage() {
+  const [analyticsLog, setAnalyticsLog] = useState<Analytics[]>();
+  const [analytic, setAnalytic] = useState<Analytics>();
 
   const isMobile = useIsMobile();
   const color = useColorModeValue('gray.200', 'gray.700');
 
-  const { data, isError } = useQuery(['AuditLog'], async () => {
+  const { data, isError } = useQuery(['Analytic'], async () => {
     try {
-      const res = await axios.get(`/api/AuditLogAPI`);
+      const res = await axios.get(`/api/AnalyticsAPI`);
       return res.data;
     } catch (error) {
       if (axios.isCancel(error)) {
@@ -36,17 +36,17 @@ export default function AuditLogPage() {
   });
 
   useEffect(() => {
-    if (data) setAuditLog(data);
-    if (isError) setAuditLog(undefined);
-  }, [data, isError, setAuditLog]);
+    if (data) setAnalyticsLog(data);
+    if (isError) setAnalyticsLog(undefined);
+  }, [data, isError, setAnalyticsLog]);
 
-  const addAuditLogEntry = async () => {
-    const auditEntry: AuditLog = await axios.post('/api/AuditLogAPI', {
+  const addAnalyticsLogEntry = async () => {
+    const analyticEntry: Analytics = await axios.post('/api/AnalyticsAPI', {
       action: 'SCAN',
       status: 'SUCCESS',
     });
 
-    return setAudit(auditEntry);
+    return setAnalytic(analyticEntry);
   };
 
   return (
@@ -61,13 +61,13 @@ export default function AuditLogPage() {
           <Text fontSize="2xl">{isMobile ? null : 'Audit Log'}</Text>
         </VStack>
         <VStack spacing={[2, 4]} align="left" pb={4}>
-          <Text fontSize="2xl">{audit ? audit.action : 'no Data'}</Text>
-          <Button onClick={addAuditLogEntry}>Add AuditEntry</Button>
+          <Text fontSize="2xl">{analytic ? analytic.action : 'no Data'}</Text>
+          <Button onClick={addAnalyticsLogEntry}>Add Analytics Entry</Button>
         </VStack>
 
-        {auditLog?.length === 0 ? (
-          <Text fontSize="1xl">No Audits Found Here...</Text>
-        ) : auditLog ? (
+        {analyticsLog?.length === 0 ? (
+          <Text fontSize="1xl">No Analytics Found Here...</Text>
+        ) : analyticsLog ? (
           <VStack>
             <HStack>
               <HStack>
@@ -77,16 +77,16 @@ export default function AuditLogPage() {
               </HStack>
             </HStack>
             <VStack>
-              {auditLog.map((auditItem) => (
+              {analyticsLog.map((analyticsItem) => (
                 <HStack>
-                  {auditItem.status == 'SUCCESS' ? (
+                  {analyticsItem.status == 'SUCCESS' ? (
                     <InfoIcon />
                   ) : (
                     <WarningTwoIcon />
                   )}
-                  <Text>{auditItem.action}</Text>
-                  <Text>{auditItem.status}</Text>
-                  <Text>{auditItem.eventAt.toLocaleString()}</Text>
+                  <Text>{analyticsItem.action}</Text>
+                  <Text>{analyticsItem.status}</Text>
+                  <Text>{analyticsItem.eventAt.toLocaleString()}</Text>
                 </HStack>
               ))}
             </VStack>

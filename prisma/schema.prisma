@@ -20,7 +20,7 @@ model StoredBooks {
   genre     String        @default("n/a")
   createdAt DateTime      @default(now())
   books     ScannedBook[]
-  AuditLog  AuditLog[]
+  Analytics  Analytics[]
 
   @@unique([barcode, isbn, title, author, genre])
 }
@@ -37,7 +37,7 @@ model ScannedBook {
   createdAt DateTime     @default(now())
 }
 
-model AuditLog {
+model Analytics {
   id                 Int          @id @default(autoincrement())
   action             Actions
   book               StoredBooks? @relation(fields: [storedBooksBarcode], references: [barcode])
