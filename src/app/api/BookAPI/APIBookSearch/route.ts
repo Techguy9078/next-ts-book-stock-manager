@@ -8,8 +8,6 @@ import {
   BookDataParseOL,
 } from '@/components/_helpers/DataParse';
 
-const sessionId = process.env.Secure1PSID!;
-
 // Trial ISBN 9781845967888
 // Another Trial ISBN 9780007276721
 
@@ -60,7 +58,6 @@ export async function GET(request: Request) {
       return NextResponse.json([], { status: 404 });
     }
 
-    //console.log('Local', bookResults);
 
     return NextResponse.json(bookResults);
   } catch {

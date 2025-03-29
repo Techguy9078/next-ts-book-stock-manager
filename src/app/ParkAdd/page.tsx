@@ -77,15 +77,15 @@ export default function ParkAdd() {
     },
     onSuccess: async (data: IScannedBookLayout) => {
       const book = await axios.post('/api/BookAPI/Book', data);
+      
 
-      const analyticData = await useAnalytics({
+      await useAnalytics({
         action: 'ADD',
         status: 'SUCCESS',
         storedBooksBarcode: data.barcode,
         information: 'Book was Added',
       });
 
-      console.log(analyticData);
       await searchRequests(book.data);
 
       getBookCount(null);

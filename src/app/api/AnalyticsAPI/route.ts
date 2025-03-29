@@ -9,7 +9,6 @@ export async function POST(request: Request) {
 
   if (!storedBooksBarcode) storedBooksBarcode = 'No Book Provided';
   if (!information) information = 'No Information Provided';
-  console.log(req)
 
   try {
     const analyticsData = await prisma.analytics.create({
@@ -21,8 +20,6 @@ export async function POST(request: Request) {
       },
       include: { book: storedBooksBarcode ? true : false },
     });
-
-    console.log(analyticsData);
 
     return NextResponse.json(analyticsData);
   } catch (error) {

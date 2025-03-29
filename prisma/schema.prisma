@@ -57,6 +57,7 @@ enum Statuses {
 enum Actions {
   SCAN
   ADD
+  MANUALADD
   REMOVE
   EDIT
   SEARCH
