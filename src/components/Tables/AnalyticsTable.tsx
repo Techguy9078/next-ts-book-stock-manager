@@ -1,4 +1,4 @@
-import { CheckIcon, InfoIcon, WarningTwoIcon } from '@chakra-ui/icons';
+import { InfoIcon, WarningTwoIcon } from '@chakra-ui/icons';
 import {
   Icon,
   Table,
@@ -11,11 +11,12 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { Analytics } from '@prisma/client';
+import BookInfoModal from '../Modals/BookInfoModal';
 
 export default function AnalyticsTable({
   analyticsData,
 }: {
-  analyticsData: Array<Analytics> | undefined;
+  analyticsData: Array<any> | undefined; // FIXME: There does seem to be an any here...
 }) {
   return (
     <>
@@ -63,7 +64,11 @@ export default function AnalyticsTable({
                   </Td>
                   <Td fontSize={'lg'}>{analyticsItem.action}</Td>
                   <Td fontSize={'lg'}>{analyticsItem.status}</Td>
-                  <Td fontSize={'lg'}>{analyticsItem.storedBooksBarcode}</Td>
+                  <Td fontSize={'lg'}>
+                    <BookInfoModal
+                      book={analyticsItem.book}
+                    />
+                  </Td>
                   <Td fontSize={'lg'} isNumeric>
                     {analyticsItem.eventAt.toLocaleString()}
                   </Td>

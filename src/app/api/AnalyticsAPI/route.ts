@@ -35,6 +35,13 @@ export async function GET() {
   try {
     const analyticsDataLogResults = await prisma.analytics.findMany({
       orderBy: { eventAt: 'asc' },
+      include: {
+        book: {
+          include: {
+            Analytics: true,
+          },
+        },
+      },
     });
 
     return NextResponse.json(analyticsDataLogResults);

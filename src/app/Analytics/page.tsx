@@ -9,7 +9,6 @@ import AnalyticsTable from '@/components/Tables/AnalyticsTable';
 
 export default function AnalyticsLogPage() {
   const [analyticsLog, setAnalyticsLog] = useState<Analytics[]>();
-  const [analytic, setAnalytic] = useState<Analytics>();
 
   const isMobile = useIsMobile();
   const color = useColorModeValue('gray.200', 'gray.700');

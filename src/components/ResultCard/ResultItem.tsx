@@ -20,13 +20,11 @@ export default function ResultItem({
   item,
   cardBodyName,
   field,
-  genre,
 }: {
   barcode: string;
   item: string;
   cardBodyName: string;
-  field: 'title' | 'author' | 'genre' | 'isbn';
-  genre: string;
+  field: 'title' | 'author' | 'genre' | 'isbn' | 'barcode';
 }) {
   if (field == 'genre') {
     return (
@@ -36,7 +34,7 @@ export default function ResultItem({
           fontSize="lg"
           fontWeight={600}
           onSubmit={(data) => updateBookValue(barcode, field, data)}
-          genre={genre}
+          genre={item}
         />
       </HStack>
     );
