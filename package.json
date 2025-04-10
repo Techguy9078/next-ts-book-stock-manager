@@ -52,6 +52,6 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.3.3",
-    "prisma": "^6.5.0"
+    "prisma": "^6.6.0"
   }
 }

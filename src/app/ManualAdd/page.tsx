@@ -15,7 +15,7 @@ import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import ResultCard from '@/components/ResultCard/ResultCard';
+import EditableResultCard from '@/components/ResultCard/EditableResultCard';
 import axios, { AxiosError } from 'axios';
 import CustomDivider from '@/components/Divider/customDivider';
 import BookCount from '@/components/BookCount/BookCount';
@@ -162,7 +162,7 @@ export default function ManualAdd() {
           <GenericButton isLoading={isLoading} buttonType="Add" />
         </form>
 
-        {bookDetails && <ResultCard {...bookDetails} />}
+        {bookDetails && <EditableResultCard {...bookDetails} />}
       </VStack>
 
       {customerRequests?.length ? (

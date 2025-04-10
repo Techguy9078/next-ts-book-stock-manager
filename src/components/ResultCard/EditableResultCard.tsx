@@ -67,9 +67,10 @@ export default function EditableResultCard({
       const bookCountResults = response.data;
 
       setCurrentBookCount(Number(bookCountResults) || 0);
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error);
       toast.error('Error searching for bookCount', {
-        description: `${error}`,
+        description: `${error?.response?.data.error}`,
       });
     }
   };

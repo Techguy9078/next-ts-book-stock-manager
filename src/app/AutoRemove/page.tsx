@@ -9,7 +9,7 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import CustomDivider from '@/components/Divider/customDivider';
-import ResultCard from '@/components/ResultCard/ResultCard';
+import EditableResultCard from '@/components/ResultCard/EditableResultCard';
 import BookCount from '@/components/BookCount/BookCount';
 import BarcodeForm from '@/components/Forms/BarcodeForm';
 import { BookCountContext } from '../BookCountContext';
@@ -83,7 +83,7 @@ export default function AutoRemove() {
           formType="Remove"
         />
 
-        {bookDetails && <ResultCard {...bookDetails} />}
+        {bookDetails && <EditableResultCard {...bookDetails} />}
       </VStack>
     </Box>
   );

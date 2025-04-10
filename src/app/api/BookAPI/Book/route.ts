@@ -77,6 +77,13 @@ export async function GET(request: Request) {
     return NextResponse.json(bookFindingCountResult._count);
   }
 
+  if (!searchTerm && (!currentFindingBookTitle && !currentFindingBookAuthor)) {
+    return NextResponse.json(
+      { error: 'Cannot Find Similar Books!' },
+      { status: 500 },
+    );
+  }
+
   if (!searchTerm) {
     return NextResponse.json(
       { error: 'No Search Term Entered...' },
