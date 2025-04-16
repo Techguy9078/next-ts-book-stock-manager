@@ -69,11 +69,11 @@ const links = [
     href: 'Search',
     color: { light: '#00a9be', dark: '#008394' },
   },
-  {
-  	name: "Reports",
-  	href: "Reports",
-  	color: { light: "#836a8a", dark: "#65466D" },
-  },
+  // {
+  // 	name: "Reports",
+  // 	href: "Reports",
+  // 	color: { light: "#836a8a", dark: "#65466D" },
+  // },
   {
   	name: "Add Requests",
   	href: "AddCustomerRequest",
